@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  microgrid-qubo-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: thermodynamic_qubo_microgrid
+    ports:
+      - "8501:8501"
+    environment:
+      - MPLCONFIGDIR=/tmp/mpl_cache
+      - DWAVE_API_TOKEN=${DWAVE_API_TOKEN:-}
+    restart: unless-stopped

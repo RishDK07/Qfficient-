@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "thermodynamic-grid-qubo"
+version = "1.0.0"
+description = "Thermodynamic-Mapped QUBO Formulation for Dynamic Microgrid Power Distribution"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Microgrid Optimization Team" }
+]
+dependencies = [
+    "numpy>=1.26.0",
+    "scipy>=1.11.0",
+    "pandas>=2.0.0",
+    "networkx>=3.0",
+    "dimod>=0.12.0",
+    "openjij>=0.12.0",
+    "dwave-neal>=0.6.0",
+    "dwave-samplers>=1.8.0",
+    "matplotlib>=3.8.0",
+    "tabulate>=0.10.0",
+    "streamlit>=1.35.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0"
+]
+
+[project.scripts]
+thermo-qubo-sim = "main_experiment:run_simulation"
+thermo-qubo-gui = "visualize_microgrid:main"
