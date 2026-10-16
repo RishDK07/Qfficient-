@@ -309,6 +309,8 @@ pip install -r requirements.txt
 
 | Task | Command | Description |
 | :--- | :--- | :--- |
+| **Unified CLI Suite** | `python run.py -n 60` | Full CLI & automated export suite (CSV, figures, reports) |
+| **Parametric Sweep** | `python run.py --sweep` | Multi-scale scaling sweep across sizes [20, 40, 60, 80, 100] |
 | **Launch Dashboard** | `streamlit run app.py` | Full interactive review portal & custom grid designer |
 | **Standalone Web Suite**| Open `dashboard.html` | Self-contained single-page executive web app with SVG topology |
 | **Build HTML Dashboard**| `python build_dashboard_html.py` | Compiles simulation telemetry into `dashboard.html` |
@@ -330,6 +332,7 @@ pip install -r requirements.txt
 
 ```
 Qfficient-/
+├── run.py                                             # Unified CLI entry point & scaling sweep runner
 ├── MANUAL.md                                          # Complete technical stack specification & user manual
 ├── QFFICIENT_SYSTEM_MANUAL.docx                       # Comprehensive formatted Word technical manual
 ├── generate_docx_manual.py                            # Automated generator for the Word technical manual
@@ -364,6 +367,7 @@ Qfficient-/
 │
 └── thermodynamic_grid_qubo/                           # Core Python Package
     ├── __init__.py                                    # Package root
+    ├── cli.py                                         # Rich CLI & batch execution engine with CSV/report exports
     ├── pipeline.py                                    # Unified optimization pipeline & config
     ├── grid_engine/                                   # Distribution grid netlists & DER dynamics
     │   ├── __init__.py                                # Grid engine exports

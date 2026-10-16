@@ -21,11 +21,11 @@ from .ieee_feeder_loader import DistributionGrid
 
 def generate_custom_grid(
     n_components: int = 30,
-    n_solar: int = 3,
-    n_wind: int = 2,
-    n_battery: int = 2,
-    n_ev: int = 2,
-    n_ties: int = 5,
+    n_solar: Optional[int] = None,
+    n_wind: Optional[int] = None,
+    n_battery: Optional[int] = None,
+    n_ev: Optional[int] = None,
+    n_ties: Optional[int] = None,
     seed: int = 42,
     v_base_kv: float = 12.66,
     s_base_mva: float = 10.0,
@@ -35,11 +35,11 @@ def generate_custom_grid(
 
     Parameters:
         n_components: Total number of buses (nodes), including 1 substation (slack bus).
-        n_solar: Number of Solar PV generation nodes.
-        n_wind: Number of Wind turbine nodes.
-        n_battery: Number of Battery Energy Storage System (BESS) nodes.
-        n_ev: Number of EV fast charging depot nodes.
-        n_ties: Number of normally open tie-line switches.
+        n_solar: Number of Solar PV generation nodes (or None for auto).
+        n_wind: Number of Wind turbine nodes (or None for auto).
+        n_battery: Number of Battery Energy Storage System (BESS) nodes (or None for auto).
+        n_ev: Number of EV fast charging depot nodes (or None for auto).
+        n_ties: Number of normally open tie-line switches (or None for auto).
         seed: Random seed for deterministic, reproducible generation.
         v_base_kv: Nominal line-to-line voltage base (kV).
         s_base_mva: System three-phase MVA base.
@@ -50,6 +50,18 @@ def generate_custom_grid(
     """
     if n_components < 4:
         raise ValueError(f"Custom grid must have at least 4 components (got {n_components}).")
+
+    # Dynamic defaults proportional to network scale
+    if n_solar is None:
+        n_solar = max(1, int(round(n_components * 0.08)))
+    if n_wind is None:
+        n_wind = max(1, int(round(n_components * 0.05)))
+    if n_battery is None:
+        n_battery = max(1, int(round(n_components * 0.05)))
+    if n_ev is None:
+        n_ev = max(1, int(round(n_components * 0.05)))
+    if n_ties is None:
+        n_ties = max(2, min(14, int(round(n_components * 0.12))))
 
     rng = np.random.default_rng(seed)
     grid = DistributionGrid(
