@@ -18,11 +18,14 @@ import networkx as nx
 import numpy as np
 
 from .grid_engine.ieee_feeder_loader import DistributionGrid, IEEEFeederLoader
+from .grid_engine.custom_grid_generator import generate_custom_grid
 from .grid_engine.renewable_simulator import RenewableProfileSimulator
 from .qubo_engine.entropy_calculator import EntropyCalculator
 from .qubo_engine.penalty_tuner import PenaltyTuner
 from .qubo_engine.qubo_builder import ThermodynamicQUBOBuilder
 from .solvers.classical_baseline import ClassicalBaselineSolver
+from .solvers.exact_classical_solver import ExactClassicalSolver
+from .solvers.numpy_annealer import NumpyAnnealer
 from .solvers.openjij_annealer import OpenJijAnnealer
 from .verification.metrics_evaluator import MetricsEvaluator
 from .verification.microgrid_visualizer import SAMPLE_LINES, SAMPLE_NODES
@@ -38,13 +41,16 @@ MAX_BUSES = 100       # components (buses / nodes)
 MAX_BRANCHES = 150    # candidate lines incl. tie switches  -> ~11k couplings
 
 GRID_CHOICES = {
-    "microgrid12": "12-Component Smart Microgrid",
     "ieee33": "IEEE 33-Bus Radial Feeder",
+    "microgrid12": "12-Component Smart Microgrid",
+    "custom": "Custom User-Defined Microgrid",
 }
 SOLVER_CHOICES = {
+    "exact_oracle": "Exact Loss-Minimizing Reconfiguration (Baran-Wu Optimum)",
+    "numpy_annealer": "NumPy Vectorized Annealer (Native, Fast)",
     "sqa": "OpenJij Simulated Quantum Annealing (SQA)",
     "neal": "D-Wave Neal (Simulated Annealing)",
-    "classical": "Classical Minimum-Resistance Greedy",
+    "classical": "Classical Minimum-Resistance Baseline",
 }
 
 
@@ -63,6 +69,14 @@ class OptimizationConfig:
     time_steps: int = 40
     dt_seconds: float = 2.0
     seed: int = 42
+    # Custom Grid Parameters
+    custom_n_components: int = 30
+    custom_n_solar: int = 3
+    custom_n_wind: int = 2
+    custom_n_battery: int = 2
+    custom_n_ev: int = 2
+    custom_n_ties: int = 5
+    custom_grid: Optional[DistributionGrid] = None
 
 
 def validate_grid_size(grid: DistributionGrid) -> None:
@@ -124,6 +138,31 @@ def _grid_meta(choice: str, grid: DistributionGrid) -> Dict[str, Any]:
         node_labels = {i + 1: n for i, n in enumerate(names)}
         positions = {i + 1: SAMPLE_NODES[n] for i, n in enumerate(names)}
         line_labels = {i: row[0] for i, row in enumerate(SAMPLE_LINES)}
+    elif choice == "custom":
+        node_labels = {}
+        for b in grid.graph.nodes:
+            if b in grid.substations:
+                node_labels[b] = f"Substation (B{b})"
+            elif b in grid.der_nodes:
+                kind = grid.der_nodes[b].upper()
+                der_names = {"PV": "Solar", "WIND": "Wind", "BESS": "Battery", "EV": "EV Depot"}
+                node_labels[b] = f"{der_names.get(kind, kind)} (B{b})"
+            else:
+                node_labels[b] = f"Bus {b}"
+
+        pos = getattr(grid, "layout_positions", None)
+        if not pos or len(pos) != len(grid.graph.nodes):
+            pos = nx.kamada_kawai_layout(grid.graph)
+        positions = {b: (float(x), float(y)) for b, (x, y) in pos.items()}
+
+        line_labels = {}
+        tie_counter = 1
+        for e, line in grid.lines.items():
+            if grid.graph[line.u][line.v].get("is_tie", False):
+                line_labels[e] = f"T{tie_counter}"
+                tie_counter += 1
+            else:
+                line_labels[e] = f"L{e + 1}"
     else:
         node_labels = {b: str(b) for b in grid.graph.nodes}
         pos = nx.kamada_kawai_layout(grid.graph)
@@ -175,10 +214,24 @@ class ParametricScenario(RenewableProfileSimulator):
 # Solver dispatch
 # ---------------------------------------------------------------------------
 def _anneal(solver: str, annealer: OpenJijAnnealer, bqm, num_reads: int):
-    """Returns (energy, latency_ms, response) for sqa / neal."""
+    """Returns (energy, latency_ms, response) for sqa / neal / numpy_annealer."""
     if solver == "sqa":
         _s, energy, ms, resp = annealer.solve(bqm, num_reads=num_reads)
         return energy, ms, resp
+    elif solver == "numpy_annealer":
+        import dimod
+        t0 = time.perf_counter()
+        Q, offset = bqm.to_qubo()
+        var_list = list(bqm.variables)
+        vmap = {v: i for i, v in enumerate(var_list)}
+        N = len(var_list)
+        q_mat = np.zeros((N, N), dtype=float)
+        for (u, v), val in Q.items():
+            q_mat[vmap[u], vmap[v]] = val
+        X, E, sample_ms = NumpyAnnealer(sweeps=80).sample(q_mat, num_reads=num_reads, offset=offset)
+        samples = [{var_list[i]: int(X[r, i]) for i in range(N)} for r in range(len(X))]
+        resp = dimod.SampleSet.from_samples(samples, vartype=dimod.BINARY, energy=E)
+        return float(E[0]), sample_ms, resp
     import neal
     t0 = time.perf_counter()
     resp = neal.SimulatedAnnealingSampler().sample(bqm, num_reads=num_reads)
@@ -186,11 +239,8 @@ def _anneal(solver: str, annealer: OpenJijAnnealer, bqm, num_reads: int):
 
 
 def estimate_runtime_s(cfg: OptimizationConfig, n_lines: int) -> float:
-    """
-    Rough wall-clock estimate (seconds) for the UI. Calibrated on a single cloud CPU core:
-    SQA ~0.42 ms and SA ~0.035 ms per (read x variable) per step. Your machine will differ.
-    """
-    per_read_var_ms = {"sqa": 0.42, "neal": 0.035, "classical": 0.0}[cfg.solver]
+    """Rough wall-clock estimate (seconds) for the UI."""
+    per_read_var_ms = {"sqa": 0.42, "neal": 0.035, "numpy_annealer": 0.005, "exact_oracle": 0.0, "classical": 0.0}.get(cfg.solver, 0.02)
     return cfg.time_steps * (cfg.num_reads * n_lines * per_read_var_ms / 1000.0 + 0.05)
 
 
@@ -210,8 +260,25 @@ def run_optimization(
     notify = progress_cb or (lambda i, n, m: None)
     T, dt = cfg.time_steps, cfg.dt_seconds
 
-    loader = load_12_component_microgrid if cfg.grid == "microgrid12" else IEEEFeederLoader.load_ieee33
-    grid_base, grid_qubo = loader(), loader()
+    if cfg.grid == "custom":
+        if cfg.custom_grid is not None:
+            grid_base = copy.deepcopy(cfg.custom_grid)
+            grid_qubo = copy.deepcopy(cfg.custom_grid)
+        else:
+            def _build_custom():
+                return generate_custom_grid(
+                    n_components=cfg.custom_n_components,
+                    n_solar=cfg.custom_n_solar,
+                    n_wind=cfg.custom_n_wind,
+                    n_battery=cfg.custom_n_battery,
+                    n_ev=cfg.custom_n_ev,
+                    n_ties=cfg.custom_n_ties,
+                    seed=cfg.seed,
+                )
+            grid_base, grid_qubo = _build_custom(), _build_custom()
+    else:
+        loader = load_12_component_microgrid if cfg.grid == "microgrid12" else IEEEFeederLoader.load_ieee33
+        grid_base, grid_qubo = loader(), loader()
     validate_grid_size(grid_qubo)
 
     t_amb_k = cfg.ambient_c + 273.15
@@ -282,7 +349,13 @@ def run_optimization(
 
     for t in range(T):
         prev = dict(active)
-        if cfg.solver != "classical":
+        if cfg.solver == "exact_oracle":
+            t0 = time.perf_counter()
+            exact_solver = ExactClassicalSolver(grid_qubo)
+            active, best_loss, _ = exact_solver.solve_exact_loss_minimizer(scenario[t])
+            ms = (time.perf_counter() - t0) * 1000.0
+            energy = best_loss
+        elif cfg.solver != "classical":
             weights = entropy_calc.compute_all_entropy_weights(grid_qubo.lines, currents_q)
             lam = tuner.calibrate(weights, num_buses)
             builder = ThermodynamicQUBOBuilder(
@@ -326,7 +399,8 @@ def run_optimization(
         "config": asdict(cfg),
         "grid": {
             "name": grid_qubo.name,
-            "title": GRID_CHOICES[cfg.grid],
+            "title": (f"Custom Microgrid ({num_buses} Buses, {len(grid_qubo.tie_switches)} Ties)"
+                      if cfg.grid == "custom" else GRID_CHOICES[cfg.grid]),
             "n_buses": num_buses,
             "n_lines": len(edge_ids),
             "n_ties": len(grid_qubo.tie_switches),
