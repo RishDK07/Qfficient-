@@ -33,3 +33,8 @@ dev = [
 [project.scripts]
 thermo-qubo-sim = "main_experiment:run_simulation"
 thermo-qubo-gui = "visualize_microgrid:main"
+
+[tool.setuptools.packages.find]
+include = ["thermodynamic_grid_qubo*"]
+exclude = ["results*", "tests*"]
+

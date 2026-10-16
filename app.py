@@ -49,9 +49,35 @@ with st.sidebar:
     st.header("🎛️ Simulation & Grid Inputs")
     grid_key = st.selectbox("Select Microgrid Architecture", list(GRID_CHOICES),
                             format_func=GRID_CHOICES.get, index=0)
-    n_comp, n_lines = GRID_SIZES[grid_key]
-    st.caption(f"{n_comp} components · {n_lines} candidate lines "
-               f"(supported limit: {MAX_BUSES} components / {MAX_BRANCHES} lines)")
+
+    cfg_custom_args = {}
+    if grid_key == "custom":
+        st.subheader("⚙️ Custom Grid Topology")
+        c_nodes = st.slider("Total Components (Buses)", 10, MAX_BUSES, 30, 5,
+                            help="1 substation + (N-1) load/DER buses")
+        c_ties = st.slider("Tie Lines Available", 1, 15, 5, 1,
+                           help="Normally open tie switches for network reconfiguration")
+        st.markdown("**DER Mix Allocation**")
+        col_a, col_b = st.columns(2)
+        c_solar = col_a.slider("Solar PV Nodes", 0, min(10, c_nodes - 1), min(3, c_nodes - 1))
+        c_wind = col_b.slider("Wind Nodes", 0, min(10, c_nodes - 1), min(2, c_nodes - 1))
+        c_bat = col_a.slider("Battery (BESS) Nodes", 0, min(10, c_nodes - 1), min(2, c_nodes - 1))
+        c_ev = col_b.slider("EV Depot Nodes", 0, min(10, c_nodes - 1), min(2, c_nodes - 1))
+        n_comp = c_nodes
+        n_lines = (c_nodes - 1) + c_ties
+        cfg_custom_args = {
+            "custom_n_components": c_nodes,
+            "custom_n_solar": c_solar,
+            "custom_n_wind": c_wind,
+            "custom_n_battery": c_bat,
+            "custom_n_ev": c_ev,
+            "custom_n_ties": c_ties,
+        }
+        st.caption(f"{n_comp} components · {n_lines} candidate lines ({c_nodes - 1} base + {c_ties} ties)")
+    else:
+        n_comp, n_lines = GRID_SIZES[grid_key]
+        st.caption(f"{n_comp} components · {n_lines} candidate lines "
+                   f"(supported limit: {MAX_BUSES} components / {MAX_BRANCHES} lines)")
 
     st.subheader("☀️ Renewable & Demand Transients")
     solar_drop = st.slider("Solar PV Cloud Drop (%)", 0, 90, 75, 5)
@@ -64,7 +90,8 @@ with st.sidebar:
                           disabled=(solver_key == "classical"))
 
     cfg = OptimizationConfig(grid=grid_key, solver=solver_key, solar_drop_pct=solar_drop,
-                             ev_surge_kw=ev_spike, ambient_c=t_ambient, num_reads=num_reads)
+                             ev_surge_kw=ev_spike, ambient_c=t_ambient, num_reads=num_reads,
+                             **cfg_custom_args)
     st.caption(f"⏱️ Estimated run time ≈ {max(estimate_runtime_s(cfg, n_lines), 0.5):.0f} s "
                f"({cfg.time_steps} steps × {cfg.dt_seconds:.0f} s window)")
     run_btn = st.button("🚀 Run Thermodynamic Optimization", type="primary", **_w(st.button))
@@ -108,8 +135,25 @@ with tab_report:
         st.markdown(rc.header_html(result, grade), unsafe_allow_html=True)
         st.markdown(rc.kpi_cards_html(result, grade), unsafe_allow_html=True)
 
+        # ---- executive comparison table ---------------------------------------
+        st.subheader("📊 Executive Performance Comparison")
+        s_sum = result["summary"]
+        b_sum, q_sum = s_sum["baseline"], s_sum["qubo"]
+        chk_sum = result["checks"]
+        comp_df = pd.DataFrame([
+            {"Physical Metric": "Total Joule Heat Dissipation", "Classical Baseline": rc.fmt_energy_mj(b_sum["total_heat_mj"]), "Thermodynamic QUBO": rc.fmt_energy_mj(q_sum["total_heat_mj"]), "Gain / Delta": f"{s_sum['heat_reduction_pct']:+.2f}%"},
+            {"Physical Metric": "Entropy Generation Rate", "Classical Baseline": f"{b_sum['total_entropy_jk']/1000:.3f} kJ/K", "Thermodynamic QUBO": f"{q_sum['total_entropy_jk']/1000:.3f} kJ/K", "Gain / Delta": f"{s_sum['entropy_reduction_pct']:+.2f}%"},
+            {"Physical Metric": "Exergy Preserved (Gouy-Stodola: T₀·ΔS)", "Classical Baseline": "0.0 kJ (ref)", "Thermodynamic QUBO": f"{s_sum['exergy_saved_mj']*1000:+.1f} kJ", "Gain / Delta": f"{s_sum['exergy_saved_mj']*1000:+.1f} kJ"},
+            {"Physical Metric": "Peak Conductor Temperature", "Classical Baseline": f"{b_sum['peak_temp_c']:.1f} °C", "Thermodynamic QUBO": f"{q_sum['peak_temp_c']:.1f} °C", "Gain / Delta": f"{-s_sum['peak_temp_reduction_c']:+.2f} °C"},
+            {"Physical Metric": "Lowest Feeder Voltage", "Classical Baseline": f"{min(result['baseline']['min_v']):.4f} p.u.", "Thermodynamic QUBO": f"{min(result['qubo']['min_v']):.4f} p.u.", "Gain / Delta": "ANSI Compliant" if q_sum["voltage_violations"] == 0 else f"{q_sum['voltage_violations']} violations"},
+            {"Physical Metric": "Line Ampacity Overloads", "Classical Baseline": f"{chk_sum['overload_line_steps_base']} steps", "Thermodynamic QUBO": f"{chk_sum['overload_line_steps_qubo']} steps", "Gain / Delta": "0 overloads" if chk_sum["overload_line_steps_qubo"] == 0 else f"{chk_sum['overload_line_steps_qubo']} overloads"},
+            {"Physical Metric": "Breaker Switch Operations", "Classical Baseline": "0 (static)", "Thermodynamic QUBO": f"{chk_sum['reconfigurations']} ops", "Gain / Delta": f"{chk_sum['reconfigurations']} reconfigurations"},
+            {"Physical Metric": "Solver Latency", "Classical Baseline": f"{b_sum['avg_latency_ms']:.1f} ms", "Thermodynamic QUBO": f"{q_sum['avg_latency_ms']:.1f} ms", "Gain / Delta": f"{q_sum['avg_latency_ms']:.1f} ms/step"},
+        ])
+        st.dataframe(comp_df, hide_index=True, **_w(st.dataframe))
+
         # ---- network diagram --------------------------------------------------
-        st.subheader("🗺️ Optimized network topology")
+        st.subheader("🗺️ Optimized Network Topology Diagram")
         times = result["time_s"]
         step = st.select_slider(
             "Inspect the network at time (s)", options=list(range(len(times))),
@@ -122,11 +166,13 @@ with tab_report:
         net_png = rc.fig_to_png(fig_net)
         plt.close(fig_net)
 
-        with st.expander("Line-by-line table for this moment"):
-            st.dataframe(pd.DataFrame(rc.line_rows(result, step)), hide_index=True, **_w(st.dataframe))
+        # ---- line-by-line table -----------------------------------------------
+        st.subheader(f"📋 Line-by-Line Operating State (at t = {times[step]:.0f} s)")
+        st.caption(f"Electrical flow, thermal runaway resistance, loading %, and losses across all {result['grid']['n_lines']} branches.")
+        st.dataframe(pd.DataFrame(rc.line_rows(result, step)), hide_index=True, **_w(st.dataframe))
 
         # ---- transient charts -------------------------------------------------
-        st.subheader("📈 Transient behaviour")
+        st.subheader("📈 Transient Behaviour Charts")
         fig_tr = rc.render_transient_figure(result)
         st.pyplot(fig_tr, **_w(st.pyplot))
         plt.close(fig_tr)
