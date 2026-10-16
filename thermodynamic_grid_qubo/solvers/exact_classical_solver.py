@@ -32,11 +32,11 @@ class ExactClassicalSolver:
         return cycle_edges
 
     def solve_unreconfigured_standard(self) -> Tuple[Dict[int, int], float]:
-        """
-        Returns the standard unswitched IEEE 33 configuration:
-        Lines 0..31 closed, Tie switches 32..36 open.
-        """
-        switches = {e: (1 if e < 32 else 0) for e in range(len(self.grid.lines))}
+        if hasattr(self.grid, "tie_switches") and self.grid.tie_switches:
+            switches = {e: (0 if e in self.grid.tie_switches else 1) for e in self.grid.lines}
+        else:
+            n_tree = len(self.grid.graph.nodes) - len(self.grid.substations)
+            switches = {e: (1 if i < n_tree else 0) for i, e in enumerate(self.grid.lines)}
         return switches, 0.05
 
     def solve_exact_loss_minimizer(
