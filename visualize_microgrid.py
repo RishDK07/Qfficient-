@@ -141,7 +141,7 @@ def main():
         if attrs["line_id"] not in selected_line_ids
     ]
 
-    fig, ax = plt.subplots(figsize=(19, 10))
+    fig, ax = plt.subplots(figsize=(20, 10))
     ax.set_title("Optimized 33-Component Distribution Microgrid Topology (IEEE 33 Testbed)", fontsize=18, weight="bold", pad=15)
 
     # Draw unused candidate lines first so selected lines remain prominent
@@ -156,11 +156,40 @@ def main():
     nx.draw_networkx_nodes(
         graph, NODES, ax=ax,
         node_color="#e0f2fe", edgecolors="#0369a1",
-        linewidths=1.8, node_size=1100,
+        linewidths=2.0, node_size=1250,
     )
+
+    # Bus IDs (B1..B33) drawn inside nodes
+    bus_ids = {
+        node: node.split("(")[-1].rstrip(")") if "(" in node else node
+        for node in NODES
+    }
     nx.draw_networkx_labels(
-        graph, NODES, ax=ax, font_size=7.2, font_weight="bold",
+        graph, NODES, labels=bus_ids, ax=ax,
+        font_size=8.5, font_weight="bold", font_color="#0f172a"
     )
+
+    # Node descriptors placed cleanly above/below nodes without collision
+    for node, (x, y) in NODES.items():
+        desc = node.split(" (")[0] if " (" in node else ""
+        if not desc:
+            continue
+        # Determine clean vertical offset based on branch position
+        if abs(y) < 0.5:
+            # Main trunk: alternate above and below
+            bus_num = int("".join(filter(str.isdigit, bus_ids[node])) or 0)
+            offset_y = 0.38 if (bus_num % 2 == 1) else -0.38
+        elif y > 0.5:
+            offset_y = 0.38
+        else:
+            offset_y = -0.38
+
+        ax.text(
+            x, y + offset_y, desc,
+            fontsize=7.2, ha="center", va="center",
+            fontweight="semibold", color="#1e3a8a",
+            bbox={"boxstyle": "round,pad=0.2", "facecolor": "white", "edgecolor": "#cbd5e1", "alpha": 0.88, "lw": 0.7}
+        )
 
     # Show line IDs on every candidate line
     edge_id_labels = {
@@ -170,7 +199,7 @@ def main():
     nx.draw_networkx_edge_labels(
         graph, NODES, edge_labels=edge_id_labels, ax=ax,
         font_size=7, font_color="#1e293b", label_pos=0.5,
-        bbox={"alpha": 0.7, "color": "white", "pad": 0.8},
+        bbox={"alpha": 0.75, "color": "white", "pad": 0.8},
     )
 
     if SHOW_LINE_METRICS:
