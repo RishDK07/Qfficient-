@@ -20,17 +20,18 @@
 
 ## 📌 Table of Contents
 1. [Executive Summary & Problem Context](#-executive-summary--problem-context)
-2. [Proven Experimental Outcomes & Claim Reconciliation](#-proven-experimental-outcomes--claim-reconciliation)
-3. [Core Physics & Non-Equilibrium Thermodynamics](#-core-physics--non-equilibrium-thermodynamics)
-4. [Thermodynamic QUBO & Ising Formulation](#-thermodynamic-qubo--ising-formulation)
-5. [Custom Microgrid Generator (10 to 100 Components)](#-custom-microgrid-generator-10-to-100-components)
-6. [Multi-Solver Architecture & Scalable Quantum Annealing](#-multi-solver-architecture--scalable-quantum-annealing)
-7. [Visual Diagnostics & Network Topologies](#-visual-diagnostics--network-topologies)
-8. [Interactive Review Portal (Streamlit 2.0 Web Dashboard)](#-interactive-review-portal-streamlit-20-web-dashboard)
-9. [Minute-by-Minute Engineering Changelog](#-minute-by-minute-engineering-changelog)
-10. [Quickstart & CLI Commands](#-quickstart--cli-commands)
-11. [Repository Architecture](#-repository-architecture)
-12. [License & Citation](#-license--citation)
+2. [Complete Technical Stack & Operational User Manual](#-complete-technical-stack--operational-user-manual)
+3. [Proven Experimental Outcomes & Claim Reconciliation](#-proven-experimental-outcomes--claim-reconciliation)
+4. [Core Physics & Non-Equilibrium Thermodynamics](#-core-physics--non-equilibrium-thermodynamics)
+5. [Thermodynamic QUBO & Ising Formulation](#-thermodynamic-qubo--ising-formulation)
+6. [Custom Microgrid Generator (10 to 100 Components)](#-custom-microgrid-generator-10-to-100-components)
+7. [Multi-Solver Architecture & Scalable Quantum Annealing](#-multi-solver-architecture--scalable-quantum-annealing)
+8. [Visual Diagnostics & Network Topologies](#-visual-diagnostics--network-topologies)
+9. [Interactive Review Portal (Streamlit 2.0 Web Dashboard)](#-interactive-review-portal-streamlit-20-web-dashboard)
+10. [Minute-by-Minute Engineering Changelog](#-minute-by-minute-engineering-changelog)
+11. [Quickstart & CLI Commands](#-quickstart--cli-commands)
+12. [Repository Architecture](#-repository-architecture)
+13. [License & Citation](#-license--citation)
 
 ---
 
@@ -42,6 +43,15 @@ Modern electrical distribution microgrids are experiencing rapid, high-density p
 * **The Classical Reconfiguration Bottleneck**: Traditional Distribution Network Reconfiguration (DNR) relies on static shortest-path heuristics or Mixed-Integer Non-Linear Programming (MINLP). These solvers assume fixed conductor resistances ($R_0$) and take seconds to minutes to converge—making real-time topological adaptation during steep transient ramps ($di/dt$ and $dP/dt$) physically impossible.
 * **Thermal Runaway & Resistance Feedback**: Electric current generates heat quadratically ($P = 3 I^2 R$). As heavy feeder lines heat up under demand surges, conductor resistance rises non-linearly ($R(T) = R_0 [1 + \alpha(T - T_0)]$). This positive feedback loop amplifies voltage sag, triggers line ampacity overloads, and permanently destroys available electrical work (exergy).
 * **The Qfficient Solution**: We reframe dynamic network reconfiguration strictly as an **entropy-generation minimization problem grounded in non-equilibrium thermodynamics**. Dynamic conductor temperatures, transient power injections, and topological radiality constraints are compiled into an Ising spin glass Hamiltonian solved on quantum annealers, simulated quantum annealing (SQA), or exact loss-minimizing classical oracles in milliseconds.
+
+---
+
+## 📖 Complete Technical Stack & Operational User Manual
+
+For a comprehensive, end-to-end technical reference with step-by-step CLI walkthroughs, programmatic Python APIs, technology stack breakdowns, and diagnostic troubleshooting:
+
+* 📄 **Markdown User Manual**: See [`MANUAL.md`](MANUAL.md) for complete file-by-file blueprints, solver parameter guides, and Docker orchestration details.
+* 📑 **Formatted Word Manual**: Download [`QFFICIENT_SYSTEM_MANUAL.docx`](QFFICIENT_SYSTEM_MANUAL.docx) (generated via `python generate_docx_manual.py`) for formatted printing, stakeholder submission, and formal project presentation.
 
 ---
 
@@ -300,6 +310,8 @@ pip install -r requirements.txt
 | Task | Command | Description |
 | :--- | :--- | :--- |
 | **Launch Dashboard** | `streamlit run app.py` | Full interactive review portal & custom grid designer |
+| **Standalone Web Suite**| Open `dashboard.html` | Self-contained single-page executive web app with SVG topology |
+| **Build HTML Dashboard**| `python build_dashboard_html.py` | Compiles simulation telemetry into `dashboard.html` |
 | **Run Benchmark** | `python run_benchmark.py` | 100-scenario statistical evaluation with LaTeX tables |
 | **Custom 60-Bus Grid** | `python run_custom_grid.py --components 60 --ties 6` | Generates 60-component microgrid and runs optimization |
 | **Custom 40-Bus Script** | `python run_custom_40.py` | Evaluates 40-component microgrid with transient plots |
@@ -318,6 +330,12 @@ pip install -r requirements.txt
 
 ```
 Qfficient-/
+├── MANUAL.md                                          # Complete technical stack specification & user manual
+├── QFFICIENT_SYSTEM_MANUAL.docx                       # Comprehensive formatted Word technical manual
+├── generate_docx_manual.py                            # Automated generator for the Word technical manual
+├── dashboard.html                                     # Self-contained executive single-page presentation suite
+├── build_dashboard_html.py                            # Compiler for the executive presentation dashboard
+├── dashboard_data.json                                # Pre-generated multi-grid simulation telemetry
 ├── app.py                                             # Streamlit 2.0 interactive review portal & custom designer
 ├── main_experiment.py                                 # Scientific benchmark runner & figure generator
 ├── run_benchmark.py                                   # 100-scenario research-grade benchmark suite
