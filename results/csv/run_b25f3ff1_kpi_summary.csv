@@ -1,0 +1,7 @@
+metric,baseline_value,qubo_value,delta_value,delta_percent
+total_heat_dissipation_mj,0.158697,0.147126,0.011571,7.29%
+entropy_generation_jk,532.2052,493.4034,38.8018,7.29%
+exergy_destroyed_mj,0.158677,0.147108,0.011569,N/A
+peak_temperature_c,25.16,25.16,0.00,N/A
+voltage_violations,0,0,0,0.0%
+avg_solver_latency_ms,0.67,819.13,818.46,N/A
