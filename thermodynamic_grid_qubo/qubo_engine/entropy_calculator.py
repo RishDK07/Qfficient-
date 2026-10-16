@@ -1,5 +1,5 @@
 import math
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
 from ..grid_engine.thermal_dynamics import ThermodynamicLineModel
 
 class EntropyCalculator:
@@ -74,3 +74,70 @@ class EntropyCalculator:
     def compute_exergy_destruction(self, entropy_joules_per_k: float) -> float:
         """Gouy-Stodola Theorem: Exergy Destroyed = T_0 * S_gen."""
         return self.t0 * entropy_joules_per_k
+
+
+def mesh_branch_currents(
+    grid,
+    injections: Dict[int, Tuple[float, float]],
+    temps_k: Optional[Dict[int, float]] = None,
+) -> Dict[int, float]:
+    """Estimated current (Amps) every candidate line would carry with ALL switches closed (meshed network).
+
+    Solves the complex nodal equations of the fully meshed feeder with constant-power loads linearized at 1.0 pu.
+    Unlike last-step currents, this gives non-zero, physically grounded currents for open tie lines as well
+    (Merlin-Back heuristic relaxation).
+    """
+    import numpy as np
+
+    buses = sorted(grid.graph.nodes)
+    idx = {b: i for i, b in enumerate(buses)}
+    n = len(buses)
+    root = idx[grid.substations[0]]
+
+    Y = np.zeros((n, n), dtype=complex)
+    ys = {}
+
+    for e, line in grid.lines.items():
+        t = line.temp if temps_k is None else temps_k.get(e, line.temp)
+        r = line.r0 * (1.0 + line.alpha * (t - line.t_amb))
+        z = complex(r, line.x0) / grid.z_base_ohm
+        y = 1.0 / z
+        ys[e] = y
+        a, b = idx[line.u], idx[line.v]
+        Y[a, a] += y
+        Y[b, b] += y
+        Y[a, b] -= y
+        Y[b, a] -= y
+
+    # Injections: P + jQ in pu (load is negative injection)
+    s_pu = np.zeros(n, dtype=complex)
+    for b, (p_kw, q_kvar) in injections.items():
+        if b in idx:
+            s_pu[idx[b]] = complex(p_kw, q_kvar) * 1e3 / (grid.s_base_mva * 1e6)
+
+    # Nodal current injection: I_inj = conj(S / V) ~ conj(S) for V ~ 1.0
+    i_inj = np.conj(s_pu)
+
+    # Substation bus voltage is fixed at 1.0 + j0.0 pu (slack bus)
+    keep = [i for i in range(n) if i != root]
+    Y_red = Y[np.ix_(keep, keep)]
+    rhs = i_inj[keep] - Y[keep, root] * 1.0
+
+    try:
+        v_red = np.linalg.solve(Y_red, rhs)
+    except np.linalg.LinAlgError:
+        v_red = np.ones(len(keep), dtype=complex)
+
+    v = np.ones(n, dtype=complex)
+    v[keep] = v_red
+
+    # Branch currents in Amperes: I_ij = |V_i - V_j| / |z_ij| * I_base
+    i_base_amps = (grid.s_base_mva * 1e6) / (np.sqrt(3.0) * grid.v_base_kv * 1e3)
+    currents = {}
+    for e, line in grid.lines.items():
+        a, b = idx[line.u], idx[line.v]
+        delta_v_pu = abs(v[a] - v[b])
+        i_pu = delta_v_pu * abs(ys[e])
+        currents[e] = float(i_pu * i_base_amps)
+
+    return currents

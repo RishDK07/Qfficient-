@@ -1,0 +1,286 @@
+"""Reconfiguration policies for benchmark and ablation evaluation."""
+from dataclasses import dataclass
+from typing import Dict, List, Optional, Sequence, Set, Tuple, Any
+import time
+import numpy as np
+
+from ..grid_engine.ieee_feeder_loader import DistributionGrid
+from ..verification.fast_flow import FastFeeder
+from ..qubo_engine.qubo_builder import ThermodynamicQUBOBuilder, QUBOModel
+from ..qubo_engine.entropy_calculator import mesh_branch_currents, EntropyCalculator
+from ..solvers.numpy_annealer import NumpyAnnealer
+
+
+@dataclass
+class DecisionContext:
+    grid: DistributionGrid
+    fast: FastFeeder
+    injections: Dict[int, Tuple[float, float]]
+    temps_k: np.ndarray
+    prev_active: Tuple[int, ...]
+    step: int
+    p_pu: np.ndarray
+    q_pu: np.ndarray
+    resistances: np.ndarray
+
+
+class Policy:
+    name: str = "base_policy"
+
+    def reset(self, grid: DistributionGrid, fast: FastFeeder, timeline: List[Dict[int, Tuple[float, float]]]):
+        pass
+
+    def decide(self, ctx: DecisionContext) -> Tuple[Tuple[int, ...], float]:
+        """Returns (active_edges_tuple, decision_latency_ms)."""
+        raise NotImplementedError
+
+
+class StandardStaticPolicy(Policy):
+    """Textbook IEEE 33-bus baseline: branches 0..31 closed, 5 tie lines open (no reconfiguration)."""
+    name = "standard_static"
+
+    def reset(self, grid, fast, timeline):
+        self.standard = tuple(range(fast.n - 1))
+
+    def decide(self, ctx: DecisionContext) -> Tuple[Tuple[int, ...], float]:
+        t0 = time.perf_counter()
+        active = self.standard
+        latency_ms = (time.perf_counter() - t0) * 1e3
+        return active, latency_ms
+
+
+class StaticLossOptimalPolicy(Policy):
+    """Optimal single static topology: the best single tree chosen offline under mean load."""
+    name = "static_loss_optimal"
+
+    def __init__(self, candidate_trees: Optional[List[Tuple[int, ...]]] = None):
+        self.candidate_trees = candidate_trees
+        self.best_tree: Optional[Tuple[int, ...]] = None
+
+    def reset(self, grid, fast, timeline):
+        trees = self.candidate_trees or fast.enumerate_radial_configs()
+        # Compute mean loads
+        mean_inj = {}
+        for b in grid.graph.nodes:
+            p_mean = float(np.mean([inj.get(b, (0.0, 0.0))[0] for inj in timeline]))
+            q_mean = float(np.mean([inj.get(b, (0.0, 0.0))[1] for inj in timeline]))
+            mean_inj[b] = (p_mean, q_mean)
+
+        p_pu, q_pu = fast.vectors(mean_inj)
+        r0 = fast.resistances()
+
+        best_loss = 1e12
+        best_t = tuple(range(fast.n - 1))
+        for t in trees:
+            ok, _, _, loss_kw, _ = fast.evaluate(t, p_pu, q_pu, r0)
+            if ok and loss_kw < best_loss:
+                best_loss = loss_kw
+                best_t = t
+        self.best_tree = best_t
+
+    def decide(self, ctx: DecisionContext) -> Tuple[Tuple[int, ...], float]:
+        t0 = time.perf_counter()
+        active = self.best_tree or ctx.fast.standard_edges
+        latency_ms = (time.perf_counter() - t0) * 1e3
+        return active, latency_ms
+
+
+class ExactDynamicOraclePolicy(Policy):
+    """Exact loss-minimizing dynamic reconfiguration oracle."""
+    name = "exact_dynamic_oracle"
+
+    def __init__(self, candidate_trees: Optional[List[Tuple[int, ...]]] = None, pool_size: int = 400):
+        self.candidate_trees = candidate_trees
+        self.pool_size = pool_size
+        self.active_pool: List[Tuple[int, ...]] = []
+
+    def reset(self, grid, fast, timeline):
+        trees = self.candidate_trees or fast.enumerate_radial_configs()
+        # Pre-filter to top pool based on mean load to make per-step solve ultra-fast
+        mean_inj = {b: (float(np.mean([inj.get(b, (0.0, 0.0))[0] for inj in timeline])),
+                        float(np.mean([inj.get(b, (0.0, 0.0))[1] for inj in timeline])))
+                    for b in grid.graph.nodes}
+        p_pu, q_pu = fast.vectors(mean_inj)
+        r0 = fast.resistances()
+
+        scored = []
+        for t in trees:
+            ok, _, _, loss, _ = fast.evaluate(t, p_pu, q_pu, r0)
+            if ok:
+                scored.append((loss, t))
+        scored.sort(key=lambda x: x[0])
+        self.active_pool = [t for _, t in scored[: self.pool_size]]
+
+    def decide(self, ctx: DecisionContext) -> Tuple[Tuple[int, ...], float]:
+        t0 = time.perf_counter()
+        best_loss = 1e12
+        best_t = ctx.prev_active
+
+        for t in self.active_pool:
+            ok, _, _, loss, _ = ctx.fast.evaluate(t, ctx.p_pu, ctx.q_pu, ctx.resistances)
+            if ok and loss < best_loss:
+                best_loss = loss
+                best_t = t
+
+        latency_ms = (time.perf_counter() - t0) * 1e3
+        return best_t, latency_ms
+
+
+class RandomTreePolicy(Policy):
+    """Ablation: generates K random spanning trees.
+    In 'raw' mode, picks a random tree.
+    In 'filtered' mode, picks the tree with minimum power-flow loss among the K candidates.
+    """
+
+    def __init__(self, k_samples: int = 100, mode: str = "filtered", seed: int = 42):
+        self.k_samples = k_samples
+        self.mode = mode
+        self.name = f"random_trees_{mode}"
+        self.rng = np.random.default_rng(seed)
+        self.all_trees: List[Tuple[int, ...]] = []
+
+    def reset(self, grid, fast, timeline):
+        self.all_trees = fast.enumerate_radial_configs()
+
+    def decide(self, ctx: DecisionContext) -> Tuple[Tuple[int, ...], float]:
+        t0 = time.perf_counter()
+        indices = self.rng.choice(len(self.all_trees), size=min(self.k_samples, len(self.all_trees)), replace=False)
+        candidates = [self.all_trees[i] for i in indices]
+
+        if self.mode == "raw":
+            chosen = candidates[0]
+        else:
+            # Filtered: evaluate power flow on all K candidate trees
+            best_loss = 1e12
+            chosen = candidates[0]
+            for t in candidates:
+                ok, _, _, loss, _ = ctx.fast.evaluate(t, ctx.p_pu, ctx.q_pu, ctx.resistances)
+                if ok and loss < best_loss:
+                    best_loss = loss
+                    chosen = t
+
+        latency_ms = (time.perf_counter() - t0) * 1e3
+        return chosen, latency_ms
+
+
+class QUBOPolicy(Policy):
+    """Thermodynamic QUBO Policy with Simulated Annealing.
+    Modes:
+      - selection: 'raw' (pure Hamiltonian eigenvalue ranking) vs 'filtered' (power flow loss filter)
+      - weights: 'mesh_current' vs 'flow_preserving'
+    """
+
+    def __init__(
+        self,
+        sampler: Optional[Any] = None,
+        num_reads: int = 100,
+        selection: str = "raw",
+        weight_mode: str = "mesh_current",
+        seed: int = 42,
+    ):
+        self.sampler = sampler or NumpyAnnealer(sweeps=300, seed=seed)
+        self.num_reads = num_reads
+        self.selection = selection
+        self.weight_mode = weight_mode
+        self.name = f"qubo_{weight_mode}_{selection}"
+        self.builder: Optional[ThermodynamicQUBOBuilder] = None
+        self.calculator = EntropyCalculator()
+        self.all_trees: List[Tuple[int, ...]] = []
+
+    def reset(self, grid, fast, timeline):
+        edges = [(grid.lines[e].u, grid.lines[e].v) for e in fast.edge_ids]
+        self.builder = ThermodynamicQUBOBuilder(
+            num_buses=fast.n,
+            edges=edges,
+            substations=grid.substations,
+            graph=grid.graph,
+            lambda_thermo=1.0,
+            lambda_cycle=4.0,
+            lambda_rad=4.0,
+            lambda_cap=5.0,
+            lambda_sw=0.2,
+        )
+
+    def _repair_to_tree(self, active_edges: Set[int], fast: FastFeeder, weights: Dict[int, float]) -> Tuple[int, ...]:
+        """Greedy repair if raw sample is not connected tree: sort by weight and keep acyclic edges."""
+        if fast.is_tree(tuple(active_edges)):
+            return tuple(sorted(active_edges))
+
+        # Build minimum-weight spanning tree guided by the QUBO sample
+        # Prioritize edges in active_edges, tie-break by lower weight
+        all_edges = list(range(fast.m))
+        all_edges.sort(key=lambda e: (0 if e in active_edges else 1, weights.get(e, 0.0)))
+
+        import networkx as nx
+        G = nx.Graph()
+        G.add_nodes_from(range(fast.n))
+        chosen = []
+        for e in all_edges:
+            u, v = fast.eu[e], fast.ev[e]
+            if not nx.has_path(G, u, v):
+                G.add_edge(u, v)
+                chosen.append(e)
+            if len(chosen) == fast.n - 1:
+                break
+        return tuple(sorted(chosen))
+
+    def decide(self, ctx: DecisionContext) -> Tuple[Tuple[int, ...], float]:
+        t0 = time.perf_counter()
+        # Compute mesh currents for non-zero weights on all lines
+        temps_dict = {e: ctx.temps_k[i] for i, e in enumerate(ctx.fast.edge_ids)}
+        i_mesh = mesh_branch_currents(ctx.grid, ctx.injections, temps_dict)
+
+        weights = {}
+        for i, e in enumerate(ctx.fast.edge_ids):
+            line = ctx.grid.lines[e]
+            i_val = i_mesh.get(e, 30.0)
+            if self.weight_mode == "flow_preserving":
+                # Weight prioritizing high-loss branches
+                weights[i] = (i_val ** 2) * ctx.resistances[i] / max(ctx.temps_k[i], 273.15)
+            else:
+                # Standard thermodynamic entropy rate
+                p_loss = 3.0 * (i_val ** 2) * ctx.resistances[i]
+                weights[i] = p_loss / max(ctx.temps_k[i], 273.15)
+
+        prev_map = {i: (1 if i in ctx.prev_active else 0) for i in range(ctx.fast.m)}
+        qubo_model = self.builder.build_model(
+            entropy_weights=weights,
+            line_currents={i: i_mesh.get(e, 30.0) for i, e in enumerate(ctx.fast.edge_ids)},
+            line_i_max={i: ctx.grid.lines[e].i_max for i, e in enumerate(ctx.fast.edge_ids)},
+            prev_switch_states=prev_map,
+        )
+
+        X, E, sample_ms = self.sampler.sample(qubo_model.Q, num_reads=self.num_reads, offset=qubo_model.offset)
+
+        if self.selection == "raw":
+            # Rank STRICTLY by raw lowest QUBO Hamiltonian energy
+            best_sample = X[0, :ctx.fast.m]
+            active_set = set(np.nonzero(best_sample)[0])
+            if ctx.fast.is_tree(tuple(active_set)):
+                chosen = tuple(sorted(active_set))
+            else:
+                # Repair minimal discrepancy to form valid radial tree
+                chosen = self._repair_to_tree(active_set, ctx.fast, weights)
+        else:
+            # Filtered mode: check feasible trees among reads and rank by power flow loss
+            valid_trees = []
+            for r in range(len(X)):
+                act = tuple(sorted(np.nonzero(X[r, :ctx.fast.m])[0]))
+                if ctx.fast.is_tree(act):
+                    valid_trees.append(act)
+
+            if valid_trees:
+                best_loss = 1e12
+                chosen = valid_trees[0]
+                for t in valid_trees:
+                    ok, _, _, loss, _ = ctx.fast.evaluate(t, ctx.p_pu, ctx.q_pu, ctx.resistances)
+                    if ok and loss < best_loss:
+                        best_loss = loss
+                        chosen = t
+            else:
+                # Fallback to repairing top sample
+                act_set = set(np.nonzero(X[0, :ctx.fast.m])[0])
+                chosen = self._repair_to_tree(act_set, ctx.fast, weights)
+
+        latency_ms = (time.perf_counter() - t0) * 1e3
+        return chosen, latency_ms

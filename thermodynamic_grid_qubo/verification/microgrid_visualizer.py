@@ -11,8 +11,51 @@ if "MPLCONFIGDIR" not in os.environ:
 import matplotlib.pyplot as plt
 import networkx as nx
 
+# 12-Component (Node) Microgrid Topology
+SAMPLE_NODES_12: Dict[str, Tuple[float, float]] = {
+    "Substation": (0.0, 2.0),
+    "Solar Farm": (1.2, 3.4),
+    "Wind Park": (1.2, 0.6),
+    "Battery BESS": (2.2, 2.4),
+    "Junction A": (2.8, 3.5),
+    "Junction B": (2.8, 1.8),
+    "Junction C": (2.8, 0.5),
+    "EV Depot": (4.3, 3.8),
+    "Hospital": (4.3, 2.8),
+    "Data Center": (4.3, 1.9),
+    "Residential": (4.3, 1.0),
+    "Heavy Industry": (4.3, 0.1),
+}
+
+SAMPLE_LINES_12: List[Tuple[str, str, str, float, float]] = [
+    # id, endpoint 1, endpoint 2, loss in kW, flow in kW
+    ("L1", "Substation", "Battery BESS", 1.2, 85.0),
+    ("L2", "Substation", "Junction B", 1.8, 95.0),
+    ("L3", "Solar Farm", "Junction A", 0.8, 48.0),
+    ("L4", "Solar Farm", "Battery BESS", 0.6, 32.0),
+    ("L5", "Wind Park", "Junction C", 0.9, 44.0),
+    ("L6", "Wind Park", "Junction B", 1.1, 26.0),
+    ("L7", "Battery BESS", "Junction A", 0.7, 35.0),
+    ("L8", "Battery BESS", "Junction B", 0.5, 40.0),
+    ("L9", "Junction A", "EV Depot", 1.4, 52.0),
+    ("L10", "Junction A", "Hospital", 0.7, 38.0),
+    ("L11", "Junction B", "Hospital", 1.0, 22.0),
+    ("L12", "Junction B", "Data Center", 0.9, 60.0),
+    ("L13", "Junction B", "Residential", 1.3, 45.0),
+    ("L14", "Junction C", "Residential", 0.8, 30.0),
+    ("L15", "Junction C", "Heavy Industry", 1.5, 70.0),
+    ("L16", "Data Center", "Heavy Industry", 0.6, 20.0),
+]
+
+SAMPLE_SELECTED_LINES_12: Set[str] = {"L1", "L3", "L4", "L5", "L8", "L9", "L10", "L12", "L13", "L15"}
+
+# Default aliases for 12-component microgrid (used by pipeline.py and test suites)
+SAMPLE_NODES: Dict[str, Tuple[float, float]] = SAMPLE_NODES_12
+SAMPLE_LINES: List[Tuple[str, str, str, float, float]] = SAMPLE_LINES_12
+SAMPLE_SELECTED_LINES: Set[str] = SAMPLE_SELECTED_LINES_12
+
 # 33-Component Smart Distribution Microgrid Topology (IEEE 33 Testbed)
-SAMPLE_NODES: Dict[str, Tuple[float, float]] = {
+SAMPLE_NODES_33: Dict[str, Tuple[float, float]] = {
     "Substation (B1)": (0.0, 0.0),
     "Main Feeder (B2)": (1.2, 0.0),
     "West Trunk (B3)": (2.4, 0.0),
@@ -51,7 +94,7 @@ SAMPLE_NODES: Dict[str, Tuple[float, float]] = {
     "Wind Turbine B (B33)": (14.4, 1.8),
 }
 
-SAMPLE_LINES: List[Tuple[str, str, str, float, float]] = [
+SAMPLE_LINES_33: List[Tuple[str, str, str, float, float]] = [
     # Main Trunk (Lines 1-17)
     ("L1", "Substation (B1)", "Main Feeder (B2)", 1.2, 280.0),
     ("L2", "Main Feeder (B2)", "West Trunk (B3)", 2.4, 240.0),
@@ -96,7 +139,7 @@ SAMPLE_LINES: List[Tuple[str, str, str, float, float]] = [
     ("T37", "Rooftop PV Hub (B25)", "Data Center (B29)", 0.7, 45.0),
 ]
 
-SAMPLE_SELECTED_LINES: Set[str] = {
+SAMPLE_SELECTED_LINES_33: Set[str] = {
     "L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9", "L11", "L12", "L13",
     "L14", "L15", "L16", "L17", "L18", "L19", "L20", "L21", "L22", "L23", "L24",
     "L25", "L26", "L27", "L29", "L30", "L31", "L32", "T36", "T37"

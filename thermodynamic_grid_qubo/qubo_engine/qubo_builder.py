@@ -1,6 +1,46 @@
 import dimod
 import networkx as nx
-from typing import Dict, List, Tuple, Optional
+from dataclasses import dataclass
+from typing import Dict, List, Tuple, Optional, Sequence
+import numpy as np
+
+
+def bounded_binary_coeffs(upper_bound: int) -> List[int]:
+    """Generates binary expansion coefficients covering {0, 1, ..., upper_bound}."""
+    coeffs = []
+    power = 1
+    rem = upper_bound
+    while rem > 0:
+        val = min(power, rem)
+        coeffs.append(val)
+        rem -= val
+        power *= 2
+    return coeffs
+
+
+@dataclass
+class QUBOModel:
+    names: List[str]
+    Q: np.ndarray
+    offset: float = 0.0
+    n_edges: int = 37
+
+    def energy(self, X: np.ndarray) -> np.ndarray:
+        X = np.atleast_2d(X).astype(float)
+        return np.einsum("ri,ij,rj->r", X, self.Q, X) + self.offset
+
+    def to_bqm(self):
+        qubo_dict = {}
+        N = self.Q.shape[0]
+        for i in range(N):
+            for j in range(i, N):
+                val = float(self.Q[i, j])
+                if i != j and self.Q[j, i] != 0.0:
+                    val += float(self.Q[j, i])
+                if abs(val) > 1e-12:
+                    qubo_dict[(self.names[i], self.names[j])] = val
+        return dimod.BinaryQuadraticModel.from_qubo(qubo_dict, offset=self.offset)
+
 
 class ThermodynamicQUBOBuilder:
     """
@@ -142,6 +182,82 @@ class ThermodynamicQUBOBuilder:
                 bqm.offset += self.l_sw * float(prev_state)
 
         return bqm
+
+    def build_model(
+        self,
+        entropy_weights: Dict[int, float],
+        line_currents: Optional[Dict[int, float]] = None,
+        line_i_max: Optional[Dict[int, float]] = None,
+        prev_switch_states: Optional[Dict[int, int]] = None,
+    ) -> QUBOModel:
+        """Constructs QUBOModel with binary decision variables and cycle slack variables."""
+        var_names = [f"x_{e}" for e in range(self.num_edges)]
+
+        cycle_slacks: List[List[Tuple[str, int]]] = []
+        for k, ce in enumerate(self.cycle_edge_ids):
+            max_slack = max(len(ce) - 2, 1)
+            coeffs = bounded_binary_coeffs(max_slack)
+            slacks = []
+            for j, c in enumerate(coeffs):
+                s_name = f"s_{k}_{j}"
+                slacks.append((s_name, c))
+                var_names.append(s_name)
+            cycle_slacks.append(slacks)
+
+        N = len(var_names)
+        Q = np.zeros((N, N), dtype=float)
+        offset = 0.0
+        vidx = {name: i for i, name in enumerate(var_names)}
+
+        w_max = max(max(entropy_weights.values()) if entropy_weights else 1.0, 1e-6)
+        for e in range(self.num_edges):
+            w = entropy_weights.get(e, 0.0) / w_max
+            idx = vidx[f"x_{e}"]
+            Q[idx, idx] += self.l_thermo * w
+
+        for ce, slacks in zip(self.cycle_edge_ids, cycle_slacks):
+            target = float(len(ce) - 1)
+            terms = [(vidx[f"x_{e}"], 1.0) for e in ce] + [(vidx[s_name], float(c)) for s_name, c in slacks]
+            offset += self.l_cycle * (target ** 2)
+
+            for i, a_i in terms:
+                Q[i, i] += self.l_cycle * (a_i ** 2 - 2.0 * target * a_i)
+
+            for a in range(len(terms)):
+                i, a_i = terms[a]
+                for b in range(a + 1, len(terms)):
+                    j, a_j = terms[b]
+                    idx1, idx2 = min(i, j), max(i, j)
+                    Q[idx1, idx2] += self.l_cycle * 2.0 * a_i * a_j
+
+        target_edges = float(self.num_buses - len(self.substations))
+        offset += self.l_rad * (target_edges ** 2)
+
+        for e in range(self.num_edges):
+            i = vidx[f"x_{e}"]
+            Q[i, i] += self.l_rad * (1.0 - 2.0 * target_edges)
+
+        for a in range(self.num_edges):
+            for b in range(a + 1, self.num_edges):
+                Q[a, b] += self.l_rad * 2.0
+
+        if line_currents and line_i_max:
+            for e in range(self.num_edges):
+                i_val = line_currents.get(e, 0.0)
+                i_max = line_i_max.get(e, 350.0)
+                if i_val > i_max:
+                    over = (i_val - i_max) / i_max
+                    idx = vidx[f"x_{e}"]
+                    Q[idx, idx] += self.l_cap * (1.0 + 5.0 * (over ** 2))
+
+        if prev_switch_states:
+            for e, prev in prev_switch_states.items():
+                if e < self.num_edges:
+                    idx = vidx[f"x_{e}"]
+                    Q[idx, idx] += self.l_sw * (1.0 - 2.0 * float(prev))
+                    offset += self.l_sw * float(prev)
+
+        return QUBOModel(names=var_names, Q=Q, offset=offset, n_edges=self.num_edges)
 
     def to_ising(self, bqm: dimod.BinaryQuadraticModel) -> Tuple[Dict[str, float], Dict[Tuple[str, str], float], float]:
         """Converts QUBO Binary Quadratic Model into Ising Hamiltonian."""
