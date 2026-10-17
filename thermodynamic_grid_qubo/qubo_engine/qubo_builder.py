@@ -1,7 +1,6 @@
-import dimod
 import networkx as nx
 from dataclasses import dataclass
-from typing import Dict, List, Tuple, Optional, Sequence
+from typing import Dict, List, Tuple, Optional, Sequence, Any
 import numpy as np
 
 
@@ -30,6 +29,7 @@ class QUBOModel:
         return np.einsum("ri,ij,rj->r", X, self.Q, X) + self.offset
 
     def to_bqm(self):
+        import dimod
         qubo_dict = {}
         N = self.Q.shape[0]
         for i in range(N):
@@ -103,11 +103,12 @@ class ThermodynamicQUBOBuilder:
         line_currents: Dict[int, float],
         line_i_max: Dict[int, float],
         prev_switch_states: Optional[Dict[int, int]] = None,
-    ) -> dimod.BinaryQuadraticModel:
+    ):
         """
         Formulates the complete unconstrained BQM using dimod.
         Variables: x_0, x_1, ..., x_{M-1} in {0, 1}
         """
+        import dimod
         bqm = dimod.BinaryQuadraticModel(vartype=dimod.BINARY)
         
         # Initialize all binary switch variables
@@ -116,11 +117,11 @@ class ThermodynamicQUBOBuilder:
 
         # ------------------------------------------------------------------
         # Term 1: Thermodynamic Entropy Dissipation Objective H_thermo(x)
-        # H_thermo(x) = Sum_{e} w_e * x_e, where w_e = P_loss,e / T_e
+        # H_thermo(x) = - Sum_{e} w_e * x_e (loaded lines stay closed)
         # ------------------------------------------------------------------
         for e in range(self.num_edges):
             w = entropy_weights.get(e, 0.0)
-            bqm.add_variable(f"x_{e}", self.l_thermo * w)
+            bqm.add_variable(f"x_{e}", - self.l_thermo * w)
 
         # ------------------------------------------------------------------
         # Term 2: Fundamental Cycle Breaking Constraints H_cycle(x)
@@ -213,7 +214,7 @@ class ThermodynamicQUBOBuilder:
         for e in range(self.num_edges):
             w = entropy_weights.get(e, 0.0) / w_max
             idx = vidx[f"x_{e}"]
-            Q[idx, idx] += self.l_thermo * w
+            Q[idx, idx] -= self.l_thermo * w
 
         for ce, slacks in zip(self.cycle_edge_ids, cycle_slacks):
             target = float(len(ce) - 1)
@@ -259,6 +260,6 @@ class ThermodynamicQUBOBuilder:
 
         return QUBOModel(names=var_names, Q=Q, offset=offset, n_edges=self.num_edges)
 
-    def to_ising(self, bqm: dimod.BinaryQuadraticModel) -> Tuple[Dict[str, float], Dict[Tuple[str, str], float], float]:
+    def to_ising(self, bqm: Any) -> Tuple[Dict[str, float], Dict[Tuple[str, str], float], float]:
         """Converts QUBO Binary Quadratic Model into Ising Hamiltonian."""
         return bqm.to_ising()

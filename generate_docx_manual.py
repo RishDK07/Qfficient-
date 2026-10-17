@@ -202,7 +202,7 @@ def create_document():
     # Section 4: Repository Blueprint
     add_h1("4. Repository Structure & Codebase Blueprint")
     add_code_block(
-        "c:/ep-project/\n"
+        "qfficient/\n"
         "├── app.py                             # Interactive Streamlit Web Portal & Report Card UI\n"
         "├── main_experiment.py                 # Primary simulation & 4-panel transient dynamics figure generator\n"
         "├── run_benchmark.py                   # Multi-scenario statistical benchmark & ablation suite\n"
@@ -360,7 +360,8 @@ def create_document():
 
     # Section 8: Visual Diagrams Embedding
     add_h1("8. Embedded Visual Diagrams & Schematics")
-    microgrid_img = Path("c:/ep-project/optimized_microgrid.png")
+    base_dir = Path(__file__).resolve().parent
+    microgrid_img = base_dir / "optimized_microgrid.png"
     if microgrid_img.exists():
         doc.add_paragraph("Figure 1: 12-Component Smart Microgrid Dynamic Reconfiguration Routing Diagram:")
         doc.add_picture(str(microgrid_img), width=Inches(6.2))
@@ -369,7 +370,7 @@ def create_document():
         p_cap.runs[0].font.italic = True
         doc.add_paragraph().paragraph_format.space_after = Pt(8)
 
-    transient_img = Path("c:/ep-project/thermodynamic_qubo_results.png")
+    transient_img = base_dir / "thermodynamic_qubo_results.png"
     if transient_img.exists():
         doc.add_paragraph("Figure 2: Transient Dynamics & Loss Reduction on IEEE 33-Bus Benchmark:")
         doc.add_picture(str(transient_img), width=Inches(6.2))
@@ -378,7 +379,7 @@ def create_document():
         p_cap2.runs[0].font.italic = True
 
     # Save Document
-    out_file = Path("c:/ep-project/QFFICIENT_SYSTEM_MANUAL.docx")
+    out_file = base_dir / "QFFICIENT_SYSTEM_MANUAL.docx"
     doc.save(str(out_file))
     print(f"Successfully generated Word Document at: {out_file.resolve()}")
 

@@ -85,9 +85,29 @@ class StaticLossOptimalPolicy(Policy):
         return active, latency_ms
 
 
-class ExactDynamicOraclePolicy(Policy):
-    """Exact loss-minimizing dynamic reconfiguration oracle."""
-    name = "exact_dynamic_oracle"
+class BranchExchangePolicy(Policy):
+    """Classical loop-breaking branch exchange reconfiguration (Baran-Wu / Civanlar)."""
+    name = "branch_exchange"
+
+    def __init__(self, max_iterations: int = 5):
+        self.max_iterations = max_iterations
+        self.solver = None
+
+    def reset(self, grid, fast, timeline):
+        from ..solvers.exact_classical_solver import BranchExchangeSolver
+        self.solver = BranchExchangeSolver(grid)
+
+    def decide(self, ctx: DecisionContext) -> Tuple[Tuple[int, ...], float]:
+        t0 = time.perf_counter()
+        switches, _, _ = self.solver.solve_exact_loss_minimizer(ctx.injections, max_iterations=self.max_iterations)
+        active = tuple(sorted([e for e, s in switches.items() if s == 1]))
+        latency_ms = (time.perf_counter() - t0) * 1e3
+        return active, latency_ms
+
+
+class LossOptimalCandidateSearchPolicy(Policy):
+    """Dynamic candidate tree search over top loss-ranked radial configurations."""
+    name = "loss_optimal_candidate_search"
 
     def __init__(self, candidate_trees: Optional[List[Tuple[int, ...]]] = None, pool_size: int = 400):
         self.candidate_trees = candidate_trees
@@ -124,6 +144,10 @@ class ExactDynamicOraclePolicy(Policy):
 
         latency_ms = (time.perf_counter() - t0) * 1e3
         return best_t, latency_ms
+
+
+# Backwards compatibility alias
+ExactDynamicOraclePolicy = LossOptimalCandidateSearchPolicy
 
 
 class RandomTreePolicy(Policy):
@@ -173,13 +197,16 @@ class QUBOPolicy(Policy):
     def __init__(
         self,
         sampler: Optional[Any] = None,
-        num_reads: int = 100,
+        num_reads: int = 50,
+        sweeps: int = 100,
         selection: str = "raw",
         weight_mode: str = "mesh_current",
         seed: int = 42,
     ):
-        self.sampler = sampler or NumpyAnnealer(sweeps=300, seed=seed)
+        self.sampler = sampler or NumpyAnnealer(sweeps=sweeps, seed=seed)
         self.num_reads = num_reads
+        self.sweeps = sweeps
+        self.seed = seed
         self.selection = selection
         self.weight_mode = weight_mode
         self.name = f"qubo_{weight_mode}_{selection}"
@@ -206,10 +233,10 @@ class QUBOPolicy(Policy):
         if fast.is_tree(tuple(active_edges)):
             return tuple(sorted(active_edges))
 
-        # Build minimum-weight spanning tree guided by the QUBO sample
-        # Prioritize edges in active_edges, tie-break by lower weight
+        # Build maximum-conductivity/weight spanning tree guided by the QUBO sample
+        # Prioritize edges in active_edges, tie-break by higher weight (keeping loaded lines closed)
         all_edges = list(range(fast.m))
-        all_edges.sort(key=lambda e: (0 if e in active_edges else 1, weights.get(e, 0.0)))
+        all_edges.sort(key=lambda e: (0 if e in active_edges else 1, -weights.get(e, 0.0)))
 
         import networkx as nx
         G = nx.Graph()

@@ -6,12 +6,11 @@ from ..verification.physics_verifier import PhysicsVerifier
 
 class ExactClassicalSolver:
     """
-    Exact Loss-Minimizing Distribution Network Reconfiguration Baseline Solver.
+    Branch-Exchange Classical Reconfiguration Solver (Baran-Wu / Civanlar Heuristic).
     
     Provides:
-    1. Standard Unreconfigured Baseline: standard IEEE 33 topology (lines 0..31 closed, 32..36 open).
-    2. Exact Classical Loss Minimizer: Civanlar / Baran-Wu optimal loop-breaking branch exchange,
-       evaluating real AC LinDistFlow power flows until global minimum is reached.
+    1. Standard Unreconfigured Baseline: standard nominal feeder topology (branches closed, tie switches open).
+    2. Loop-breaking branch exchange: iterative power-flow guided loop switch swaps across fundamental cycles.
     """
     def __init__(self, grid: DistributionGrid):
         self.grid = grid
@@ -99,3 +98,6 @@ class ExactClassicalSolver:
 
         elapsed_ms = (time.perf_counter() - start_time) * 1000.0
         return current_switches, current_loss, elapsed_ms
+
+
+BranchExchangeSolver = ExactClassicalSolver

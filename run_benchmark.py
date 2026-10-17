@@ -1,12 +1,13 @@
 """Multi-scenario, multi-policy benchmark and statistical verification harness.
 
 Usage:
-    python run_benchmark.py --n 10
-    python run_benchmark.py --n 20 --output-dir results
+    python run_benchmark.py --n 30 --steps 12 --dt 300
+    python run_benchmark.py --from-json --output-dir results
 """
 import argparse
 import json
 import os
+import re
 import sys
 import time
 from pathlib import Path
@@ -28,34 +29,308 @@ from thermodynamic_grid_qubo.grid_engine.ieee_feeder_loader import IEEEFeederLoa
 from thermodynamic_grid_qubo.verification.fast_flow import FastFeeder
 from thermodynamic_grid_qubo.benchmark.policies import (
     StandardStaticPolicy,
+    BranchExchangePolicy,
     StaticLossOptimalPolicy,
-    ExactDynamicOraclePolicy,
+    LossOptimalCandidateSearchPolicy,
     RandomTreePolicy,
     QUBOPolicy,
 )
 from thermodynamic_grid_qubo.benchmark.simulate import Scenario, simulate
 
 
-def run_benchmark(num_scenarios: int = 10, time_steps: int = 40, output_dir: str = "results"):
+POLICY_LABELS = {
+    "standard_static": "Standard Static Baseline (IEEE 33 Default)",
+    "branch_exchange": "Classical Branch Exchange (Baran-Wu)",
+    "static_loss_optimal": "Static Loss-Optimal (Best Single Tree)",
+    "loss_optimal_candidate_search": "Candidate Loss-Optimal Search (Top Trees)",
+    "random_trees_raw": "Random Spanning Trees (Raw)",
+    "random_trees_filtered": "Random Spanning Trees (Filtered)",
+    "qubo_mesh_current_raw": "Thermodynamic QUBO (Raw Ground State)",
+    "qubo_mesh_current_filtered": "Thermodynamic QUBO (Power-Flow Filtered)",
+}
+
+
+def update_readme_from_summary(summary_path: Path, readme_path: Path):
+    """Regenerates the benchmark section of README.md directly from results/benchmark_summary.json."""
+    if not summary_path.exists() or not readme_path.exists():
+        return
+
+    with open(summary_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    summary = data["summary"]
+    hypo = data.get("statistical_tests", {})
+    meta = data.get("metadata", {})
+    n_sc = meta.get("scenarios", 30)
+    n_st = meta.get("steps", 12)
+    dt_s = meta.get("dt_seconds", 300.0)
+
+    rows_md = []
+    for pol_key, label in POLICY_LABELS.items():
+        if pol_key not in summary:
+            continue
+        s = summary[pol_key]
+        h_m = s["heat_mj"]["mean"]
+        h_s = s["heat_mj"]["std"]
+        t_m = s["peak_temp_c"]["mean"]
+        v_m = s["voltage_violation_steps"]["mean"]
+        l_m = s["mean_decision_ms"]["mean"]
+
+        if pol_key == "standard_static":
+            red_str = "*Reference*"
+            p_str = "—"
+        else:
+            h_info = hypo.get(pol_key, {})
+            pct = h_info.get("percent_loss_reduction", 0.0)
+            pval = h_info.get("p_value_paired_t", 1.0)
+            bold = "**" if pct > 0 else ""
+            red_str = f"{bold}{pct:+.2f}%{bold}"
+            p_str = f"{pval:.2e}" if pval < 0.001 else f"{pval:.4f}"
+
+        rows_md.append(f"| **{label}** | ${h_m:.3f} \\pm {h_s:.3f}$ | {red_str} | {p_str} | ${t_m:.1f}^\\circ\\text{{C}}$ | ${v_m:.1f}$ | ${l_m:.2f}\\text{{ ms}}$ |")
+
+    table_body = "\n".join(rows_md)
+
+    be_pct = hypo.get("branch_exchange", {}).get("percent_loss_reduction", 0.0)
+    q_filt_pct = hypo.get("qubo_mesh_current_filtered", {}).get("percent_loss_reduction", 0.0)
+    q_raw_pct = hypo.get("qubo_mesh_current_raw", {}).get("percent_loss_reduction", 0.0)
+    opt_pct = hypo.get("loss_optimal_candidate_search", {}).get("percent_loss_reduction", 0.0)
+
+    new_section = f"""### 1. IEEE 33-Bus Benchmark (Rigorous Research-Grade Evaluation)
+Evaluated across **{n_sc} independent randomized renewable/load fluctuation profiles** over {n_st} time steps ($dt = {dt_s:.1f}\\text{{ s}}$) using IEEE 33-Bus benchmark parameters ($V_{{\\text{{base}}}} = 12.66\\text{{ kV}}$, $S_{{\\text{{base}}}} = 10\\text{{ MVA}}$, ANSI C84.1 voltage band $[0.95, 1.05]\\text{{ p.u.}}$):
+
+| Policy / Algorithm | Total Joule Heat (MJ) [Mean ± Std] | Heat Reduction vs Std. Baseline (%) | $p$-value ($t$-test) | Peak Conductor Temp (°C) | Voltage Violations (steps) | Decision Latency (ms) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+{table_body}
+
+### 2. Scientific Claim Reconciliation & Empirical Findings
+* **Baseline and Branch Exchange**: Relative to the standard IEEE 33 textbook configuration, classical loop branch exchange achieves **{be_pct:+.2f}% loss reduction**, while dynamic candidate tree search achieves **{opt_pct:+.2f}% loss reduction**.
+* **Thermodynamic QUBO Sign Physics**: With the corrected negative linear mapping ($-w_e x_e$), loaded backbone lines are prioritized to stay closed while loop tie-lines with minimum mesh currents are broken. The filtered QUBO achieves **{q_filt_pct:+.2f}% loss reduction**, and raw unconstrained QUBO ground states achieve **{q_raw_pct:+.2f}% loss reduction**.
+* **Filter Necessity in Pure QUBO**: Unconstrained QUBO with quadratic penalty multipliers produces valid trees with low energy, but power-flow filtering evaluates non-linear AC/LinDistFlow losses to ensure high ANSI C84.1 voltage compliance. All numbers above are generated directly from `{summary_path.as_posix()}`."""
+
+    with open(readme_path, "r", encoding="utf-8") as f:
+        readme_content = f.read()
+
+    pattern = r"### 1\. IEEE 33-Bus Benchmark.*?(?=---\n\n## 🔬 Core Physics)"
+    if re.search(pattern, readme_content, flags=re.DOTALL):
+        updated_readme = re.sub(pattern, lambda m: new_section + "\n\n", readme_content, flags=re.DOTALL)
+        with open(readme_path, "w", encoding="utf-8") as f:
+            f.write(updated_readme)
+        print(f"Updated {readme_path} with verified benchmark metrics.")
+
+
+def generate_report_and_plots(
+    raw_results: Dict[str, List[Dict[str, Any]]],
+    output_dir: str = "results",
+    num_scenarios: int = 30,
+    time_steps: int = 12,
+    dt_seconds: float = 300.0,
+    duration_s: float = 0.0,
+):
+    out_path = Path(output_dir)
+    out_path.mkdir(parents=True, exist_ok=True)
+    policy_names = list(raw_results.keys())
+
+    metrics = [
+        "heat_mj",
+        "entropy_kj_per_k",
+        "peak_temp_c",
+        "voltage_violation_steps",
+        "min_voltage_pu",
+        "switch_operations",
+        "mean_decision_ms",
+    ]
+    summary: Dict[str, Dict[str, Any]] = {}
+
+    for name in policy_names:
+        p_data = raw_results[name]
+        summary[name] = {}
+        for m in metrics:
+            vals = np.array([row[m] for row in p_data], dtype=float)
+            summary[name][m] = {
+                "mean": float(np.mean(vals)),
+                "std": float(np.std(vals, ddof=1)) if len(vals) > 1 else 0.0,
+                "median": float(np.median(vals)),
+                "min": float(np.min(vals)),
+                "max": float(np.max(vals)),
+            }
+
+    base_heat = np.array([r["heat_mj"] for r in raw_results["standard_static"]])
+    hypothesis_tests: Dict[str, Any] = {}
+
+    for name in policy_names:
+        if name == "standard_static":
+            continue
+        p_heat = np.array([r["heat_mj"] for r in raw_results[name]])
+        diff = p_heat - base_heat
+        t_stat, p_val_t = stats.ttest_rel(p_heat, base_heat)
+        try:
+            w_stat, p_val_w = stats.wilcoxon(diff)
+        except Exception:
+            w_stat, p_val_w = 0.0, 1.0
+
+        pct_change = float((np.mean(p_heat) - np.mean(base_heat)) / np.mean(base_heat) * 100.0)
+        hypothesis_tests[name] = {
+            "percent_loss_reduction": -pct_change,
+            "paired_t_statistic": float(t_stat),
+            "p_value_paired_t": float(p_val_t),
+            "wilcoxon_statistic": float(w_stat),
+            "p_value_wilcoxon": float(p_val_w),
+            "statistically_significant": bool(p_val_t < 0.05),
+        }
+
+    sum_file = out_path / "benchmark_summary.json"
+    with open(sum_file, "w", encoding="utf-8") as f:
+        json.dump(
+            {
+                "summary": summary,
+                "statistical_tests": hypothesis_tests,
+                "metadata": {
+                    "scenarios": num_scenarios,
+                    "steps": time_steps,
+                    "dt_seconds": dt_seconds,
+                    "duration_s": duration_s,
+                },
+            },
+            f,
+            indent=2,
+        )
+
+    # Boxplots
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 6))
+    labels_fmt = [POLICY_LABELS.get(n, n).replace(" (", "\n(") for n in policy_names]
+
+    heat_data = [[r["heat_mj"] for r in raw_results[name]] for name in policy_names]
+    bp1 = ax1.boxplot(heat_data, vert=True, patch_artist=True, tick_labels=labels_fmt)
+    ax1.set_title("Total Joule Heat Dissipation Across Scenarios (MJ)", fontsize=12, weight="bold")
+    ax1.set_ylabel("Total Heat (MJ)", fontsize=11)
+    ax1.grid(True, alpha=0.3)
+    plt.setp(ax1.get_xticklabels(), rotation=25, ha="right", fontsize=9)
+
+    colors = ["#94a3b8", "#10b981", "#38bdf8", "#6366f1", "#f59e0b", "#eab308", "#f43f5e", "#8b5cf6"]
+    for patch, color in zip(bp1["boxes"], colors[:len(bp1["boxes"])]):
+        patch.set_facecolor(color)
+        patch.set_alpha(0.7)
+
+    lat_data = [[r["mean_decision_ms"] for r in raw_results[name]] for name in policy_names]
+    bp2 = ax2.boxplot(lat_data, vert=True, patch_artist=True, tick_labels=labels_fmt)
+    ax2.set_title("Decision Latency per Step (ms)", fontsize=12, weight="bold")
+    ax2.set_ylabel("Mean Latency (ms)", fontsize=11)
+    ax2.set_yscale("log")
+    ax2.grid(True, alpha=0.3)
+    plt.setp(ax2.get_xticklabels(), rotation=25, ha="right", fontsize=9)
+
+    for patch, color in zip(bp2["boxes"], colors[:len(bp2["boxes"])]):
+        patch.set_facecolor(color)
+        patch.set_alpha(0.7)
+
+    fig.tight_layout()
+    chart_file = out_path / "benchmark_distribution.png"
+    fig.savefig(chart_file, dpi=200, bbox_inches="tight")
+    plt.close(fig)
+
+    # Markdown Report
+    rows_md = []
+    for name in policy_names:
+        s = summary[name]
+        h_m = s["heat_mj"]["mean"]
+        h_s = s["heat_mj"]["std"]
+        t_m = s["peak_temp_c"]["mean"]
+        v_m = s["voltage_violation_steps"]["mean"]
+        l_m = s["mean_decision_ms"]["mean"]
+
+        if name == "standard_static":
+            red_str = "Baseline"
+            p_str = "—"
+        else:
+            red = hypothesis_tests[name]["percent_loss_reduction"]
+            p_val = hypothesis_tests[name]["p_value_paired_t"]
+            red_str = f"{red:+.2f}%"
+            p_str = f"{p_val:.4e}" if p_val < 0.001 else f"{p_val:.4f}"
+
+        rows_md.append(f"| `{name}` | {h_m:.3f} ± {h_s:.3f} | {red_str} | {p_str} | {t_m:.1f}°C | {v_m:.1f} | {l_m:.2f} ms |")
+
+    table_rows_str = "\n".join(rows_md)
+
+    be_h = hypothesis_tests.get("branch_exchange", {})
+    be_pct = be_h.get("percent_loss_reduction", 0.0)
+    be_p = be_h.get("p_value_paired_t", 1.0)
+
+    opt_h = hypothesis_tests.get("loss_optimal_candidate_search", {})
+    opt_pct = opt_h.get("percent_loss_reduction", 0.0)
+    opt_p = opt_h.get("p_value_paired_t", 1.0)
+
+    q_filt_h = hypothesis_tests.get("qubo_mesh_current_filtered", {})
+    q_filt_pct = q_filt_h.get("percent_loss_reduction", 0.0)
+    q_filt_p = q_filt_h.get("p_value_paired_t", 1.0)
+
+    q_raw_h = hypothesis_tests.get("qubo_mesh_current_raw", {})
+    q_raw_pct = q_raw_h.get("percent_loss_reduction", 0.0)
+    q_raw_p = q_raw_h.get("p_value_paired_t", 1.0)
+
+    md_content = f"""# Research-Grade Benchmark & Ablation Study
+
+**Testbed**: IEEE 33-Bus Radial Distribution Network (33 Buses, 37 Branches)  
+**Scenarios**: {num_scenarios} independent randomized renewable/load fluctuation profiles  
+**Time Horizon**: {time_steps} steps ($dt = {dt_seconds:.1f}\\text{{ s}}$) per scenario  
+**Evaluation Standard**: ANSI C84.1 ($V \\in [0.95, 1.05]\\text{{ pu}}$), 3-Phase Joule Heat ($3 I^2 R$)
+
+## 1. Summary Comparison Table
+
+| Policy | Heat (MJ) [Mean ± Std] | Heat Red. vs Std (%) | p-value (t-test) | Peak Temp (°C) | Volt Violations (steps) | Latency (ms) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+{table_rows_str}
+
+## 2. Key Scientific Findings & Claim Reconciliation
+
+1. **Classical Baseline and Branch Exchange**:
+   - The standard baseline is the textbook IEEE 33 nominal configuration (tie lines 32..36 open).
+   - Classical branch exchange (`branch_exchange`) provides a strong, physically valid reconfiguration benchmark, achieving **{be_pct:+.2f}% loss reduction** ($p = {be_p:.2e}$).
+   - The theoretical optimum across pre-filtered candidate topologies (`loss_optimal_candidate_search`) achieves **{opt_pct:+.2f}% loss reduction** ($p = {opt_p:.2e}$).
+
+2. **Thermodynamic QUBO Performance**:
+   - By correctly setting the linear Hamiltonian weights ($-w_e x_e$), loaded lines stay closed, and tie-switches at minimal mesh current points are broken.
+   - Filtered QUBO (`qubo_mesh_current_filtered`) achieves **{q_filt_pct:+.2f}% loss reduction** ($p = {q_filt_p:.2e}$).
+   - Raw QUBO (`qubo_mesh_current_raw`) achieves **{q_raw_pct:+.2f}% loss reduction** ($p = {q_raw_p:.2e}$) without post-hoc power-flow re-ranking.
+
+3. **Methodological Rigor**:
+   - All metrics above are computed dynamically from {num_scenarios} independent randomized scenarios with a {dt_seconds/60.0:.1f}-minute decision interval.
+   - All reported figures are saved directly to `benchmark_summary.json` with zero hard-coded status strings.
+"""
+    report_file = out_path / "BENCHMARK_REPORT.md"
+    with open(report_file, "w", encoding="utf-8") as f:
+        f.write(md_content)
+
+    print(f"Generated results:")
+    print(f" - {sum_file}")
+    print(f" - {chart_file}")
+    print(f" - {report_file}")
+
+    # Also sync README
+    root_readme = Path(__file__).resolve().parent / "README.md"
+    update_readme_from_summary(sum_file, root_readme)
+
+
+def run_benchmark(num_scenarios: int = 30, time_steps: int = 12, dt_seconds: float = 300.0, output_dir: str = "results"):
     out_path = Path(output_dir)
     out_path.mkdir(parents=True, exist_ok=True)
 
-    print(f"=== Starting Multi-Scenario Benchmark ({num_scenarios} scenarios, {time_steps} steps/scenario) ===")
+    print(f"=== Starting Multi-Scenario Benchmark ({num_scenarios} scenarios, {time_steps} steps/scenario, dt={dt_seconds}s) ===")
     grid = IEEEFeederLoader.load_ieee33()
     fast = FastFeeder(grid)
 
-    # Initialize candidate trees once
     candidate_trees = fast.enumerate_radial_configs()
     print(f"Loaded {len(candidate_trees)} IEEE-33 radial spanning trees.")
 
     policies = [
         StandardStaticPolicy(),
+        BranchExchangePolicy(max_iterations=5),
         StaticLossOptimalPolicy(candidate_trees=candidate_trees),
-        ExactDynamicOraclePolicy(candidate_trees=candidate_trees, pool_size=250),
+        LossOptimalCandidateSearchPolicy(candidate_trees=candidate_trees, pool_size=250),
         RandomTreePolicy(k_samples=50, mode="raw", seed=100),
         RandomTreePolicy(k_samples=50, mode="filtered", seed=100),
-        QUBOPolicy(num_reads=50, selection="raw", weight_mode="mesh_current", seed=200),
-        QUBOPolicy(num_reads=50, selection="filtered", weight_mode="mesh_current", seed=200),
+        QUBOPolicy(num_reads=50, sweeps=100, selection="raw", weight_mode="mesh_current", seed=200),
+        QUBOPolicy(num_reads=50, sweeps=100, selection="filtered", weight_mode="mesh_current", seed=200),
     ]
 
     policy_names = [p.name for p in policies]
@@ -64,8 +339,8 @@ def run_benchmark(num_scenarios: int = 10, time_steps: int = 40, output_dir: str
     t0_all = time.time()
     for s_idx in range(num_scenarios):
         seed = 1000 + s_idx
-        sc = Scenario.sample(seed=seed, time_steps=time_steps, dt_seconds=2.0)
-        print(f"Running Scenario {s_idx + 1}/{num_scenarios} (seed={seed})...")
+        sc = Scenario.sample(seed=seed, time_steps=time_steps, dt_seconds=dt_seconds, randomize=True)
+        print(f"[{s_idx + 1:2d}/{num_scenarios}] Running Scenario seed={seed} (cloud={sc.cloud_depth:.2f}, ev={sc.ev_surge_kw:.0f}kW)...")
 
         for p in policies:
             res = simulate(p, sc, grid=grid)
@@ -74,287 +349,25 @@ def run_benchmark(num_scenarios: int = 10, time_steps: int = 40, output_dir: str
     total_bench_s = time.time() - t0_all
     print(f"Benchmark simulation completed in {total_bench_s:.2f} s.")
 
-    # Compute Statistical Summaries
-    metrics = ["heat_mj", "entropy_kj_per_k", "peak_temp_c", "voltage_violation_steps", "min_voltage_pu", "switch_operations", "mean_decision_ms"]
-    summary: Dict[str, Dict[str, Any]] = {}
-
-    for name in policy_names:
-        p_data = raw_results[name]
-        summary[name] = {}
-        for m in metrics:
-            vals = np.array([row[m] for row in p_data], dtype=float)
-            summary[name][m] = {
-                "mean": float(np.mean(vals)),
-                "std": float(np.std(vals, ddof=1)) if len(vals) > 1 else 0.0,
-                "median": float(np.median(vals)),
-                "min": float(np.min(vals)),
-                "max": float(np.max(vals)),
-            }
-
-    # Paired Hypothesis Tests against Standard Static Baseline
-    base_heat = np.array([r["heat_mj"] for r in raw_results["standard_static"]])
-    hypothesis_tests: Dict[str, Any] = {}
-
-    for name in policy_names:
-        if name == "standard_static":
-            continue
-        p_heat = np.array([r["heat_mj"] for r in raw_results[name]])
-        diff = p_heat - base_heat
-        # Paired t-test
-        t_stat, p_val_t = stats.ttest_rel(p_heat, base_heat)
-        # Wilcoxon signed-rank test
-        try:
-            w_stat, p_val_w = stats.wilcoxon(diff)
-        except Exception:
-            w_stat, p_val_w = 0.0, 1.0
-
-        pct_change = float((np.mean(p_heat) - np.mean(base_heat)) / np.mean(base_heat) * 100.0)
-        hypothesis_tests[name] = {
-            "percent_loss_reduction": -pct_change,
-            "paired_t_statistic": float(t_stat),
-            "p_value_paired_t": float(p_val_t),
-            "wilcoxon_statistic": float(w_stat),
-            "p_value_wilcoxon": float(p_val_w),
-            "statistically_significant": bool(p_val_t < 0.05),
-        }
-
-    # Save JSON files
     raw_file = out_path / "benchmark_raw.json"
-    with open(raw_file, "w") as f:
+    with open(raw_file, "w", encoding="utf-8") as f:
         json.dump(raw_results, f, indent=2)
 
-    sum_file = out_path / "benchmark_summary.json"
-    with open(sum_file, "w") as f:
-        json.dump({"summary": summary, "statistical_tests": hypothesis_tests, "metadata": {"scenarios": num_scenarios, "steps": time_steps, "duration_s": total_bench_s}}, f, indent=2)
-
-    # Generate Boxplot
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
-
-    labels_fmt = [n.replace("_", "\n") for n in policy_names]
-
-    # Heat distribution
-    heat_data = [[r["heat_mj"] for r in raw_results[name]] for name in policy_names]
-    bp1 = ax1.boxplot(heat_data, vert=True, patch_artist=True, tick_labels=labels_fmt)
-    ax1.set_title("Total Joule Heat Dissipation Across Scenarios (MJ)", fontsize=13, weight="bold")
-    ax1.set_ylabel("Total Heat (MJ)", fontsize=11)
-    ax1.grid(True, alpha=0.3)
-
-    colors = ["#94a3b8", "#38bdf8", "#22c55e", "#f59e0b", "#eab308", "#f43f5e", "#8b5cf6"]
-    for patch, color in zip(bp1['boxes'], colors):
-        patch.set_facecolor(color)
-        patch.set_alpha(0.7)
-
-    # Latency distribution
-    lat_data = [[r["mean_decision_ms"] for r in raw_results[name]] for name in policy_names]
-    bp2 = ax2.boxplot(lat_data, vert=True, patch_artist=True, tick_labels=labels_fmt)
-    ax2.set_title("Decision Latency per Step (ms)", fontsize=13, weight="bold")
-    ax2.set_ylabel("Mean Latency (ms)", fontsize=11)
-    ax2.set_yscale("log")
-    ax2.grid(True, alpha=0.3)
-
-    for patch, color in zip(bp2['boxes'], colors):
-        patch.set_facecolor(color)
-        patch.set_alpha(0.7)
-
-    fig.tight_layout()
-    chart_file = out_path / "benchmark_distribution.png"
-    fig.savefig(chart_file, dpi=200, bbox_inches="tight")
-    plt.close(fig)
-
-    # Generate Markdown Report
-    md_content = f"""# Research-Grade Benchmark & Ablation Study
-
-**Testbed**: IEEE 33-Bus Radial Distribution Network (33 Buses, 37 Branches)  
-**Scenarios**: {num_scenarios} independent renewable/load fluctuation profiles  
-**Time Horizon**: {time_steps} steps ($dt = 2.0\\text{{ s}}$) per scenario  
-**Evaluation Standard**: ANSI C84.1 ($V \\in [0.95, 1.05]\\text{{ pu}}$), 3-Phase Joule Heat ($3 I^2 R$)
-
-## 1. Summary Comparison Table
-
-| Policy | Heat (MJ) [Mean ± Std] | Heat Red. vs Std (%) | p-value (t-test) | Peak Temp (°C) | Volt Violations (steps) | Latency (ms) |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-"""
-    for name in policy_names:
-        s = summary[name]
-        h_m = s["heat_mj"]["mean"]
-        h_s = s["heat_mj"]["std"]
-        t_m = s["peak_temp_c"]["mean"]
-        v_m = s["voltage_violation_steps"]["mean"]
-        l_m = s["mean_decision_ms"]["mean"]
-
-        if name == "standard_static":
-            red_str = "Baseline"
-            p_str = "—"
-        else:
-            red = hypothesis_tests[name]["percent_loss_reduction"]
-            p_val = hypothesis_tests[name]["p_value_paired_t"]
-            red_str = f"{red:+.2f}%"
-            p_str = f"{p_val:.4e}" if p_val < 0.001 else f"{p_val:.4f}"
-
-        md_content += f"| `{name}` | {h_m:.3f} ± {h_s:.3f} | {red_str} | {p_str} | {t_m:.1f}°C | {v_m:.1f} | {l_m:.2f} ms |\n"
-
-    md_content += """
-## 2. Key Scientific Findings & Claim Reconciliation
-
-1. **Reconciliation of the "22.27% / 22.5%" Improvement Claim**:
-   - In earlier iterations, the reported 22.5% heat reduction compared the solution against an artificial static-resistance MST strawman (271.7 kW loss), rather than the **standard textbook IEEE 33 configuration** (196.9 kW loss).
-   - Furthermore, the candidate selection applied a post-hoc power-flow ranking that selected the minimum-loss tree among all samples.
-   
-2. **True Reconfiguration Performance**:
-   - **Exact Dynamic Oracle** (`exact_dynamic_oracle`) establishes the theoretical optimum: **~28.5% loss reduction** relative to the standard static baseline with sub-50 ms decision latency.
-   - **Random Trees with Power Flow Filtering** (`random_trees_filtered`) achieves **~19% to 22% reduction**, proving that sampling spanning trees and evaluating LinDistFlow loss is sufficient to find high-performing configurations.
-   - **Raw QUBO Formulation** (`qubo_mesh_current_raw`) finds valid radial spanning trees, but because it relies on a linearized mesh-current proxy objective ($H = \\sum w_e x_e$) and quadratic penalty multipliers, its raw lowest-energy state does not minimize non-linear AC/LinDistFlow losses as effectively as direct power flow optimization.
-
-3. **Publication-Ready Conclusion**:
-   - The thermodynamic entropy mapping provides a rigorous physical formulation for representing distribution grid topologies on Ising/QUBO architectures.
-   - For real-time deployment, exact classical branch-exchange or hybrid QUBO-screening with LinDistFlow validation provides provable convergence, ANSI C84.1 compliance, and mathematically defensible energy attribution.
-"""
-    report_file = out_path / "BENCHMARK_REPORT.md"
-    with open(report_file, "w") as f:
-        f.write(md_content)
-
-def generate_report_and_plots(raw_results: Dict[str, List[Dict[str, Any]]], output_dir: str = "results", num_scenarios: int = 5, time_steps: int = 25, duration_s: float = 0.0):
-    out_path = Path(output_dir)
-    out_path.mkdir(parents=True, exist_ok=True)
-    policy_names = list(raw_results.keys())
-
-    metrics = ["heat_mj", "entropy_kj_per_k", "peak_temp_c", "voltage_violation_steps", "min_voltage_pu", "switch_operations", "mean_decision_ms"]
-    summary: Dict[str, Dict[str, Any]] = {}
-
-    for name in policy_names:
-        p_data = raw_results[name]
-        summary[name] = {}
-        for m in metrics:
-            vals = np.array([row[m] for row in p_data], dtype=float)
-            summary[name][m] = {
-                "mean": float(np.mean(vals)),
-                "std": float(np.std(vals, ddof=1)) if len(vals) > 1 else 0.0,
-                "median": float(np.median(vals)),
-                "min": float(np.min(vals)),
-                "max": float(np.max(vals)),
-            }
-
-    base_heat = np.array([r["heat_mj"] for r in raw_results["standard_static"]])
-    hypothesis_tests: Dict[str, Any] = {}
-
-    for name in policy_names:
-        if name == "standard_static":
-            continue
-        p_heat = np.array([r["heat_mj"] for r in raw_results[name]])
-        diff = p_heat - base_heat
-        t_stat, p_val_t = stats.ttest_rel(p_heat, base_heat)
-        try:
-            w_stat, p_val_w = stats.wilcoxon(diff)
-        except Exception:
-            w_stat, p_val_w = 0.0, 1.0
-
-        pct_change = float((np.mean(p_heat) - np.mean(base_heat)) / np.mean(base_heat) * 100.0)
-        hypothesis_tests[name] = {
-            "percent_loss_reduction": -pct_change,
-            "paired_t_statistic": float(t_stat),
-            "p_value_paired_t": float(p_val_t),
-            "wilcoxon_statistic": float(w_stat),
-            "p_value_wilcoxon": float(p_val_w),
-            "statistically_significant": bool(p_val_t < 0.05),
-        }
-
-    sum_file = out_path / "benchmark_summary.json"
-    with open(sum_file, "w") as f:
-        json.dump({"summary": summary, "statistical_tests": hypothesis_tests, "metadata": {"scenarios": num_scenarios, "steps": time_steps, "duration_s": duration_s}}, f, indent=2)
-
-    # Boxplots
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
-    labels_fmt = [n.replace("_", "\n") for n in policy_names]
-
-    heat_data = [[r["heat_mj"] for r in raw_results[name]] for name in policy_names]
-    bp1 = ax1.boxplot(heat_data, vert=True, patch_artist=True, tick_labels=labels_fmt)
-    ax1.set_title("Total Joule Heat Dissipation Across Scenarios (MJ)", fontsize=13, weight="bold")
-    ax1.set_ylabel("Total Heat (MJ)", fontsize=11)
-    ax1.grid(True, alpha=0.3)
-
-    colors = ["#94a3b8", "#38bdf8", "#22c55e", "#f59e0b", "#eab308", "#f43f5e", "#8b5cf6"]
-    for patch, color in zip(bp1['boxes'], colors):
-        patch.set_facecolor(color)
-        patch.set_alpha(0.7)
-
-    lat_data = [[r["mean_decision_ms"] for r in raw_results[name]] for name in policy_names]
-    bp2 = ax2.boxplot(lat_data, vert=True, patch_artist=True, tick_labels=labels_fmt)
-    ax2.set_title("Decision Latency per Step (ms)", fontsize=13, weight="bold")
-    ax2.set_ylabel("Mean Latency (ms)", fontsize=11)
-    ax2.set_yscale("log")
-    ax2.grid(True, alpha=0.3)
-
-    for patch, color in zip(bp2['boxes'], colors):
-        patch.set_facecolor(color)
-        patch.set_alpha(0.7)
-
-    fig.tight_layout()
-    chart_file = out_path / "benchmark_distribution.png"
-    fig.savefig(chart_file, dpi=200, bbox_inches="tight")
-    plt.close(fig)
-
-    md_content = f"""# Research-Grade Benchmark & Ablation Study
-
-**Testbed**: IEEE 33-Bus Radial Distribution Network (33 Buses, 37 Branches)  
-**Scenarios**: {num_scenarios} independent renewable/load fluctuation profiles  
-**Time Horizon**: {time_steps} steps ($dt = 2.0\\text{{ s}}$) per scenario  
-**Evaluation Standard**: ANSI C84.1 ($V \\in [0.95, 1.05]\\text{{ pu}}$), 3-Phase Joule Heat ($3 I^2 R$)
-
-## 1. Summary Comparison Table
-
-| Policy | Heat (MJ) [Mean ± Std] | Heat Red. vs Std (%) | p-value (t-test) | Peak Temp (°C) | Volt Violations (steps) | Latency (ms) |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-"""
-    for name in policy_names:
-        s = summary[name]
-        h_m = s["heat_mj"]["mean"]
-        h_s = s["heat_mj"]["std"]
-        t_m = s["peak_temp_c"]["mean"]
-        v_m = s["voltage_violation_steps"]["mean"]
-        l_m = s["mean_decision_ms"]["mean"]
-
-        if name == "standard_static":
-            red_str = "Baseline"
-            p_str = "—"
-        else:
-            red = hypothesis_tests[name]["percent_loss_reduction"]
-            p_val = hypothesis_tests[name]["p_value_paired_t"]
-            red_str = f"{red:+.2f}%"
-            p_str = f"{p_val:.4e}" if p_val < 0.001 else f"{p_val:.4f}"
-
-        md_content += f"| `{name}` | {h_m:.3f} ± {h_s:.3f} | {red_str} | {p_str} | {t_m:.1f}°C | {v_m:.1f} | {l_m:.2f} ms |\n"
-
-    md_content += """
-## 2. Key Scientific Findings & Claim Reconciliation
-
-1. **Reconciliation of the "22.27% / 22.5%" Improvement Claim**:
-   - In earlier iterations, the reported 22.5% heat reduction compared the solution against an artificial static-resistance MST strawman (271.7 kW loss), rather than the **standard textbook IEEE 33 configuration** (196.9 kW loss).
-   - Furthermore, the candidate selection applied a post-hoc power-flow ranking that selected the minimum-loss tree among all samples.
-   
-2. **True Reconfiguration Performance**:
-   - **Exact Dynamic Oracle** (`exact_dynamic_oracle`) establishes the theoretical optimum: **~28.4% loss reduction** relative to the standard static baseline ($p = 2.15 \\times 10^{-8}$) with sub-50 ms decision latency.
-   - **Random Trees with Power Flow Filtering** (`random_trees_filtered`) achieves **~20.1% loss reduction** ($p = 4.37 \\times 10^{-7}$), confirming that random sampling combined with power-flow selection finds effective configurations.
-   - **Raw QUBO Formulation** (`qubo_mesh_current_raw`) finds valid radial spanning trees, but because it relies on a linearized mesh-current proxy objective ($H = \\sum w_e x_e$) and quadratic penalty multipliers, its raw lowest-energy state does not minimize non-linear AC/LinDistFlow losses as effectively as direct power flow optimization.
-
-3. **Publication-Ready Conclusion**:
-   - The thermodynamic entropy mapping provides a rigorous physical formulation for representing distribution grid topologies on Ising/QUBO architectures.
-   - For real-time deployment, exact classical branch-exchange or hybrid QUBO-screening with LinDistFlow validation provides provable convergence, ANSI C84.1 compliance, and mathematically defensible energy attribution.
-"""
-    report_file = out_path / "BENCHMARK_REPORT.md"
-    with open(report_file, "w") as f:
-        f.write(md_content)
-
-    print(f"Generated results:")
-    print(f" - {sum_file}")
-    print(f" - {chart_file}")
-    print(f" - {report_file}")
-    print(md_content)
+    generate_report_and_plots(
+        raw_results,
+        output_dir=output_dir,
+        num_scenarios=num_scenarios,
+        time_steps=time_steps,
+        dt_seconds=dt_seconds,
+        duration_s=total_bench_s,
+    )
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--n", type=int, default=5, help="Number of scenarios")
-    parser.add_argument("--steps", type=int, default=25, help="Time steps per scenario")
+    parser.add_argument("--n", type=int, default=30, help="Number of scenarios (default: 30)")
+    parser.add_argument("--steps", type=int, default=12, help="Time steps per scenario (default: 12)")
+    parser.add_argument("--dt", type=float, default=300.0, help="Decision interval in seconds (default: 300)")
     parser.add_argument("--output-dir", type=str, default="results", help="Output directory")
     parser.add_argument("--from-json", action="store_true", help="Generate from existing benchmark_raw.json")
     args = parser.parse_args()
@@ -362,10 +375,16 @@ if __name__ == "__main__":
     if args.from_json:
         raw_p = Path(args.output_dir) / "benchmark_raw.json"
         if raw_p.exists():
-            with open(raw_p) as f:
+            with open(raw_p, "r", encoding="utf-8") as f:
                 data = json.load(f)
-            generate_report_and_plots(data, output_dir=args.output_dir, num_scenarios=len(next(iter(data.values()))), time_steps=args.steps)
+            generate_report_and_plots(
+                data,
+                output_dir=args.output_dir,
+                num_scenarios=len(next(iter(data.values()))),
+                time_steps=args.steps,
+                dt_seconds=args.dt,
+            )
         else:
-            print("No existing benchmark_raw.json found.")
+            print(f"No existing benchmark_raw.json found at {raw_p}.")
     else:
-        run_benchmark(num_scenarios=args.n, time_steps=args.steps, output_dir=args.output_dir)
+        run_benchmark(num_scenarios=args.n, time_steps=args.steps, dt_seconds=args.dt, output_dir=args.output_dir)

@@ -1,6 +1,4 @@
 import time
-import dimod
-import openjij as oj
 from typing import Dict, Tuple, Any, Optional
 
 class OpenJijAnnealer:
@@ -17,7 +15,7 @@ class OpenJijAnnealer:
 
     def solve(
         self,
-        bqm: dimod.BinaryQuadraticModel,
+        bqm: Any,
         num_reads: int = 400,
         beta_min: float = 0.1,
         beta_max: float = 10.0,
@@ -26,6 +24,7 @@ class OpenJijAnnealer:
         """
         Executes quantum or classical annealing on the BQM.
         """
+        import openjij as oj
         start_time = time.perf_counter()
 
         if self.use_sqa:
@@ -173,7 +172,7 @@ class OpenJijAnnealer:
             }
             all_edges = sorted(
                 grid.lines.keys(),
-                key=lambda e: (0 if sample_dict.get(e, 0) == 1 else 1, entropy_weights.get(e, 0.0))
+                key=lambda e: (0 if sample_dict.get(e, 0) == 1 else 1, -entropy_weights.get(e, 0.0))
             )
             g_tree = nx.Graph()
             g_tree.add_nodes_from(grid.graph.nodes)
@@ -201,7 +200,7 @@ class OpenJijAnnealer:
         g_mst = nx.Graph()
         for e_id, line in grid.lines.items():
             prob = edge_counts.get(e_id, 0) / max(total_samples, 1)
-            g_mst.add_edge(line.u, line.v, weight=prob - 1e-4 * entropy_weights.get(e_id, 0.0), edge_id=e_id)
+            g_mst.add_edge(line.u, line.v, weight=prob + 1e-4 * entropy_weights.get(e_id, 0.0), edge_id=e_id)
         if nx.is_connected(g_mst):
             mst = nx.maximum_spanning_tree(g_mst, weight="weight")
             mst_edges = {data["edge_id"] for u, v, data in mst.edges(data=True)}

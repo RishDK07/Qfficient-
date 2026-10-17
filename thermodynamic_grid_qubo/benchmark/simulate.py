@@ -11,8 +11,8 @@ from .policies import Policy, DecisionContext
 @dataclass
 class Scenario:
     seed: int
-    time_steps: int = 60
-    dt_seconds: float = 2.0
+    time_steps: int = 12
+    dt_seconds: float = 300.0
     cloud_depth: float = 0.70
     ev_surge_kw: float = 600.0
     load_scale: float = 1.0
@@ -22,44 +22,54 @@ class Scenario:
     def sample(
         cls,
         seed: int = 42,
-        time_steps: int = 60,
-        dt_seconds: float = 2.0,
-        cloud_depth: float = 0.70,
-        ev_surge_kw: float = 600.0,
-        load_scale: float = 1.0,
+        time_steps: int = 12,
+        dt_seconds: float = 300.0,
+        cloud_depth: Optional[float] = None,
+        ev_surge_kw: Optional[float] = None,
+        load_scale: Optional[float] = None,
+        randomize: bool = True,
     ) -> "Scenario":
         rng = np.random.default_rng(seed)
         grid = IEEEFeederLoader.load_ieee33()
 
         timeline: List[Dict[int, Tuple[float, float]]] = []
 
-        # Cloud transient window (PV drop)
-        cloud_start = int(time_steps * 0.25)
-        cloud_end = int(time_steps * 0.65)
-
-        # EV surge window
-        ev_start = int(time_steps * 0.40)
-        ev_end = int(time_steps * 0.85)
+        if randomize:
+            c_depth = float(rng.uniform(0.35, 0.85)) if cloud_depth is None else cloud_depth
+            ev_surge = float(rng.uniform(350.0, 850.0)) if ev_surge_kw is None else ev_surge_kw
+            l_scale = float(rng.uniform(0.85, 1.15)) if load_scale is None else load_scale
+            cloud_start = int(time_steps * rng.uniform(0.15, 0.35))
+            cloud_end = max(cloud_start + 2, int(time_steps * rng.uniform(0.55, 0.80)))
+            ev_start = int(time_steps * rng.uniform(0.25, 0.45))
+            ev_end = max(ev_start + 2, int(time_steps * rng.uniform(0.70, 0.95)))
+        else:
+            c_depth = 0.70 if cloud_depth is None else cloud_depth
+            ev_surge = 600.0 if ev_surge_kw is None else ev_surge_kw
+            l_scale = 1.0 if load_scale is None else load_scale
+            cloud_start = int(time_steps * 0.25)
+            cloud_end = int(time_steps * 0.65)
+            ev_start = int(time_steps * 0.40)
+            ev_end = int(time_steps * 0.85)
 
         for step in range(time_steps):
             # Slow load variation with subtle noise
-            step_load_factor = load_scale * (1.0 + 0.05 * np.sin(2.0 * np.pi * step / time_steps) + rng.normal(0, 0.015))
+            step_load_factor = l_scale * (1.0 + 0.05 * np.sin(2.0 * np.pi * step / time_steps) + rng.normal(0, 0.015))
 
             # Solar PV generation profile with cloud attenuation
             if cloud_start <= step <= cloud_end:
                 dip_phase = (step - cloud_start) / max(cloud_end - cloud_start, 1)
-                pv_factor = 1.0 - cloud_depth * np.sin(np.pi * dip_phase)
+                pv_factor = 1.0 - c_depth * np.sin(np.pi * dip_phase)
             else:
                 pv_factor = 1.0 + 0.05 * rng.normal(0, 1.0)
             pv_factor = max(0.05, pv_factor)
 
             # Wind generation fluctuation
-            wind_factor = max(0.2, 0.85 + 0.3 * np.sin(2.0 * np.pi * step / (time_steps * 0.5)) + 0.1 * rng.normal(0, 1.0))
+            wind_factor = max(0.2, 0.85 + 0.3 * np.sin(2.0 * np.pi * step / max(time_steps * 0.5, 1)) + 0.1 * rng.normal(0, 1.0))
 
             # EV depot load surge
             if ev_start <= step <= ev_end:
-                ev_factor = np.sin(np.pi * (step - ev_start) / (ev_end - ev_start))
-                ev_add_kw = ev_surge_kw * max(0.0, ev_factor)
+                ev_factor = np.sin(np.pi * (step - ev_start) / max(ev_end - ev_start, 1))
+                ev_add_kw = ev_surge * max(0.0, ev_factor)
             else:
                 ev_add_kw = 0.0
 
@@ -88,9 +98,9 @@ class Scenario:
             seed=seed,
             time_steps=time_steps,
             dt_seconds=dt_seconds,
-            cloud_depth=cloud_depth,
-            ev_surge_kw=ev_surge_kw,
-            load_scale=load_scale,
+            cloud_depth=c_depth,
+            ev_surge_kw=ev_surge,
+            load_scale=l_scale,
             timeline=timeline,
         )
 

@@ -238,12 +238,29 @@ def export_markdown_report(result: Dict[str, Any], output_dir: Path) -> Path:
     status_entropy = 'Reduced' if sumry['entropy_reduction_pct'] >= 0 else 'Nominal'
     tree_status = 'PASSED (All trees connected with N-1 active branches)' if result['checks']['radial_all_steps'] else 'FAILED'
     
+    status_temp = "Thermal Relief" if sumry['peak_temp_reduction_c'] >= 0 else "Temperature Rise"
+    v_viol_b = b.get('voltage_violations', 0)
+    v_viol_q = q.get('voltage_violations', 0)
+    status_volt = "100% Compliant" if v_viol_q == 0 else f"{v_viol_q} Violations"
+    b_volt_str = "100% Compliant" if v_viol_b == 0 else f"{v_viol_b} Violations"
+    delta_volt_str = "0 Violations" if v_viol_q == 0 else f"{v_viol_q - v_viol_b:+d} Violations"
+    volt_security = "Strict Security" if v_viol_q == 0 else "Non-Compliant"
+    latency_feasible = "Real-time Feasible" if q['avg_latency_ms'] < 1000.0 else "Batch Mode"
+    latency_target = "< 1.0s" if q['avg_latency_ms'] < 1000.0 else "> 1.0s"
+
+    duration_s = result["time_s"][-1] if result["time_s"] else 0.0
+    reconfigs = result['checks']['reconfigurations']
+    if reconfigs > 0:
+        telemetry_narrative = f"Over the {duration_s:.0f}-second simulation horizon, the solver dynamically executed {reconfigs} switch operations, transferring power flows across parallel tie lines."
+    else:
+        telemetry_narrative = f"Over the {duration_s:.0f}-second simulation horizon, the solver maintained the baseline radial topology with 0 switch operations."
+
     md_content = f"""# Thermodynamic QUBO Grid Optimization Report
 
 **Run Identifier:** `{run_id}`  
 **Network Architecture:** {grid['title']}  
 **Dimension:** {grid['n_buses']} Buses | {grid['n_lines']} Total Lines | {grid['n_ties']} Tie Switches  
-**QUBO Variables:** {grid['n_qubo_vars']} Binary Spins | {grid['n_couplings']} Quadratic Couplers  
+**QUBO Variables:** {grid['n_qubo_vars']} Binary Decision Variables | {grid['n_couplings']} Couplers  
 **Solver Engine:** {result['solver_label']}  
 **Execution Timestamp:** {time.strftime('%Y-%m-%d %H:%M:%S')}  
 
@@ -251,13 +268,13 @@ def export_markdown_report(result: Dict[str, Any], output_dir: Path) -> Path:
 
 ## 1. Executive Summary
 
-This report evaluates the thermodynamic loss minimization of a **{n_buses}-bus radial distribution grid** subject to time-varying photovoltaic generation and concentrated electric vehicle charging surges. Using Quantum-Inspired Annealing (Simulated Quantum Annealing / SQA), the distribution topology was dynamically reconfigured via tie switches to minimize non-equilibrium Joule heat dissipation $\\dot{{Q}} = \\sum I_e^2 R_e$ while strictly satisfying radiality, Kirchhoff's current/voltage laws, and ANSI C84.1 voltage tolerances.
+This report evaluates the thermodynamic loss minimization of a **{n_buses}-bus radial distribution grid** subject to time-varying photovoltaic generation and concentrated electric vehicle charging surges. The distribution topology was evaluated to minimize non-equilibrium Joule heat dissipation $\\dot{{Q}} = \\sum 3 I_e^2 R_e$ while evaluating radiality, Kirchhoff's current/voltage laws, and ANSI C84.1 voltage tolerances.
 
 ### Key Performance Indicators (KPIs)
 * **Total Joule Heat Saved:** `{sumry['heat_reduction_pct']:+.2f}%` ({heat_saved_kj:.2f} kJ)
 * **Entropy Generation Reduction:** `{sumry['entropy_reduction_pct']:+.2f}%` ({entropy_red_jk:.2f} J/K)
 * **Exergy Preserved:** `{exergy_saved_kj:.2f} kJ` of available electrical work
-* **ANSI C84.1 Voltage Violations:** `0 violations` across all time steps (0.95 <= V_pu <= 1.05)
+* **ANSI C84.1 Voltage Violations:** `{v_viol_q} violations` across all time steps (0.95 <= V_pu <= 1.05)
 * **Mean Solver Dispatch Latency:** `{q['avg_latency_ms']:.1f} ms` per reconfiguration cycle
 
 ---
@@ -269,17 +286,17 @@ This report evaluates the thermodynamic loss minimization of a **{n_buses}-bus r
 | **Total Joule Dissipation** | `{b['total_heat_mj']:.4f} MJ` | `{q['total_heat_mj']:.4f} MJ` | `{sumry['heat_reduction_pct']:+.2f}%` | {status_heat} |
 | **Thermodynamic Entropy (S_gen)** | `{b['total_entropy_jk']:.2f} J/K` | `{q['total_entropy_jk']:.2f} J/K` | `{sumry['entropy_reduction_pct']:+.2f}%` | {status_entropy} |
 | **Exergy Destruction (B_dest)** | `{b['exergy_destroyed_mj']:.4f} MJ` | `{q['exergy_destroyed_mj']:.4f} MJ` | `+{exergy_saved_kj:.2f} kJ preserved` | Preserved |
-| **Peak Conductor Temp** | `{b['peak_temp_c']:.2f} °C` | `{q['peak_temp_c']:.2f} °C` | `ΔT = {sumry['peak_temp_reduction_c']:+.2f} °C` | Thermal Safe |
-| **ANSI C84.1 Voltage Security** | `100% Compliant` | `100% Compliant` | `0 Violations` | Strict Security |
-| **Mean Solver Latency** | `{b['avg_latency_ms']:.2f} ms` | `{q['avg_latency_ms']:.1f} ms` | Real-time Feasible | < 1.0s |
+| **Peak Conductor Temp** | `{b['peak_temp_c']:.2f} °C` | `{q['peak_temp_c']:.2f} °C` | `ΔT = {sumry['peak_temp_reduction_c']:+.2f} °C` | {status_temp} |
+| **ANSI C84.1 Voltage Security** | `{b_volt_str}` | `{status_volt}` | `{delta_volt_str}` | {volt_security} |
+| **Mean Solver Latency** | `{b['avg_latency_ms']:.2f} ms` | `{q['avg_latency_ms']:.1f} ms` | {latency_feasible} | {latency_target} |
 
 ---
 
 ## 3. Dynamic Reconfiguration Telemetry
 
-Over the 40-second simulation horizon, the quantum annealer transferred power flows from overloaded radial trunks to parallel tie lines.
+{telemetry_narrative}
 
-* **Total Breaker Switch Operations:** `{result['checks']['reconfigurations']}` operations
+* **Total Breaker Switch Operations:** `{reconfigs}` operations
 * **Active Radial Tree Constraint Check:** `{tree_status}`
 * **Branch Overload Occurrences:** `{result['checks']['overload_line_steps_qubo']}` overloads (Baseline: `{result['checks']['overload_line_steps_base']}`)
 
@@ -287,7 +304,7 @@ Over the 40-second simulation horizon, the quantum annealer transferred power fl
 
 ## 4. Engineering Takeaway
 
-By formulating the feeder reconfiguration problem in QUBO space with thermodynamic penalty bounds, the system prevents localized conductor heating and Joule losses without violating graph radiality. Conductor thermal dissipation is reduced, preserving useful exergy and maintaining grid stability during peak EV and solar transient events.
+By formulating the feeder reconfiguration problem with thermodynamic penalty bounds, the system seeks to prevent localized conductor heating and Joule losses without violating graph radiality. Conductor thermal dissipation is tracked, preserving useful exergy and maintaining grid stability during peak EV and solar transient events.
 """
     with open(report_path, "w", encoding="utf-8") as f:
         f.write(md_content)
@@ -406,11 +423,16 @@ def print_terminal_results(result: Dict[str, Any], output_paths: Optional[Dict[s
     print(banner)
 
     # 2. Grid Architecture Table
+    qubo_desc = (
+        f"{grid['n_qubo_vars']} Binary Decision Variables | {grid['n_couplings']} Couplers | {grid['n_cycles']} Cycles"
+        if grid['n_qubo_vars'] > 0
+        else "Classical Power-Flow Search / Branch Exchange"
+    )
     dim_rows = [
         [f"{Style.BOLD}Grid Model{Style.RESET}", grid["title"]],
         [f"{Style.BOLD}Network Dimensions{Style.RESET}", f"{grid['n_buses']} Buses | {grid['n_lines']} Total Branches | {grid['n_ties']} Available Tie Switches"],
-        [f"{Style.BOLD}QUBO Formulation{Style.RESET}", f"{grid['n_qubo_vars']} Binary Decision Variables | {grid['n_couplings']} Quadratic Couplers | {grid['n_cycles']} Fundamental Cycles"],
-        [f"{Style.BOLD}Optimization Engine{Style.RESET}", f"{result['solver_label']} (SQA Monte Carlo sweeps)"],
+        [f"{Style.BOLD}QUBO Formulation{Style.RESET}", qubo_desc],
+        [f"{Style.BOLD}Optimization Engine{Style.RESET}", f"{result['solver_label']}"],
         [f"{Style.BOLD}Radiality Integrity{Style.RESET}", f"{Style.BRIGHT_GREEN}STRICTLY RADIAL (All {len(result['time_s'])} steps connected, 0 cycles){Style.RESET}" if result['checks']['radial_all_steps'] else f"{Style.BRIGHT_RED}VIOLATION DETECTED{Style.RESET}"],
         [f"{Style.BOLD}Breaker Operations{Style.RESET}", f"{result['checks']['reconfigurations']} dynamic switch operations executed"],
         [f"{Style.BOLD}Total Wallclock Runtime{Style.RESET}", f"{result['runtime_s']:.2f} seconds"]
@@ -421,6 +443,19 @@ def print_terminal_results(result: Dict[str, Any], output_paths: Optional[Dict[s
     # 3. Technical & Thermodynamic Benchmark Table
     heat_color = Style.BRIGHT_GREEN if sumry['heat_reduction_pct'] >= 0 else Style.BRIGHT_YELLOW
     heat_sign = "+" if sumry['heat_reduction_pct'] >= 0 else ""
+
+    temp_delta = sumry['peak_temp_reduction_c']
+    temp_status = f"{Style.BRIGHT_GREEN}Thermal Relief ({temp_delta:+.2f} °C){Style.RESET}" if temp_delta >= 0 else f"{Style.YELLOW}Conductor Heated ({temp_delta:+.2f} °C){Style.RESET}"
+
+    v_viol_b = b.get('voltage_violations', 0)
+    v_viol_q = q.get('voltage_violations', 0)
+    b_v_str = f"100% Compliant (0 Viols)" if v_viol_b == 0 else f"{v_viol_b} Viols"
+    q_v_str = f"100% Compliant (0 Viols)" if v_viol_q == 0 else f"{v_viol_q} Viols"
+    v_delta_color = Style.BRIGHT_GREEN if v_viol_q <= v_viol_b else Style.BRIGHT_RED
+    v_delta_str = f"{v_delta_color}{v_viol_q - v_viol_b:+d} Viols{Style.RESET}" if v_viol_q != v_viol_b else f"{Style.BRIGHT_GREEN}Baseline Preserved{Style.RESET}"
+
+    lat_str = f"{Style.BRIGHT_CYAN}Real-Time Feasible (< 1.0s){Style.RESET}" if q['avg_latency_ms'] < 1000.0 else f"{Style.YELLOW}Batch Feasible ({q['avg_latency_ms']/1000:.1f}s){Style.RESET}"
+
     bench_rows = [
         [
             f"{Style.BOLD}Total Joule Heat Dissipation{Style.RESET}",
@@ -444,19 +479,19 @@ def print_terminal_results(result: Dict[str, Any], output_paths: Optional[Dict[s
             f"{Style.BOLD}Peak Conductor Temperature{Style.RESET}",
             f"{b['peak_temp_c']:.2f} °C",
             f"{q['peak_temp_c']:.2f} °C",
-            f"{Style.BRIGHT_GREEN}Thermal Hotspots Mitigated{Style.RESET}"
+            f"{temp_status}"
         ],
         [
             f"{Style.BOLD}ANSI C84.1 Voltage Security{Style.RESET}",
-            f"100% Compliant (0 Viols)",
-            f"100% Compliant (0 Viols)",
-            f"{Style.BRIGHT_GREEN}0 Over/Under Voltage Viols{Style.RESET}"
+            f"{b_v_str}",
+            f"{q_v_str}",
+            f"{v_delta_str}"
         ],
         [
             f"{Style.BOLD}Mean Solver Dispatch Latency{Style.RESET}",
             f"{b['avg_latency_ms']:.2f} ms",
             f"{q['avg_latency_ms']:.1f} ms",
-            f"{Style.BRIGHT_CYAN}Real-Time Feasible (< 1.0s){Style.RESET}"
+            f"{lat_str}"
         ],
     ]
     print(box_table("2. THERMODYNAMIC & OPERATIONAL BENCHMARK", ["Metric Dimension", "Baseline Radial", "Thermodynamic QUBO", "Optimization Delta"], bench_rows, ["left", "right", "right", "right"]))
@@ -524,8 +559,8 @@ def main():
     parser.add_argument("--sweep", action="store_true", help="Run parametric scaling sweep across sizes [20, 40, 60, 80, 100]")
     parser.add_argument("--no-csv", action="store_true", help="Disable CSV dataset export")
     parser.add_argument("--no-report", action="store_true", help="Disable Markdown report export")
-    parser.add_argument("--no-figures", action="store_true", help="Disable publication plot export")
-    parser.add_argument("--output-dir", "-o", type=str, default=r"c:\ep-project\results", help="Directory for exported outputs")
+    default_results = str(Path(__file__).resolve().parent.parent / "results")
+    parser.add_argument("--output-dir", "-o", type=str, default=default_results, help="Directory for exported outputs")
 
     args = parser.parse_args()
     out_dir = Path(args.output_dir)

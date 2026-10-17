@@ -20,7 +20,7 @@ import numpy as np
 from .grid_engine.ieee_feeder_loader import DistributionGrid, IEEEFeederLoader
 from .grid_engine.custom_grid_generator import generate_custom_grid
 from .grid_engine.renewable_simulator import RenewableProfileSimulator
-from .qubo_engine.entropy_calculator import EntropyCalculator
+from .qubo_engine.entropy_calculator import EntropyCalculator, mesh_branch_currents
 from .qubo_engine.penalty_tuner import PenaltyTuner
 from .qubo_engine.qubo_builder import ThermodynamicQUBOBuilder
 from .solvers.classical_baseline import ClassicalBaselineSolver
@@ -46,11 +46,11 @@ GRID_CHOICES = {
     "custom": "Custom User-Defined Microgrid",
 }
 SOLVER_CHOICES = {
-    "exact_oracle": "Exact Loss-Minimizing Reconfiguration (Baran-Wu Optimum)",
+    "exact_oracle": "Classical Branch-Exchange Search (Baran-Wu Heuristic)",
     "numpy_annealer": "NumPy Vectorized Annealer (Native, Fast)",
     "sqa": "OpenJij Simulated Quantum Annealing (SQA)",
     "neal": "D-Wave Neal (Simulated Annealing)",
-    "classical": "Classical Minimum-Resistance Baseline",
+    "classical": "Standard Textbook Radial Baseline",
 }
 
 
@@ -213,7 +213,7 @@ class ParametricScenario(RenewableProfileSimulator):
 # ---------------------------------------------------------------------------
 # Solver dispatch
 # ---------------------------------------------------------------------------
-def _anneal(solver: str, annealer: OpenJijAnnealer, bqm, num_reads: int):
+def _anneal(solver: str, annealer: OpenJijAnnealer, bqm, num_reads: int, seed: Optional[int] = None):
     """Returns (energy, latency_ms, response) for sqa / neal / numpy_annealer."""
     if solver == "sqa":
         _s, energy, ms, resp = annealer.solve(bqm, num_reads=num_reads)
@@ -228,13 +228,13 @@ def _anneal(solver: str, annealer: OpenJijAnnealer, bqm, num_reads: int):
         q_mat = np.zeros((N, N), dtype=float)
         for (u, v), val in Q.items():
             q_mat[vmap[u], vmap[v]] = val
-        X, E, sample_ms = NumpyAnnealer(sweeps=80).sample(q_mat, num_reads=num_reads, offset=offset)
+        X, E, sample_ms = NumpyAnnealer(sweeps=80, seed=seed or 42).sample(q_mat, num_reads=num_reads, offset=offset)
         samples = [{var_list[i]: int(X[r, i]) for i in range(N)} for r in range(len(X))]
         resp = dimod.SampleSet.from_samples(samples, vartype=dimod.BINARY, energy=E)
         return float(E[0]), sample_ms, resp
     import neal
     t0 = time.perf_counter()
-    resp = neal.SimulatedAnnealingSampler().sample(bqm, num_reads=num_reads)
+    resp = neal.SimulatedAnnealingSampler().sample(bqm, num_reads=num_reads, seed=seed)
     return float(resp.first.energy), (time.perf_counter() - t0) * 1000.0, resp
 
 
@@ -311,7 +311,7 @@ def run_optimization(
             loss_kw.append(3.0 * i_act ** 2 * line.resistance() / 1000.0)  # 3-phase, as in power flow
             temp = line.update_transient_temperature(i_act, dt_seconds=dt)
             temps.append(temp - 273.15)
-            q_j = (i_act ** 2) * line.resistance() * dt   # same convention as main_experiment.py
+            q_j = 3.0 * (i_act ** 2) * line.resistance() * dt   # 3-phase heat
             heat_j += q_j
             ent += q_j / max(temp, 273.15)
         return heat_j / 1e6, ent, temps, loss_kw
@@ -344,7 +344,6 @@ def run_optimization(
                          "line_loss_kw", "switches", "toggles", "latency_ms", "energy")}
     qubo_viol = qubo_over = 0
     active = copy.deepcopy(base_switches)
-    currents_q = {e: 120.0 for e in grid_qubo.lines}
     n_vars = n_couplings = n_cycles = 0
 
     for t in range(T):
@@ -356,17 +355,19 @@ def run_optimization(
             ms = (time.perf_counter() - t0) * 1000.0
             energy = best_loss
         elif cfg.solver != "classical":
-            weights = entropy_calc.compute_all_entropy_weights(grid_qubo.lines, currents_q)
+            temps_dict = {e: grid_qubo.lines[e].temp for e in edge_ids}
+            i_mesh = mesh_branch_currents(grid_qubo, scenario[t], temps_dict)
+            weights = entropy_calc.compute_all_entropy_weights(grid_qubo.lines, i_mesh)
             lam = tuner.calibrate(weights, num_buses)
             builder = ThermodynamicQUBOBuilder(
                 num_buses=num_buses, edges=edges, substations=grid_qubo.substations,
                 graph=grid_qubo.graph, lambda_thermo=lam["lambda_thermo"], lambda_cycle=lam["lambda_cycle"],
                 lambda_rad=lam["lambda_rad"], lambda_cap=lam["lambda_cap"], lambda_sw=lam["lambda_sw"],
             )
-            bqm = builder.build_bqm(weights, currents_q, {e: l.i_max for e, l in grid_qubo.lines.items()}, active)
+            bqm = builder.build_bqm(weights, i_mesh, {e: l.i_max for e, l in grid_qubo.lines.items()}, active)
             if t == 0:
                 n_vars, n_couplings, n_cycles = len(bqm.variables), len(bqm.quadratic), len(builder.cycle_edge_ids)
-            energy, ms, resp = _anneal(cfg.solver, annealer, bqm, cfg.num_reads)
+            energy, ms, resp = _anneal(cfg.solver, annealer, bqm, cfg.num_reads, seed=cfg.seed)
             active = annealer.extract_optimal_tree(resp, grid_qubo, weights, injections=scenario[t], current_switches=active)
         else:
             energy, ms = 0.0, base_latency_ms

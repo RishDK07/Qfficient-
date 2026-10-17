@@ -7,9 +7,9 @@ dynamic switching animations, loss comparison charts, and executive KPI cards.
 import json
 from pathlib import Path
 
-DATA_PATH = Path(r"c:\ep-project\dashboard_data.json")
-OUTPUT_HTML = Path(r"c:\ep-project\dashboard.html")
-ARTIFACT_HTML = Path(r"C:\Users\Manoj\.gemini\antigravity\brain\54ff33d8-6e1a-4e9b-aecc-51bbbdd092b5\executive_dashboard.html")
+BASE_DIR = Path(__file__).resolve().parent
+DATA_PATH = BASE_DIR / "dashboard_data.json"
+OUTPUT_HTML = BASE_DIR / "dashboard.html"
 
 with open(DATA_PATH, "r", encoding="utf-8") as f:
     dashboard_data_str = f.read()
@@ -1001,11 +1001,3 @@ html_template = f"""<!DOCTYPE html>
 with open(OUTPUT_HTML, "w", encoding="utf-8") as f:
     f.write(html_template)
 print(f"Generated standalone dashboard: {OUTPUT_HTML} ({len(html_template)} bytes)")
-
-# Also write to artifact path if dir exists
-try:
-    with open(ARTIFACT_HTML, "w", encoding="utf-8") as f:
-        f.write(html_template)
-    print(f"Generated artifact dashboard: {ARTIFACT_HTML}")
-except Exception as e:
-    print(f"Artifact write error: {e}")

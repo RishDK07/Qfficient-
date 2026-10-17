@@ -58,7 +58,7 @@ Conductors heat up quadratically with electric current ($P = 3 I^2 R$). High lin
 | **Interactive UI** | **Streamlit** | `>=1.35.0` | Web dashboard with interactive parameter sliders, topology viewer, and real-time report cards. |
 | **Visualization** | **Matplotlib** | `>=3.8.0` | 300-DPI publication figures, 4-panel transient dynamics plots, and microgrid network layouts. |
 | **CLI Formatting** | **tabulate** | `>=0.10.0` | Formatted terminal output tables for simulation summaries. |
-| **Test Automation** | **pytest** | `>=8.0.0` | 17 unit and physics validation tests ensuring radiality and mathematical integrity. |
+| **Test Automation** | **pytest** | `>=8.0.0` | 23 unit, physics validation, and report integrity tests ensuring radiality, flow sign, and empirical data correspondence. |
 | **Containerization** | **Docker & Docker Compose** | Multi-stage | Containerization based on `python:3.11-slim` with healthcheck orchestration. |
 
 ---
@@ -87,9 +87,9 @@ Where conductor resistance updates non-linearly: $R_e(T_e) = R_{0,e} \cdot [1 + 
 ### 3.4 Master Hamiltonian Assembly
 For binary switch variables $x_e \in \{0, 1\}$ ($1 = \text{closed}, 0 = \text{open}$):
 
-$$H(x) = \lambda_{\text{thermo}} H_{\text{thermo}}(x) + \lambda_{\text{cycle}} H_{\text{cycle}}(x) + \lambda_{\text{rad}} H_{\text{rad}}(x) + \lambda_{\text{cap}} H_{\text{cap}}(x) + \lambda_{\text{sw}} H_{\text{sw}}(x)$$
+$$H(x) = -\lambda_{\text{thermo}} H_{\text{thermo}}(x) + \lambda_{\text{cycle}} H_{\text{cycle}}(x) + \lambda_{\text{rad}} H_{\text{rad}}(x) + \lambda_{\text{cap}} H_{\text{cap}}(x) + \lambda_{\text{sw}} H_{\text{sw}}(x)$$
 
-1. **Thermodynamic Objective**: $H_{\text{thermo}}(x) = \sum_{e \in E} w_e x_e$, where $w_e = \frac{3 I_e^2 R_e(T_e)}{T_e}$.
+1. **Thermodynamic Objective**: $H_{\text{thermo}}(x) = \sum_{e \in E} w_e x_e$, where $w_e = \frac{3 I_e^2 R_e(T_e)}{T_e}$. In energy minimization $\min H(x)$, the negative linear coefficient $-\lambda_{\text{thermo}} w_e$ prioritizes keeping loaded, low-resistance distribution branches closed ($x_e = 1$) rather than forcing current through high-resistance detours.
 2. **Fundamental Cycle-Breaking**: For each independent loop $C_k$, enforce exactly one open switch:
    $$H_{\text{cycle}}(x) = \sum_{k} \left(\sum_{e \in C_k} x_e - (|C_k| - 1)\right)^2$$
 3. **Radiality / Spanning Tree Constraint**: Enforce $|V| - N_{\text{sub}}$ active branches:
@@ -268,18 +268,18 @@ python run_custom_60.py
 Executes a multi-scenario statistical ablation study with Student's $t$-tests and p-value validation.
 
 ```bash
-# Run benchmark across 5 scenarios:
-python run_benchmark.py --n 5
+# Run 30-scenario statistical benchmark across 8 policies with 5-minute decision intervals:
+python run_benchmark.py --n 30 --output-dir results
 
-# Comprehensive study across 20 scenarios into a custom output folder:
-python run_benchmark.py --n 20 --output-dir results
+# Custom scenario batch:
+python run_benchmark.py --n 10 --output-dir results
 ```
 
 **Outputs Created in `results/`**:
-- `results/BENCHMARK_REPORT.md`: Comprehensive markdown report.
-- `results/benchmark_summary.json`: Mean, std dev, and p-value statistical summaries.
-- `results/benchmark_raw.json`: Complete raw step-by-step logs.
-- `results/benchmark_distribution.png`: Scatter and distribution comparison chart.
+- `results/BENCHMARK_REPORT.md`: Comprehensive markdown report generated dynamically from JSON.
+- `results/benchmark_summary.json`: Mean, std dev, paired t-tests, and p-value statistical summaries.
+- `results/benchmark_raw.json`: Complete raw step-by-step telemetry logs.
+- `results/benchmark_distribution.png`: Cumulative energy dissipation distribution chart.
 
 ---
 
@@ -298,7 +298,7 @@ thermo-qubo-gui
 ---
 
 ### 6.6 Automated Test Suite Execution (pytest)
-Runs 17 unit and physics verification tests across 4 modules.
+Runs 23 unit, physics verification, and scientific integrity tests across 5 modules.
 
 ```bash
 # Run all tests:
@@ -312,20 +312,24 @@ Runs 17 unit and physics verification tests across 4 modules.
 .venv\Scripts\python.exe -m pytest tests/test_fast_flow.py
 .venv\Scripts\python.exe -m pytest tests/test_pipeline.py
 .venv\Scripts\python.exe -m pytest tests/test_qubo_grid.py
+.venv\Scripts\python.exe -m pytest tests/test_report_integrity.py
 ```
 
 ---
 
 ## 7. Solver Engines & Policy Comparative Analysis
 
-| Policy / Solver Identifier | Algorithm Description | Loss Reduction | ANSI C84.1 Compliant | Mean Latency | Primary Application |
-| :--- | :--- | :---: | :---: | :---: | :--- |
-| `exact_dynamic_oracle` | Global exact loss minimization via dynamic branch-exchange | **+28.37%** | Yes | 38.98 ms | Theoretical upper-bound benchmark. |
-| `static_loss_optimal` | Loss-optimal static spanning tree without dynamic switching | **+27.87%** | Yes | 0.00 ms | High-efficiency static baseline. |
-| `sqa` (OpenJij) | Simulated Quantum Annealing with transverse field schedule | **Dynamic** | Yes | ~330 ms | Real-time quantum-inspired solving. |
-| `numpy_annealer` | Vectorized local-search simulated annealing | **Dynamic** | Yes | ~15 ms | High-speed local embedded solver. |
-| `dwave_qpu_runner` | Physical quantum annealer (D-Wave Advantage) via Leap API | **Dynamic** | Yes | Cloud | Hardware quantum execution. |
-| `standard_static` | Unreconfigured standard textbook network (tie switches open) | **0.00%** | Baseline | 0.00 ms | Real-world legacy baseline. |
+Empirical results from 30 randomized scenarios ($dt = 300\text{ s}$, 12 steps = 1-hour horizon) on the IEEE 33-bus benchmark network:
+
+| Policy / Solver Identifier | Algorithm Description | Dissipation (MJ) | Loss Reduction vs Baseline | ANSI Violations | Mean Latency | Primary Application |
+| :--- | :--- | :---: | :---: | :---: | :---: | :--- |
+| `loss_optimal_candidate_search` | Global candidate tree loss minimization (50k radial trees) | **261.62 ± 60.11** | **+29.06%** ($p = 1.22 \times 10^{-19}$) | 0.00 steps | 41.2 ms | Global theoretical bound. |
+| `static_loss_optimal` | Optimal fixed radial configuration (tie switches 7-9, 14-34, 32-33 open) | **265.72 ± 61.20** | **+27.95%** ($p = 3.51 \times 10^{-19}$) | 0.00 steps | 0.00 ms | High-efficiency static planning. |
+| `branch_exchange` | Classical Baran-Wu / Civanlar loop branch exchange heuristic | **292.36 ± 69.20** | **+20.73%** ($p = 5.45 \times 10^{-20}$) | 3.40 steps | 1.8 ms | Fast utility baseline. |
+| `qubo_filtered` | Thermodynamic QUBO with Kruskal thermal repair heuristic | **355.40 ± 88.46** | **+3.64%** ($p = 0.0194$) | 7.00 steps | 55.4 ms | Near-term hybrid quantum reconfiguration. |
+| `standard_static` | Textbook nominal radial topology (tie switches open) | **368.81 ± 87.58** | **0.00%** (Baseline) | 7.43 steps | 0.00 ms | Unreconfigured legacy utility baseline. |
+| `qubo_raw` | Thermodynamic QUBO raw binary samples (unrepaired) | **409.08 ± 107.88** | **-10.92%** ($p = 0.0016$) | 11.23 steps | 54.8 ms | Raw Hamiltonian spin formulation. |
+| `random_trees_raw` | Random uniform spanning tree selections | **842.12 ± 187.67** | **-128.34%** | 10.37 steps | 0.8 ms | Stochastic null model. |
 
 ### D-Wave QPU Hardware Submission
 To execute the QUBO on physical quantum hardware:

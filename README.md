@@ -58,19 +58,23 @@ For a comprehensive, end-to-end technical reference with step-by-step CLI walkth
 ## 🏆 Proven Experimental Outcomes & Claim Reconciliation
 
 ### 1. IEEE 33-Bus Benchmark (Rigorous Research-Grade Evaluation)
-Evaluated across **5 independent renewable/load fluctuation profiles** over 25 time steps ($dt = 2.0\text{ s}$) using IEEE 33-Bus benchmark parameters ($V_{\text{base}} = 12.66\text{ kV}$, $S_{\text{base}} = 10\text{ MVA}$, ANSI C84.1 voltage band $[0.95, 1.05]\text{ p.u.}$):
+Evaluated across **30 independent randomized renewable/load fluctuation profiles** over 12 time steps ($dt = 300.0\text{ s}$) using IEEE 33-Bus benchmark parameters ($V_{\text{base}} = 12.66\text{ kV}$, $S_{\text{base}} = 10\text{ MVA}$, ANSI C84.1 voltage band $[0.95, 1.05]\text{ p.u.}$):
 
 | Policy / Algorithm | Total Joule Heat (MJ) [Mean ± Std] | Heat Reduction vs Std. Baseline (%) | $p$-value ($t$-test) | Peak Conductor Temp (°C) | Voltage Violations (steps) | Decision Latency (ms) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Standard Static Baseline** (IEEE 33 default) | $4.980 \pm 0.068$ | *Reference* | — | $26.5^\circ\text{C}$ | $18.4$ | $0.00\text{ ms}$ |
-| **Static Loss-Optimal** (Best static tree) | $3.592 \pm 0.045$ | **$+27.87\%$** | $3.34 \times 10^{-8}$ | $26.0^\circ\text{C}$ | $5.4$ | $0.00\text{ ms}$ |
-| **Exact Dynamic Oracle** (`exact_oracle`) | **$3.567 \pm 0.045$** | **$+28.37\%$** | **$2.15 \times 10^{-8}$** | **$25.9^\circ\text{C}$** | **$5.2$** | **$38.98\text{ ms}$** |
-| **Random Spanning Trees (Filtered)** | $3.981 \pm 0.065$ | $+20.06\%$ | $4.37 \times 10^{-7}$ | $26.0^\circ\text{C}$ | $4.6$ | $8.35\text{ ms}$ |
-| **Thermodynamic QUBO (Ensemble SQA)** | $3.470 \pm 0.052$ | **$+22.54\%$** | $6.12 \times 10^{-4}$ | $27.3^\circ\text{C}$ | $29.0$ | $85.40\text{ ms}$ |
+| **Standard Static Baseline (IEEE 33 Default)** | $368.805 \pm 87.578$ | *Reference* | — | $47.3^\circ\text{C}$ | $7.4$ | $0.00\text{ ms}$ |
+| **Classical Branch Exchange (Baran-Wu)** | $292.359 \pm 69.195$ | **+20.73%** | 5.45e-20 | $44.6^\circ\text{C}$ | $3.4$ | $78.10\text{ ms}$ |
+| **Static Loss-Optimal (Best Single Tree)** | $265.718 \pm 61.197$ | **+27.95%** | 3.51e-19 | $38.7^\circ\text{C}$ | $3.3$ | $0.00\text{ ms}$ |
+| **Candidate Loss-Optimal Search (Top Trees)** | $261.623 \pm 61.079$ | **+29.06%** | 1.22e-19 | $38.9^\circ\text{C}$ | $3.0$ | $62.99\text{ ms}$ |
+| **Random Spanning Trees (Raw)** | $842.111 \pm 259.067$ | -128.34% | 6.32e-14 | $56.7^\circ\text{C}$ | $10.3$ | $0.05\text{ ms}$ |
+| **Random Spanning Trees (Filtered)** | $292.410 \pm 72.627$ | **+20.71%** | 2.96e-22 | $39.7^\circ\text{C}$ | $3.2$ | $12.55\text{ ms}$ |
+| **Thermodynamic QUBO (Raw Ground State)** | $409.083 \pm 107.876$ | -10.92% | 2.39e-04 | $43.7^\circ\text{C}$ | $6.6$ | $241.38\text{ ms}$ |
+| **Thermodynamic QUBO (Power-Flow Filtered)** | $355.396 \pm 88.464$ | **+3.64%** | 0.0194 | $42.7^\circ\text{C}$ | $5.7$ | $250.02\text{ ms}$ |
 
-### 2. Scientific Claim Reconciliation
-* **Empirical Verification of the 22.5% Claim**: Early iterations reported a 22.5% reduction relative to a static-resistance minimum spanning tree baseline. In our research-grade benchmark (`results/BENCHMARK_REPORT.md`), the true theoretical ceiling established by the **Exact Dynamic Oracle** achieves **28.37% loss reduction** ($p = 2.15 \times 10^{-8}$) over the textbook IEEE 33 static configuration.
-* **Filter Necessity in Pure QUBO**: Pure unconstrained QUBO relies on a linearized mesh-current objective ($H = \sum w_e x_e$). Combining quantum sample distributions with fast LinDistFlow screening or Kruskal-guided loop repair guarantees **100% valid radial spanning trees** and complete ANSI C84.1 compliance across all steps.
+### 2. Scientific Claim Reconciliation & Empirical Findings
+* **Baseline and Branch Exchange**: Relative to the standard IEEE 33 textbook configuration, classical loop branch exchange achieves **+20.73% loss reduction**, while dynamic candidate tree search achieves **+29.06% loss reduction**.
+* **Thermodynamic QUBO Sign Physics**: With the corrected negative linear mapping ($-w_e x_e$), loaded backbone lines are prioritized to stay closed while loop tie-lines with minimum mesh currents are broken. The filtered QUBO achieves **+3.64% loss reduction**, and raw unconstrained QUBO ground states achieve **-10.92% loss reduction**.
+* **Filter Necessity in Pure QUBO**: Unconstrained QUBO with quadratic penalty multipliers produces valid trees with low energy, but power-flow filtering evaluates non-linear AC/LinDistFlow losses to ensure high ANSI C84.1 voltage compliance. All numbers above are generated directly from `results/benchmark_summary.json`.
 
 ---
 
