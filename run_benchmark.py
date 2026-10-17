@@ -323,13 +323,17 @@ def generate_report_and_plots(
    - All reported figures are saved directly to `benchmark_summary.json` with zero hard-coded status strings.
 """
     report_file = out_path / "BENCHMARK_REPORT.md"
+    report_file_alias = out_path / "BENCHMARK.md"
     with open(report_file, "w", encoding="utf-8") as f:
+        f.write(md_content)
+    with open(report_file_alias, "w", encoding="utf-8") as f:
         f.write(md_content)
 
     print(f"Generated results:")
     print(f" - {sum_file}")
     print(f" - {chart_file}")
     print(f" - {report_file}")
+    print(f" - {report_file_alias}")
 
     # Also sync README
     root_readme = Path(__file__).resolve().parent / "README.md"
