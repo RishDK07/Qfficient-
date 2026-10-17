@@ -46,3 +46,18 @@
 6. **Methodological Rigor**:
    - All metrics above are computed dynamically from 30 independent randomized scenarios with a 5.0-minute decision interval.
    - All reported figures are saved directly to `benchmark_summary.json` with zero hard-coded status strings.
+
+## 3. Sampler Comparison & Parameter Sensitivity Study
+
+Evaluated across 10 scenarios on IEEE 33-Bus benchmark parameters ($dt = 300.0\text{ s}$):
+
+| Sampler Engine | Type | Raw Heat Red. (%) | Filtered Heat Red. (%) | Feasible Reads (%) | Wall Latency (ms) |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `numpy-sa` | Vectorized Classical SA | -10.46% | **+8.63%** | 22.2% | 1213.1 ms |
+| `openjij-sa` | OpenJij C++ Classical SA | -68.99% | **-68.99%** | 13.3% | 115.9 ms |
+| `openjij-sqa` | OpenJij Quantum (SQA, Trotter=16) | -30.78% | **-30.78%** | 31.7% | 737.0 ms |
+| `neal` | D-Wave Neal Simulated Annealing | -7.01% | **+7.98%** | 21.0% | 44.7 ms |
+
+### Parameter Sensitivity (Valid Tree Feasible Reads)
+* **Number of Sweeps**: Increasing sweeps from 100 to 1000 changes the raw feasible read fraction from ~6.8% to ~10.8%.
+* **Sample Size ($N_R$)**: At 800 reads, the probability of sampling at least one valid radial tree in the read ensemble exceeds 99.9%, enabling robust post-hoc power-flow filtering.
