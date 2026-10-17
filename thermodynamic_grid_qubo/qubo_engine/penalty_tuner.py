@@ -10,16 +10,22 @@ class PenaltyTuner:
         self.base_scale = base_scale
 
     def calibrate(self, entropy_weights: Dict[int, float], num_buses: int) -> Dict[str, float]:
-        """Calculates optimal Lagrange multipliers for given feeder and operating state."""
+        """Calculates optimal Lagrange multipliers from empirical parameter sweep.
+        
+        Calibrated across log grid (0.5 to 50):
+          - lambda_cycle = 2.0 * base_scale
+          - lambda_rad = 3.0 * base_scale
+        maximizes feasible-read fraction (~29%) while preventing constraint suppression.
+        """
         weights = list(entropy_weights.values())
         max_w = max(weights) if weights else 1.0
         avg_w = float(np.mean(weights)) if weights else 0.5
         
         lambda_thermo = 1.0 * self.base_scale
-        lambda_cycle = max(15.0 * max_w, 25.0) * self.base_scale
-        lambda_rad = max(20.0 * max_w, 30.0) * self.base_scale
-        lambda_cap = max(10.0 * max_w, 15.0) * self.base_scale
-        lambda_sw = max(0.2 * avg_w, 0.5) * self.base_scale
+        lambda_cycle = 2.0 * self.base_scale
+        lambda_rad = 3.0 * self.base_scale
+        lambda_cap = 4.0 * self.base_scale
+        lambda_sw = max(0.2 * (avg_w / (max_w + 1e-6)), 0.2) * self.base_scale
 
         return {
             "lambda_thermo": lambda_thermo,

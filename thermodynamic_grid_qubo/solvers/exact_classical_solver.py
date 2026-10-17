@@ -41,7 +41,8 @@ class ExactClassicalSolver:
     def solve_exact_loss_minimizer(
         self,
         injections: Dict[int, Tuple[float, float]],
-        max_iterations: int = 5
+        max_iterations: int = 5,
+        initial_switches: Optional[Dict[int, int]] = None,
     ) -> Tuple[Dict[int, int], float, float]:
         """
         Computes the optimal loss-minimizing radial reconfiguration using optimal branch exchange
@@ -54,8 +55,11 @@ class ExactClassicalSolver:
         """
         start_time = time.perf_counter()
         
-        # Start from standard unswitched state
-        current_switches, _ = self.solve_unreconfigured_standard()
+        # Start from initial state if provided, otherwise standard unswitched state
+        if initial_switches is not None:
+            current_switches = dict(initial_switches)
+        else:
+            current_switches, _ = self.solve_unreconfigured_standard()
         _, _, _, current_loss = self.verifier.solve_power_flow(current_switches, injections)
         
         # Track currently open switches (initially ties 32, 33, 34, 35, 36)
