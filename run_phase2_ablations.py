@@ -154,10 +154,15 @@ def run_phase2_ablations(
     diff_th = np.array(th_heats) - np.array(i2r_heats)
     mean_diff_th = float(np.mean(diff_th))
     std_diff_th = float(np.std(diff_th, ddof=1)) if len(diff_th) > 1 else 0.0
-    try:
-        _, p_th_val = stats.wilcoxon(diff_th)
-    except Exception:
+    if np.allclose(diff_th, 0.0):
         p_th_val = 1.0
+    else:
+        try:
+            _, p_th_val = stats.wilcoxon(diff_th)
+            if np.isnan(p_th_val):
+                p_th_val = 1.0
+        except Exception:
+            p_th_val = 1.0
 
     print(f"Stress Regime: Delta Heat (Thermo - I^2R) = {mean_diff_th:.4f} +/- {std_diff_th:.4f} MJ (p = {p_th_val:.4f})")
 
@@ -169,10 +174,10 @@ def run_phase2_ablations(
         "random_trees_filtered": "Random spanning tree baseline with identical power-flow filter.",
         "branch_exchange": "Fast classical loop branch-exchange heuristic (Baran-Wu).",
         "qubo_mesh_current_filtered": "Baseline linear-flow QUBO: underperforms random search due to linear objective.",
-        "qubo_penalty_tuned_filtered": "Tuned penalties (lambda_cycle=2.0, lambda_rad=3.0) raise feasible reads to ~29% but cannot overcome linear surrogate limit.",
-        "qubo_quadratic_surrogate_filtered": "Validated quadratic surrogate (rho=0.924) achieves +28.1% heat reduction, matching classical search.",
-        "hybrid_qubo_branch_exchange": "QUBO warm-start achieves +25.4% reduction in 2 iterations, slightly exceeding random warm-start.",
-        "random_branch_exchange": "Random warm-start achieves +24.8% reduction in 2 iterations.",
+        "qubo_penalty_tuned_filtered": "Tuned penalties (lambda_cycle=2.0, lambda_rad=3.0) raise feasible reads to ~29% (+13.54% reduction, +9.9 pp gain).",
+        "qubo_quadratic_surrogate_filtered": "Validated quadratic surrogate (rho=0.924) achieves +15.24% heat reduction (+11.6 pp gain over linear QUBO).",
+        "hybrid_qubo_branch_exchange": "QUBO warm-start achieves +16.41% reduction in 2 iterations.",
+        "random_branch_exchange": "Random warm-start achieves +25.01% reduction in 2 iterations.",
     }
 
     display_names = {

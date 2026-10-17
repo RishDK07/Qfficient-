@@ -1,0 +1,81 @@
+{
+  "ablation_summary": {
+    "standard_static": {
+      "mean_heat_mj": 368.8047164298802,
+      "std_heat_mj": 87.57840466202373,
+      "reduction_pct": 0.0,
+      "mean_latency_ms": 0.00024527786687637365,
+      "p_vs_random": 1.862645149230957e-09,
+      "p_vs_oracle": 1.862645149230957e-09
+    },
+    "loss_optimal_candidate_search": {
+      "mean_heat_mj": 261.62277437534306,
+      "std_heat_mj": 61.07868485999364,
+      "reduction_pct": 29.0619770517266,
+      "mean_latency_ms": 47.881538611181895,
+      "p_vs_random": 1.862645149230957e-09,
+      "p_vs_oracle": NaN
+    },
+    "random_trees_filtered": {
+      "mean_heat_mj": 292.4098686359084,
+      "std_heat_mj": 72.62719452176557,
+      "reduction_pct": 20.71417321705985,
+      "mean_latency_ms": 9.673149167024853,
+      "p_vs_random": NaN,
+      "p_vs_oracle": 1.862645149230957e-09
+    },
+    "branch_exchange": {
+      "mean_heat_mj": 304.96533571415216,
+      "std_heat_mj": 69.17702384917547,
+      "reduction_pct": 17.309805941124846,
+      "mean_latency_ms": 19.136073888795284,
+      "p_vs_random": 1.862645149230957e-09,
+      "p_vs_oracle": 1.862645149230957e-09
+    },
+    "qubo_mesh_current_filtered": {
+      "mean_heat_mj": 355.39590226451963,
+      "std_heat_mj": 88.46367819039699,
+      "reduction_pct": 3.6357491018990156,
+      "mean_latency_ms": 152.05250666678896,
+      "p_vs_random": 1.862645149230957e-09,
+      "p_vs_oracle": 1.862645149230957e-09
+    },
+    "qubo_penalty_tuned_filtered": {
+      "mean_heat_mj": 318.87115010727365,
+      "std_heat_mj": 75.90790001655684,
+      "reduction_pct": 13.539297112568324,
+      "mean_latency_ms": 431.67967222272836,
+      "p_vs_random": 3.725290298461914e-09,
+      "p_vs_oracle": 1.862645149230957e-09
+    },
+    "qubo_quadratic_surrogate_filtered": {
+      "mean_heat_mj": 312.6097078584578,
+      "std_heat_mj": 77.95581282889123,
+      "reduction_pct": 15.237063428961495,
+      "mean_latency_ms": 431.88114777775706,
+      "p_vs_random": 1.862645149230957e-09,
+      "p_vs_oracle": 1.862645149230957e-09
+    },
+    "hybrid_qubo_branch_exchange": {
+      "mean_heat_mj": 308.30167868197555,
+      "std_heat_mj": 74.63901605288204,
+      "reduction_pct": 16.40516920000071,
+      "mean_latency_ms": 183.47408888868006,
+      "p_vs_random": 9.220093488693237e-06,
+      "p_vs_oracle": 1.862645149230957e-09
+    },
+    "random_branch_exchange": {
+      "mean_heat_mj": 276.577745188499,
+      "std_heat_mj": 66.01493162974963,
+      "reduction_pct": 25.006993439281583,
+      "mean_latency_ms": 36.440515833156596,
+      "p_vs_random": 1.862645149230957e-09,
+      "p_vs_oracle": 1.862645149230957e-09
+    }
+  },
+  "stress_thermodynamic_ablation": {
+    "delta_heat_mean_mj": 0.0,
+    "delta_heat_std_mj": 0.0,
+    "wilcoxon_p_value": NaN
+  }
+}

@@ -61,3 +61,24 @@ Evaluated across 10 scenarios on IEEE 33-Bus benchmark parameters ($dt = 300.0\t
 ### Parameter Sensitivity (Valid Tree Feasible Reads)
 * **Number of Sweeps**: Increasing sweeps from 100 to 1000 changes the raw feasible read fraction from ~6.8% to ~10.8%.
 * **Sample Size ($N_R$)**: At 800 reads, the probability of sampling at least one valid radial tree in the read ensemble exceeds 99.9%, enabling robust post-hoc power-flow filtering.
+
+## 4. Phase 2: QUBO Enhancement & Research Ablation Study
+
+Evaluated across 30 independent scenarios ($dt = 300.0\text{ s}$):
+
+| Formulation / Policy | Total Joule Heat (MJ) [Mean ± Std] | Heat Red. vs Baseline (%) | $p$-val vs Random | $p$-val vs Oracle | Wall Latency | One-Line Empirical Conclusion |
+| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Standard Static Baseline** | $368.805 \pm 87.578$ | +0.00% | 1.86e-09 | 1.86e-09 | $0.0\text{ ms}$ | Standard baseline reference. |
+| **Exhaustive Dynamic Oracle** | $261.623 \pm 61.079$ | **+29.06%** | 1.86e-09 | — | $47.9\text{ ms}$ | Exact empirical dynamic optimum upper bound. |
+| **Random Trees (Filtered Control)** | $292.410 \pm 72.627$ | **+20.71%** | — | 1.86e-09 | $9.7\text{ ms}$ | Random spanning tree baseline with identical power-flow filter. |
+| **Classical Branch Exchange** | $304.965 \pm 69.177$ | **+17.31%** | 1.86e-09 | 1.86e-09 | $19.1\text{ ms}$ | Fast classical loop branch-exchange heuristic (Baran-Wu). |
+| **Linear QUBO (Filtered)** | $355.396 \pm 88.464$ | **+3.64%** | 1.86e-09 | 1.86e-09 | $152.1\text{ ms}$ | Baseline linear-flow QUBO: underperforms random search due to linear objective. |
+| **Tuned-Penalty QUBO (Filtered)** | $318.871 \pm 75.908$ | **+13.54%** | 3.73e-09 | 1.86e-09 | $431.7\text{ ms}$ | Tuned penalties (lambda_cycle=2.0, lambda_rad=3.0) raise feasible reads to ~29% (+13.54% reduction, +9.9 pp gain). |
+| **Quadratic Surrogate QUBO (Filtered)** | $312.610 \pm 77.956$ | **+15.24%** | 1.86e-09 | 1.86e-09 | $431.9\text{ ms}$ | Validated quadratic surrogate (rho=0.924) achieves +15.24% heat reduction (+11.6 pp gain over linear QUBO). |
+| **Hybrid QUBO + Branch Exchange** | $308.302 \pm 74.639$ | **+16.41%** | 9.22e-06 | 1.86e-09 | $183.5\text{ ms}$ | QUBO warm-start achieves +16.41% reduction in 2 iterations. |
+| **Hybrid Random + Branch Exchange** | $276.578 \pm 66.015$ | **+25.01%** | 1.86e-09 | 1.86e-09 | $36.4\text{ ms}$ | Random warm-start achieves +25.01% reduction in 2 iterations. |
+
+### Thermodynamic vs. Plain $I^2 R$ Weights Ablation (Stress Regime)
+* **Regime**: $1.6\times$ loading, $T_{\text{amb}} = 40^\circ\text{C}$, $\tau_{\text{th}} = 60\text{ s}$, $H_{\text{cap}}$ active.
+* **Result**: $\Delta_{\text{Heat}} = 0.0000 \pm 0.0000\text{ MJ}$ ($p = 1.0000$).
+* **Empirical Finding**: Thermodynamic entropy weighting ($P_{\text{loss}} / T$) is statistically indistinguishable from plain Joule heat ($I^2 R$) weighting even under thermal stress, because temperature variations across lateral conductors ($\Delta T \approx 10\text{--}20\text{ K}$) do not alter the relative permutation ordering of line conductivities.
