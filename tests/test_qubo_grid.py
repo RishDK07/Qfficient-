@@ -55,10 +55,15 @@ def test_qubo_bqm_formulation_and_ising():
     weights = {e: 1.0 for e in range(len(edges))}
     bqm = builder.build_bqm(weights, {}, {})
     
-    assert len(bqm.variables) == 37
+    # 37 branch decision variables + cycle slack variables
+    edge_vars = [v for v in bqm.variables if v.startswith("x_")]
+    slack_vars = [v for v in bqm.variables if v.startswith("s_")]
+    assert len(edge_vars) == 37
+    assert len(slack_vars) > 0  # Slack formulation for inequality cycle constraints
+    assert len(bqm.variables) == len(edge_vars) + len(slack_vars)
     # Verify Ising transformation s_i in {-1, +1}
     h, J, offset = builder.to_ising(bqm)
-    assert len(h) == 37
+    assert len(h) == len(bqm.variables)
     assert isinstance(offset, (float, int))
 
 def test_power_flow_verification():

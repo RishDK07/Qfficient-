@@ -123,3 +123,89 @@ def test_report_numbers_match_summary_json():
         heat_str = f"{heat_mean:.3f}"
         assert heat_str in report_text, f"Mean heat {heat_str} for {pol_name} not found in BENCHMARK_REPORT.md"
         assert heat_str in readme_text, f"Mean heat {heat_str} for {pol_name} not found in README.md"
+
+
+def test_build_bqm_slack_formulation():
+    """Verify build_bqm uses the inequality slack formulation for fundamental cycles."""
+    from thermodynamic_grid_qubo.grid_engine.ieee_feeder_loader import IEEEFeederLoader
+    from thermodynamic_grid_qubo.qubo_engine.qubo_builder import ThermodynamicQUBOBuilder
+    grid = IEEEFeederLoader.load_ieee33()
+    builder = ThermodynamicQUBOBuilder(
+        num_buses=len(grid.graph.nodes),
+        edges=grid.get_edge_list(),
+        substations=grid.substations,
+        graph=grid.graph,
+    )
+    weights = {e: 1.0 for e in range(len(grid.lines))}
+    bqm = builder.build_bqm(weights, {}, {})
+    # Edge variables: x_0 .. x_36
+    edge_vars = [v for v in bqm.variables if v.startswith("x_")]
+    # Slack variables: s_k_j
+    slack_vars = [v for v in bqm.variables if v.startswith("s_")]
+    assert len(edge_vars) == 37
+    assert len(slack_vars) > 0, "BQM must include cycle slack variables"
+    assert len(bqm.variables) == 37 + len(slack_vars)
+
+
+def test_exact_ac_baseline_loss():
+    """Verify that exact AC DistFlow produces canonical ~210.74 kW (~211 kW) base loss on IEEE 33."""
+    from thermodynamic_grid_qubo.grid_engine.ieee_feeder_loader import IEEEFeederLoader
+    from thermodynamic_grid_qubo.verification.fast_flow import FastFeeder
+    from thermodynamic_grid_qubo.verification.physics_verifier import PhysicsVerifier
+    grid = IEEEFeederLoader.load_ieee33()
+    fast = FastFeeder(grid)
+    pv = PhysicsVerifier(grid)
+
+    injections = {b: (-p, -q) for b, (p, q) in grid.bus_loads.items()}
+    p_pu, q_pu = fast.vectors(injections)
+    r0 = fast.resistances()
+
+    # LinDistFlow (linearized, no branch loss feedback): ~196.9 kW
+    ok_lin, _, _, loss_lin, _ = fast.evaluate(fast.standard_edges, p_pu, q_pu, r0)
+    assert ok_lin
+    assert 190.0 < loss_lin < 200.0
+
+    # Exact AC DistFlow (iterative, branch loss feedback): canonical ~210.74 kW (~211 kW)
+    ok_ac, _, _, loss_ac, v_min = fast.evaluate_ac(fast.standard_edges, p_pu, q_pu, r0)
+    assert ok_ac
+    assert 205.0 < loss_ac < 215.0, f"Expected AC loss ~211 kW, got {loss_ac:.2f} kW"
+    assert 0.90 < v_min < 0.92
+
+    # PhysicsVerifier AC power flow
+    sw = {e: (0 if e in grid.tie_switches else 1) for e in grid.lines}
+    _, v_pv, _, loss_pv = pv.solve_ac_power_flow(sw, injections)
+    assert 0.90 < min(v_pv.values()) < 0.92
+    assert 205.0 < loss_pv < 215.0
+
+
+def test_random_proposals_policy():
+    """Verify that RandomProposalsPolicy generates valid radial tree reconfigurations."""
+    from thermodynamic_grid_qubo.grid_engine.ieee_feeder_loader import IEEEFeederLoader
+    from thermodynamic_grid_qubo.verification.fast_flow import FastFeeder
+    from thermodynamic_grid_qubo.benchmark.policies import RandomProposalsPolicy, DecisionContext
+    import numpy as np
+
+    grid = IEEEFeederLoader.load_ieee33()
+    fast = FastFeeder(grid)
+    policy = RandomProposalsPolicy(k_samples=20, mode="filtered", seed=42)
+    policy.reset(grid, fast, [])
+
+    injections = {b: (-p, -q) for b, (p, q) in grid.bus_loads.items()}
+    p_pu, q_pu = fast.vectors(injections)
+    temps_k = np.array([grid.lines[e].t_amb for e in fast.edge_ids], dtype=float)
+    resistances = fast.resistances(temps_k)
+
+    ctx = DecisionContext(
+        grid=grid,
+        fast=fast,
+        injections=injections,
+        temps_k=temps_k,
+        prev_active=fast.standard_edges,
+        step=0,
+        p_pu=p_pu,
+        q_pu=q_pu,
+        resistances=resistances,
+    )
+    chosen, ms = policy.decide(ctx)
+    assert fast.is_tree(chosen), "Chosen configuration must be a valid radial tree"
+    assert len(chosen) == 32

@@ -192,6 +192,98 @@ class FastFeeder:
 
         return True, v_pu, currents_amps, total_loss_kw, v_min
 
+    AC_CALIBRATION_FACTOR = 1.0701  # Ratio of exact AC DistFlow loss (210.74 kW) to LinDistFlow loss (196.93 kW) on nominal IEEE 33
+
+    def evaluate_ac(
+        self,
+        active_edges: Sequence[int],
+        p_pu: np.ndarray,
+        q_pu: np.ndarray,
+        resistances_ohm: np.ndarray,
+        max_iter: int = 20,
+        tol: float = 1e-5,
+    ) -> Tuple[bool, np.ndarray, np.ndarray, float, float]:
+        """Solve exact non-linear AC DistFlow equations (Baran & Wu, 1989) with branch loss feedback.
+
+        Iteratively couples branch flows with branch losses:
+            P_{ij} = P_j + p_{demand, j} + r_{ij} I_{ij}^2
+            Q_{ij} = Q_j + q_{demand, j} + x_{ij} I_{ij}^2
+            V_j^2 = V_i^2 - 2(r_{ij} P_{ij} + x_{ij} Q_{ij}) + (r_{ij}^2 + x_{ij}^2) I_{ij}^2
+            I_{ij}^2 = (P_{ij}^2 + Q_{ij}^2) / V_i^2
+
+        Returns:
+            is_valid: bool
+            v_pu: array of bus voltage magnitudes in pu
+            currents_amps: array of branch current magnitudes (0 for open lines)
+            total_loss_kw: total 3-phase real power loss in kW (~210.74 kW / ~211 kW on nominal baseline)
+            v_min: minimum bus voltage in pu
+        """
+        tree_info = self._get_tree_order(active_edges)
+        if tree_info is None:
+            return False, np.ones(self.n), np.zeros(self.m), 1e9, 0.0
+
+        order, parent, parent_edge = tree_info
+        r_pu = resistances_ohm / self.z_base
+        p_demand = -p_pu
+        q_demand = -q_pu
+
+        v_sq = np.ones(self.n, dtype=float)
+        v_sq[self.root] = 1.0
+
+        loss_p_pu = np.zeros(self.m, dtype=float)
+        loss_q_pu = np.zeros(self.m, dtype=float)
+        P_flow = np.zeros(self.n, dtype=float)
+        Q_flow = np.zeros(self.n, dtype=float)
+
+        for _ in range(max_iter):
+            P_flow.fill(0.0)
+            Q_flow.fill(0.0)
+
+            # Backward sweep with branch loss feedback
+            for u in reversed(order):
+                if u != self.root:
+                    e = parent_edge[u]
+                    p_par = parent[u]
+                    P_flow[u] += p_demand[u]
+                    Q_flow[u] += q_demand[u]
+                    i_sq = (P_flow[u] ** 2 + Q_flow[u] ** 2) / max(v_sq[p_par], 0.1)
+                    loss_p_pu[e] = i_sq * r_pu[e]
+                    loss_q_pu[e] = i_sq * self.x_pu[e]
+                    P_flow[p_par] += P_flow[u] + loss_p_pu[e]
+                    Q_flow[p_par] += Q_flow[u] + loss_q_pu[e]
+
+            # Forward sweep with second-order DistFlow drop
+            v_sq_prev = v_sq.copy()
+            for u in order:
+                if u != self.root:
+                    p_par = parent[u]
+                    e = parent_edge[u]
+                    i_sq = (P_flow[u] ** 2 + Q_flow[u] ** 2) / max(v_sq[p_par], 0.1)
+                    drop = 2.0 * (r_pu[e] * P_flow[u] + self.x_pu[e] * Q_flow[u]) - (r_pu[e] ** 2 + self.x_pu[e] ** 2) * i_sq
+                    v_sq[u] = max(0.01, v_sq[p_par] - drop)
+
+            if np.max(np.abs(v_sq - v_sq_prev)) < tol:
+                break
+
+        v_pu = np.sqrt(v_sq)
+
+        # Calculate line currents and 3-phase losses
+        currents_amps = np.zeros(self.m, dtype=float)
+        for u in order:
+            if u != self.root:
+                e = parent_edge[u]
+                p_par = parent[u]
+                s_branch_va = np.sqrt(P_flow[u] ** 2 + Q_flow[u] ** 2) * self.s_base_va
+                v_node_kv = v_pu[p_par] * self.grid.v_base_kv
+                if v_node_kv > 1e-3:
+                    currents_amps[e] = s_branch_va / (np.sqrt(3.0) * v_node_kv * 1e3)
+                else:
+                    currents_amps[e] = 0.0
+
+        total_loss_kw = float(np.sum(loss_p_pu) * (self.s_base_va / 1e3))
+        v_min = float(np.min(v_pu))
+        return True, v_pu, currents_amps, total_loss_kw, v_min
+
     _TREE_CACHE: Optional[List[Tuple[int, ...]]] = None
 
     def enumerate_radial_configs(self) -> List[Tuple[int, ...]]:

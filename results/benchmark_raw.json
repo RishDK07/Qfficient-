@@ -11,8 +11,8 @@
       "voltage_violation_steps": 6,
       "min_voltage_pu": 0.9260167549687376,
       "switch_operations": 0,
-      "mean_decision_ms": 0.0002083331006967152,
-      "max_decision_ms": 0.000300002284348011,
+      "mean_decision_ms": 0.00039166722369069856,
+      "max_decision_ms": 0.000600004568696022,
       "total_steps": 12
     },
     {
@@ -26,8 +26,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9353635952993891,
       "switch_operations": 0,
-      "mean_decision_ms": 0.0003916678300204997,
-      "max_decision_ms": 0.0008999995770864189,
+      "mean_decision_ms": 0.0002250005006014059,
+      "max_decision_ms": 0.000400003045797348,
       "total_steps": 12
     },
     {
@@ -41,8 +41,8 @@
       "voltage_violation_steps": 10,
       "min_voltage_pu": 0.9195871620208963,
       "switch_operations": 0,
-      "mean_decision_ms": 0.0005083317470659191,
-      "max_decision_ms": 0.0010999938240274787,
+      "mean_decision_ms": 0.0003833332205734526,
+      "max_decision_ms": 0.0008999995770864189,
       "total_steps": 12
     },
     {
@@ -56,8 +56,8 @@
       "voltage_violation_steps": 8,
       "min_voltage_pu": 0.934303273316604,
       "switch_operations": 0,
-      "mean_decision_ms": 0.00035833424287072074,
-      "max_decision_ms": 0.000500003807246685,
+      "mean_decision_ms": 0.0003250012620507429,
+      "max_decision_ms": 0.000400003045797348,
       "total_steps": 12
     },
     {
@@ -71,8 +71,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9430572152253184,
       "switch_operations": 0,
-      "mean_decision_ms": 0.00015000053584420434,
-      "max_decision_ms": 0.000200001522898674,
+      "mean_decision_ms": 0.00019166630712182572,
+      "max_decision_ms": 0.000400003045797348,
       "total_steps": 12
     },
     {
@@ -86,8 +86,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.9389638814138551,
       "switch_operations": 0,
-      "mean_decision_ms": 0.0002583340877511849,
-      "max_decision_ms": 0.000500003807246685,
+      "mean_decision_ms": 0.00020833188803711286,
+      "max_decision_ms": 0.0005999972927384079,
       "total_steps": 12
     },
     {
@@ -101,7 +101,7 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.9289778391097444,
       "switch_operations": 0,
-      "mean_decision_ms": 0.0001333313169501101,
+      "mean_decision_ms": 0.00014999992951440314,
       "max_decision_ms": 0.000200001522898674,
       "total_steps": 12
     },
@@ -116,8 +116,8 @@
       "voltage_violation_steps": 9,
       "min_voltage_pu": 0.9265328234421976,
       "switch_operations": 0,
-      "mean_decision_ms": 0.0001583333263018479,
-      "max_decision_ms": 0.000200001522898674,
+      "mean_decision_ms": 0.00036666521433896076,
+      "max_decision_ms": 0.0005999972927384079,
       "total_steps": 12
     },
     {
@@ -131,8 +131,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.9400044875898268,
       "switch_operations": 0,
-      "mean_decision_ms": 0.00011666634236462414,
-      "max_decision_ms": 0.000200001522898674,
+      "mean_decision_ms": 0.00033333465883818764,
+      "max_decision_ms": 0.0010000003385357559,
       "total_steps": 12
     },
     {
@@ -146,8 +146,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9447437293140841,
       "switch_operations": 0,
-      "mean_decision_ms": 0.00022499989427160472,
-      "max_decision_ms": 0.0004999965312890708,
+      "mean_decision_ms": 0.0001750007262065386,
+      "max_decision_ms": 0.000200001522898674,
       "total_steps": 12
     },
     {
@@ -161,7 +161,7 @@
       "voltage_violation_steps": 12,
       "min_voltage_pu": 0.9130329536518057,
       "switch_operations": 0,
-      "mean_decision_ms": 0.000133334348599116,
+      "mean_decision_ms": 0.0001583333263018479,
       "max_decision_ms": 0.000200001522898674,
       "total_steps": 12
     },
@@ -176,8 +176,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.9376489099833176,
       "switch_operations": 0,
-      "mean_decision_ms": 0.00012500034548187008,
-      "max_decision_ms": 0.000200001522898674,
+      "mean_decision_ms": 0.0002083331006967152,
+      "max_decision_ms": 0.000400003045797348,
       "total_steps": 12
     },
     {
@@ -191,8 +191,8 @@
       "voltage_violation_steps": 6,
       "min_voltage_pu": 0.9309210140820392,
       "switch_operations": 0,
-      "mean_decision_ms": 0.0001999990975794693,
-      "max_decision_ms": 0.000500003807246685,
+      "mean_decision_ms": 0.00014166774538656077,
+      "max_decision_ms": 0.000200001522898674,
       "total_steps": 12
     },
     {
@@ -206,7 +206,7 @@
       "voltage_violation_steps": 11,
       "min_voltage_pu": 0.9179393500070688,
       "switch_operations": 0,
-      "mean_decision_ms": 0.0001583327199720467,
+      "mean_decision_ms": 0.00014166532006735602,
       "max_decision_ms": 0.000200001522898674,
       "total_steps": 12
     },
@@ -221,8 +221,8 @@
       "voltage_violation_steps": 12,
       "min_voltage_pu": 0.9125032155279788,
       "switch_operations": 0,
-      "mean_decision_ms": 0.0003166666526036958,
-      "max_decision_ms": 0.0004999965312890708,
+      "mean_decision_ms": 0.00013333374226931483,
+      "max_decision_ms": 0.000200001522898674,
       "total_steps": 12
     },
     {
@@ -236,8 +236,8 @@
       "voltage_violation_steps": 10,
       "min_voltage_pu": 0.9246529484390478,
       "switch_operations": 0,
-      "mean_decision_ms": 0.00015833393263164908,
-      "max_decision_ms": 0.000200001522898674,
+      "mean_decision_ms": 0.00020000091656887284,
+      "max_decision_ms": 0.00039999576983973384,
       "total_steps": 12
     },
     {
@@ -251,7 +251,7 @@
       "voltage_violation_steps": 6,
       "min_voltage_pu": 0.9357373018242813,
       "switch_operations": 0,
-      "mean_decision_ms": 0.00014166592639715722,
+      "mean_decision_ms": 0.00020000091656887284,
       "max_decision_ms": 0.000300002284348011,
       "total_steps": 12
     },
@@ -266,8 +266,8 @@
       "voltage_violation_steps": 12,
       "min_voltage_pu": 0.9113613865375151,
       "switch_operations": 0,
-      "mean_decision_ms": 0.0002083337070265164,
-      "max_decision_ms": 0.00039999576983973384,
+      "mean_decision_ms": 0.0001833347293237845,
+      "max_decision_ms": 0.000400003045797348,
       "total_steps": 12
     },
     {
@@ -281,8 +281,8 @@
       "voltage_violation_steps": 12,
       "min_voltage_pu": 0.9159420658060998,
       "switch_operations": 0,
-      "mean_decision_ms": 0.00019166751978142807,
-      "max_decision_ms": 0.000300002284348011,
+      "mean_decision_ms": 0.0001416665327269584,
+      "max_decision_ms": 0.000200001522898674,
       "total_steps": 12
     },
     {
@@ -296,8 +296,8 @@
       "voltage_violation_steps": 8,
       "min_voltage_pu": 0.9308004498405731,
       "switch_operations": 0,
-      "mean_decision_ms": 0.00019166751978142807,
-      "max_decision_ms": 0.000400003045797348,
+      "mean_decision_ms": 0.0001583333263018479,
+      "max_decision_ms": 0.000300002284348011,
       "total_steps": 12
     },
     {
@@ -311,8 +311,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9347298813198549,
       "switch_operations": 0,
-      "mean_decision_ms": 0.000375000430115809,
-      "max_decision_ms": 0.000600004568696022,
+      "mean_decision_ms": 0.0001750001198767374,
+      "max_decision_ms": 0.000300002284348011,
       "total_steps": 12
     },
     {
@@ -326,8 +326,8 @@
       "voltage_violation_steps": 12,
       "min_voltage_pu": 0.9184999741158332,
       "switch_operations": 0,
-      "mean_decision_ms": 0.00040833341093578685,
-      "max_decision_ms": 0.0006999980541877449,
+      "mean_decision_ms": 0.0002500019036233425,
+      "max_decision_ms": 0.000600004568696022,
       "total_steps": 12
     },
     {
@@ -341,8 +341,8 @@
       "voltage_violation_steps": 11,
       "min_voltage_pu": 0.9276027228920478,
       "switch_operations": 0,
-      "mean_decision_ms": 0.00045000039487301063,
-      "max_decision_ms": 0.0008999995770864189,
+      "mean_decision_ms": 0.00015833393263164908,
+      "max_decision_ms": 0.000300002284348011,
       "total_steps": 12
     },
     {
@@ -356,8 +356,8 @@
       "voltage_violation_steps": 12,
       "min_voltage_pu": 0.909726160275405,
       "switch_operations": 0,
-      "mean_decision_ms": 0.00039999940781854093,
-      "max_decision_ms": 0.0005999972927384079,
+      "mean_decision_ms": 0.0002083331006967152,
+      "max_decision_ms": 0.00039999576983973384,
       "total_steps": 12
     },
     {
@@ -371,7 +371,7 @@
       "voltage_violation_steps": 7,
       "min_voltage_pu": 0.9316887735260565,
       "switch_operations": 0,
-      "mean_decision_ms": 0.0003916647983714938,
+      "mean_decision_ms": 0.00024999947830413777,
       "max_decision_ms": 0.000500003807246685,
       "total_steps": 12
     },
@@ -386,8 +386,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.9295299138087317,
       "switch_operations": 0,
-      "mean_decision_ms": 0.0003083350748056546,
-      "max_decision_ms": 0.000400003045797348,
+      "mean_decision_ms": 0.00026666687820882845,
+      "max_decision_ms": 0.000500003807246685,
       "total_steps": 12
     },
     {
@@ -401,8 +401,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9360529230126904,
       "switch_operations": 0,
-      "mean_decision_ms": 0.00031666725893349695,
-      "max_decision_ms": 0.0005999972927384079,
+      "mean_decision_ms": 0.00020833431335631758,
+      "max_decision_ms": 0.000400003045797348,
       "total_steps": 12
     },
     {
@@ -416,8 +416,8 @@
       "voltage_violation_steps": 9,
       "min_voltage_pu": 0.9268620755835796,
       "switch_operations": 0,
-      "mean_decision_ms": 0.00040833401726558805,
-      "max_decision_ms": 0.0007999988156370819,
+      "mean_decision_ms": 0.00014999932318460196,
+      "max_decision_ms": 0.000300002284348011,
       "total_steps": 12
     },
     {
@@ -431,8 +431,8 @@
       "voltage_violation_steps": 10,
       "min_voltage_pu": 0.9235665063823121,
       "switch_operations": 0,
-      "mean_decision_ms": 0.00034166623663622886,
-      "max_decision_ms": 0.000500003807246685,
+      "mean_decision_ms": 0.00024999947830413777,
+      "max_decision_ms": 0.0008999995770864189,
       "total_steps": 12
     },
     {
@@ -446,8 +446,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.9341887580125597,
       "switch_operations": 0,
-      "mean_decision_ms": 0.0004333348139577235,
-      "max_decision_ms": 0.000900006853044033,
+      "mean_decision_ms": 0.00036666521433896076,
+      "max_decision_ms": 0.0005999972927384079,
       "total_steps": 12
     }
   ],
@@ -463,8 +463,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9404704242505998,
       "switch_operations": 6,
-      "mean_decision_ms": 77.69319999958195,
-      "max_decision_ms": 151.59399999538437,
+      "mean_decision_ms": 65.98230833211953,
+      "max_decision_ms": 113.08339999959571,
       "total_steps": 12
     },
     {
@@ -478,8 +478,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9487317074481694,
       "switch_operations": 8,
-      "mean_decision_ms": 120.64219999956549,
-      "max_decision_ms": 160.50209999957588,
+      "mean_decision_ms": 53.78503333364885,
+      "max_decision_ms": 67.50409999949625,
       "total_steps": 12
     },
     {
@@ -493,8 +493,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.9362984474525093,
       "switch_operations": 6,
-      "mean_decision_ms": 111.72027499984931,
-      "max_decision_ms": 140.03569999476895,
+      "mean_decision_ms": 57.15118333561501,
+      "max_decision_ms": 111.05450000468409,
       "total_steps": 12
     },
     {
@@ -508,8 +508,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9473060206663482,
       "switch_operations": 8,
-      "mean_decision_ms": 51.52129166587353,
-      "max_decision_ms": 65.59500000003027,
+      "mean_decision_ms": 56.00444999981846,
+      "max_decision_ms": 100.72560000116937,
       "total_steps": 12
     },
     {
@@ -523,8 +523,8 @@
       "voltage_violation_steps": 0,
       "min_voltage_pu": 0.9540534543997199,
       "switch_operations": 6,
-      "mean_decision_ms": 55.66727500020837,
-      "max_decision_ms": 63.522500000544824,
+      "mean_decision_ms": 57.987974999074744,
+      "max_decision_ms": 84.13689999724738,
       "total_steps": 12
     },
     {
@@ -538,8 +538,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.9497243716742084,
       "switch_operations": 6,
-      "mean_decision_ms": 55.664000001343084,
-      "max_decision_ms": 63.41500000417,
+      "mean_decision_ms": 54.56093333183768,
+      "max_decision_ms": 100.5449000003864,
       "total_steps": 12
     },
     {
@@ -553,8 +553,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9432876849560857,
       "switch_operations": 6,
-      "mean_decision_ms": 56.15565833371269,
-      "max_decision_ms": 76.60309999482706,
+      "mean_decision_ms": 57.38859166679807,
+      "max_decision_ms": 123.65889999637147,
       "total_steps": 12
     },
     {
@@ -568,8 +568,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.9411753926892401,
       "switch_operations": 6,
-      "mean_decision_ms": 56.13293333529631,
-      "max_decision_ms": 71.07260000339011,
+      "mean_decision_ms": 54.809275000782996,
+      "max_decision_ms": 66.67490000108955,
       "total_steps": 12
     },
     {
@@ -583,8 +583,8 @@
       "voltage_violation_steps": 0,
       "min_voltage_pu": 0.9512288373097136,
       "switch_operations": 6,
-      "mean_decision_ms": 60.932641668841825,
-      "max_decision_ms": 92.51220000442117,
+      "mean_decision_ms": 58.157083334663184,
+      "max_decision_ms": 92.26530000159983,
       "total_steps": 12
     },
     {
@@ -598,8 +598,8 @@
       "voltage_violation_steps": 0,
       "min_voltage_pu": 0.9552743235038095,
       "switch_operations": 10,
-      "mean_decision_ms": 57.143716666663146,
-      "max_decision_ms": 98.34799999953248,
+      "mean_decision_ms": 61.32449999980357,
+      "max_decision_ms": 172.67100000026403,
       "total_steps": 12
     },
     {
@@ -613,8 +613,8 @@
       "voltage_violation_steps": 6,
       "min_voltage_pu": 0.9323220360135507,
       "switch_operations": 6,
-      "mean_decision_ms": 63.111816666302424,
-      "max_decision_ms": 100.85940000135452,
+      "mean_decision_ms": 52.625499999824875,
+      "max_decision_ms": 122.24850000347942,
       "total_steps": 12
     },
     {
@@ -628,8 +628,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9494644177857391,
       "switch_operations": 8,
-      "mean_decision_ms": 56.19987499812851,
-      "max_decision_ms": 65.29999999474967,
+      "mean_decision_ms": 62.35912499929933,
+      "max_decision_ms": 94.9112000016612,
       "total_steps": 12
     },
     {
@@ -643,8 +643,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9453278748761202,
       "switch_operations": 8,
-      "mean_decision_ms": 55.9232000002036,
-      "max_decision_ms": 78.81990000169026,
+      "mean_decision_ms": 57.89069166712579,
+      "max_decision_ms": 105.1584999950137,
       "total_steps": 12
     },
     {
@@ -658,8 +658,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.9350150062441372,
       "switch_operations": 6,
-      "mean_decision_ms": 49.96798333255962,
-      "max_decision_ms": 66.99809999554418,
+      "mean_decision_ms": 43.10173333457593,
+      "max_decision_ms": 54.92159999994328,
       "total_steps": 12
     },
     {
@@ -673,8 +673,8 @@
       "voltage_violation_steps": 9,
       "min_voltage_pu": 0.9308780102568653,
       "switch_operations": 6,
-      "mean_decision_ms": 54.36032500013729,
-      "max_decision_ms": 73.79419999779202,
+      "mean_decision_ms": 53.01013333337323,
+      "max_decision_ms": 76.03669999662088,
       "total_steps": 12
     },
     {
@@ -688,8 +688,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.939830965256915,
       "switch_operations": 6,
-      "mean_decision_ms": 55.86859999978818,
-      "max_decision_ms": 71.95689999934984,
+      "mean_decision_ms": 60.564525001003254,
+      "max_decision_ms": 99.34729999804404,
       "total_steps": 12
     },
     {
@@ -703,8 +703,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9479023628499283,
       "switch_operations": 4,
-      "mean_decision_ms": 53.15627499961314,
-      "max_decision_ms": 66.28539999655914,
+      "mean_decision_ms": 61.51467500118694,
+      "max_decision_ms": 121.89840000064578,
       "total_steps": 12
     },
     {
@@ -718,8 +718,8 @@
       "voltage_violation_steps": 10,
       "min_voltage_pu": 0.9298959990559692,
       "switch_operations": 6,
-      "mean_decision_ms": 52.32370833376384,
-      "max_decision_ms": 69.56680000439519,
+      "mean_decision_ms": 52.21358333377187,
+      "max_decision_ms": 73.78349999635248,
       "total_steps": 12
     },
     {
@@ -733,8 +733,8 @@
       "voltage_violation_steps": 7,
       "min_voltage_pu": 0.9333652076825001,
       "switch_operations": 4,
-      "mean_decision_ms": 50.791141667408134,
-      "max_decision_ms": 72.09809999767458,
+      "mean_decision_ms": 47.605441667352956,
+      "max_decision_ms": 63.870899997709785,
       "total_steps": 12
     },
     {
@@ -748,8 +748,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.944347570032659,
       "switch_operations": 4,
-      "mean_decision_ms": 63.11785000070813,
-      "max_decision_ms": 127.38970000646077,
+      "mean_decision_ms": 63.85346666441668,
+      "max_decision_ms": 110.66079999727663,
       "total_steps": 12
     },
     {
@@ -763,8 +763,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.9487806630295852,
       "switch_operations": 10,
-      "mean_decision_ms": 109.01943333313586,
-      "max_decision_ms": 132.8700000012759,
+      "mean_decision_ms": 48.774516666526324,
+      "max_decision_ms": 59.71599999611499,
       "total_steps": 12
     },
     {
@@ -778,8 +778,8 @@
       "voltage_violation_steps": 8,
       "min_voltage_pu": 0.9364569373560973,
       "switch_operations": 6,
-      "mean_decision_ms": 100.7613083323425,
-      "max_decision_ms": 128.45789999846602,
+      "mean_decision_ms": 45.45144166756169,
+      "max_decision_ms": 59.314600002835505,
       "total_steps": 12
     },
     {
@@ -793,8 +793,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.9416025593916796,
       "switch_operations": 5,
-      "mean_decision_ms": 103.7953749995116,
-      "max_decision_ms": 142.53070000268053,
+      "mean_decision_ms": 48.533758334087906,
+      "max_decision_ms": 63.4898999996949,
       "total_steps": 12
     },
     {
@@ -808,8 +808,8 @@
       "voltage_violation_steps": 7,
       "min_voltage_pu": 0.9279319286539826,
       "switch_operations": 9,
-      "mean_decision_ms": 103.20106666828603,
-      "max_decision_ms": 124.76630000310251,
+      "mean_decision_ms": 44.367983333965334,
+      "max_decision_ms": 67.10949999978766,
       "total_steps": 12
     },
     {
@@ -823,8 +823,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9456868459452027,
       "switch_operations": 6,
-      "mean_decision_ms": 105.69714166801229,
-      "max_decision_ms": 126.25259999913396,
+      "mean_decision_ms": 50.11708333525652,
+      "max_decision_ms": 61.438600001565646,
       "total_steps": 12
     },
     {
@@ -838,8 +838,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.9443887399469507,
       "switch_operations": 12,
-      "mean_decision_ms": 110.5093333323263,
-      "max_decision_ms": 129.32770000043092,
+      "mean_decision_ms": 48.76092500126106,
+      "max_decision_ms": 57.00779999460792,
       "total_steps": 12
     },
     {
@@ -853,8 +853,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.9489663985587884,
       "switch_operations": 8,
-      "mean_decision_ms": 102.91350833419226,
-      "max_decision_ms": 121.02589999994962,
+      "mean_decision_ms": 66.92768333414278,
+      "max_decision_ms": 115.28850000468083,
       "total_steps": 12
     },
     {
@@ -868,8 +868,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9431412061563919,
       "switch_operations": 6,
-      "mean_decision_ms": 111.86470000029658,
-      "max_decision_ms": 131.73570000071777,
+      "mean_decision_ms": 60.98785833273723,
+      "max_decision_ms": 115.20809999638004,
       "total_steps": 12
     },
     {
@@ -883,8 +883,8 @@
       "voltage_violation_steps": 6,
       "min_voltage_pu": 0.9393674608507376,
       "switch_operations": 8,
-      "mean_decision_ms": 105.2210333327821,
-      "max_decision_ms": 128.22839999716962,
+      "mean_decision_ms": 49.32728333187697,
+      "max_decision_ms": 85.29629999975441,
       "total_steps": 12
     },
     {
@@ -898,8 +898,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.9477007944442676,
       "switch_operations": 8,
-      "mean_decision_ms": 131.8857583337376,
-      "max_decision_ms": 203.6091000045417,
+      "mean_decision_ms": 61.45424166546339,
+      "max_decision_ms": 91.92459999758285,
       "total_steps": 12
     }
   ],
@@ -915,8 +915,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9277604890010246,
       "switch_operations": 5,
-      "mean_decision_ms": 0.0003833338269032538,
-      "max_decision_ms": 0.0007999988156370819,
+      "mean_decision_ms": 0.0002583340877511849,
+      "max_decision_ms": 0.000600004568696022,
       "total_steps": 12
     },
     {
@@ -930,8 +930,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.938867322400725,
       "switch_operations": 5,
-      "mean_decision_ms": 0.00048333216303338605,
-      "max_decision_ms": 0.0008999995770864189,
+      "mean_decision_ms": 0.0002999980400394027,
+      "max_decision_ms": 0.0004999965312890708,
       "total_steps": 12
     },
     {
@@ -945,8 +945,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.9200972259054516,
       "switch_operations": 5,
-      "mean_decision_ms": 0.0008666678089260434,
-      "max_decision_ms": 0.0015999976312741637,
+      "mean_decision_ms": 0.0005083335660553227,
+      "max_decision_ms": 0.0012999953469261527,
       "total_steps": 12
     },
     {
@@ -960,8 +960,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9412838347174544,
       "switch_operations": 5,
-      "mean_decision_ms": 0.0002166652848245576,
-      "max_decision_ms": 0.0005999972927384079,
+      "mean_decision_ms": 0.0008333317964570597,
+      "max_decision_ms": 0.0016999983927235007,
       "total_steps": 12
     },
     {
@@ -975,8 +975,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.9485431211895599,
       "switch_operations": 5,
-      "mean_decision_ms": 0.00044999978854320943,
-      "max_decision_ms": 0.0013000026228837669,
+      "mean_decision_ms": 0.0004000006204781433,
+      "max_decision_ms": 0.000800006091594696,
       "total_steps": 12
     },
     {
@@ -990,8 +990,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9438787810525041,
       "switch_operations": 5,
-      "mean_decision_ms": 0.0002083331006967152,
-      "max_decision_ms": 0.000400003045797348,
+      "mean_decision_ms": 0.00018333291033438096,
+      "max_decision_ms": 0.000300002284348011,
       "total_steps": 12
     },
     {
@@ -1005,8 +1005,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9265984674636167,
       "switch_operations": 5,
-      "mean_decision_ms": 0.00021666589115435878,
-      "max_decision_ms": 0.0004999965312890708,
+      "mean_decision_ms": 0.00018333230400457978,
+      "max_decision_ms": 0.00029999500839039683,
       "total_steps": 12
     },
     {
@@ -1020,7 +1020,7 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.928241329234196,
       "switch_operations": 5,
-      "mean_decision_ms": 0.00024166608151669303,
+      "mean_decision_ms": 0.00038333200791385025,
       "max_decision_ms": 0.0006999980541877449,
       "total_steps": 12
     },
@@ -1035,8 +1035,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.9438403719823943,
       "switch_operations": 5,
-      "mean_decision_ms": 0.00016666551042969027,
-      "max_decision_ms": 0.000300002284348011,
+      "mean_decision_ms": 0.00025000008463393897,
+      "max_decision_ms": 0.0006999980541877449,
       "total_steps": 12
     },
     {
@@ -1050,8 +1050,8 @@
       "voltage_violation_steps": 0,
       "min_voltage_pu": 0.950157345981763,
       "switch_operations": 5,
-      "mean_decision_ms": 0.0004166668077232316,
-      "max_decision_ms": 0.0010000003385357559,
+      "mean_decision_ms": 0.0002333320783994471,
+      "max_decision_ms": 0.0005999972927384079,
       "total_steps": 12
     },
     {
@@ -1065,8 +1065,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.9074307171300021,
       "switch_operations": 5,
-      "mean_decision_ms": 0.00018333291033438096,
-      "max_decision_ms": 0.000500003807246685,
+      "mean_decision_ms": 0.000233335110048453,
+      "max_decision_ms": 0.000600004568696022,
       "total_steps": 12
     },
     {
@@ -1080,8 +1080,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9411617441857838,
       "switch_operations": 5,
-      "mean_decision_ms": 0.00023333450371865183,
-      "max_decision_ms": 0.0011000010999850929,
+      "mean_decision_ms": 0.00022500171326100826,
+      "max_decision_ms": 0.000500003807246685,
       "total_steps": 12
     },
     {
@@ -1095,8 +1095,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.929877278318988,
       "switch_operations": 5,
-      "mean_decision_ms": 0.00025833287509158254,
-      "max_decision_ms": 0.000500003807246685,
+      "mean_decision_ms": 0.00022500171326100826,
+      "max_decision_ms": 0.000600004568696022,
       "total_steps": 12
     },
     {
@@ -1110,8 +1110,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.9198395322666995,
       "switch_operations": 5,
-      "mean_decision_ms": 0.00023333268472924829,
-      "max_decision_ms": 0.0004999965312890708,
+      "mean_decision_ms": 0.0004000006204781433,
+      "max_decision_ms": 0.0007999988156370819,
       "total_steps": 12
     },
     {
@@ -1125,8 +1125,8 @@
       "voltage_violation_steps": 7,
       "min_voltage_pu": 0.9094603892990545,
       "switch_operations": 5,
-      "mean_decision_ms": 0.00042500081084047753,
-      "max_decision_ms": 0.0006999980541877449,
+      "mean_decision_ms": 0.0004333336012981211,
+      "max_decision_ms": 0.0014999968698248267,
       "total_steps": 12
     },
     {
@@ -1140,8 +1140,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9296220910798658,
       "switch_operations": 5,
-      "mean_decision_ms": 0.00020000091656887284,
-      "max_decision_ms": 0.000400003045797348,
+      "mean_decision_ms": 0.0001999990975794693,
+      "max_decision_ms": 0.0007999988156370819,
       "total_steps": 12
     },
     {
@@ -1155,8 +1155,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9425515610243125,
       "switch_operations": 5,
-      "mean_decision_ms": 0.00020833491968611875,
-      "max_decision_ms": 0.000700005330145359,
+      "mean_decision_ms": 0.00021666710381396115,
+      "max_decision_ms": 0.000600004568696022,
       "total_steps": 12
     },
     {
@@ -1170,8 +1170,8 @@
       "voltage_violation_steps": 8,
       "min_voltage_pu": 0.9144683023854703,
       "switch_operations": 5,
-      "mean_decision_ms": 0.00029166524958175916,
-      "max_decision_ms": 0.0007999988156370819,
+      "mean_decision_ms": 0.00027500148765587557,
+      "max_decision_ms": 0.000500003807246685,
       "total_steps": 12
     },
     {
@@ -1185,8 +1185,8 @@
       "voltage_violation_steps": 7,
       "min_voltage_pu": 0.9196511987270795,
       "switch_operations": 5,
-      "mean_decision_ms": 0.00017500133253633976,
-      "max_decision_ms": 0.000500003807246685,
+      "mean_decision_ms": 0.0002166652848245576,
+      "max_decision_ms": 0.000400003045797348,
       "total_steps": 12
     },
     {
@@ -1200,8 +1200,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9384294403102935,
       "switch_operations": 5,
-      "mean_decision_ms": 0.0002750002749962732,
-      "max_decision_ms": 0.000700005330145359,
+      "mean_decision_ms": 0.0001916669134516269,
+      "max_decision_ms": 0.000400003045797348,
       "total_steps": 12
     },
     {
@@ -1215,8 +1215,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.9311793351748027,
       "switch_operations": 5,
-      "mean_decision_ms": 0.0007166690920712426,
-      "max_decision_ms": 0.001400003384333104,
+      "mean_decision_ms": 0.0003166660462738946,
+      "max_decision_ms": 0.0007999988156370819,
       "total_steps": 12
     },
     {
@@ -1230,8 +1230,8 @@
       "voltage_violation_steps": 6,
       "min_voltage_pu": 0.9241720259674304,
       "switch_operations": 5,
-      "mean_decision_ms": 0.0018166659477477272,
-      "max_decision_ms": 0.015400000847876072,
+      "mean_decision_ms": 0.00016666611675949147,
+      "max_decision_ms": 0.000300002284348011,
       "total_steps": 12
     },
     {
@@ -1245,8 +1245,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.929207310593821,
       "switch_operations": 5,
-      "mean_decision_ms": 0.0006916652637301013,
-      "max_decision_ms": 0.0011999945854768157,
+      "mean_decision_ms": 0.00021666589115435878,
+      "max_decision_ms": 0.0004999965312890708,
       "total_steps": 12
     },
     {
@@ -1260,8 +1260,8 @@
       "voltage_violation_steps": 6,
       "min_voltage_pu": 0.9068081540513273,
       "switch_operations": 5,
-      "mean_decision_ms": 0.0005166675691725686,
-      "max_decision_ms": 0.0011000010999850929,
+      "mean_decision_ms": 0.0003249988367315382,
+      "max_decision_ms": 0.0004999965312890708,
       "total_steps": 12
     },
     {
@@ -1275,8 +1275,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9333547471285093,
       "switch_operations": 5,
-      "mean_decision_ms": 0.0004833315567035849,
-      "max_decision_ms": 0.0008999995770864189,
+      "mean_decision_ms": 0.00018333291033438096,
+      "max_decision_ms": 0.000400003045797348,
       "total_steps": 12
     },
     {
@@ -1290,8 +1290,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.9270637920420715,
       "switch_operations": 5,
-      "mean_decision_ms": 0.000458332579000853,
-      "max_decision_ms": 0.0010000003385357559,
+      "mean_decision_ms": 0.0001833347293237845,
+      "max_decision_ms": 0.000500003807246685,
       "total_steps": 12
     },
     {
@@ -1305,8 +1305,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9376381563258517,
       "switch_operations": 5,
-      "mean_decision_ms": 0.0006083343275046597,
-      "max_decision_ms": 0.0011000010999850929,
+      "mean_decision_ms": 0.00017500133253633976,
+      "max_decision_ms": 0.000400003045797348,
       "total_steps": 12
     },
     {
@@ -1320,8 +1320,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.929024044664738,
       "switch_operations": 5,
-      "mean_decision_ms": 0.0007583324380296593,
-      "max_decision_ms": 0.0016999983927235007,
+      "mean_decision_ms": 0.00025000008463393897,
+      "max_decision_ms": 0.0004999965312890708,
       "total_steps": 12
     },
     {
@@ -1335,8 +1335,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.928368684614467,
       "switch_operations": 5,
-      "mean_decision_ms": 0.0005833353498019278,
-      "max_decision_ms": 0.0011000010999850929,
+      "mean_decision_ms": 0.00024166608151669303,
+      "max_decision_ms": 0.0004999965312890708,
       "total_steps": 12
     },
     {
@@ -1350,8 +1350,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.9328242877527227,
       "switch_operations": 5,
-      "mean_decision_ms": 0.0005749989213654771,
-      "max_decision_ms": 0.0013000026228837669,
+      "mean_decision_ms": 0.00025833226876178134,
+      "max_decision_ms": 0.0005999972927384079,
       "total_steps": 12
     }
   ],
@@ -1367,8 +1367,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9285070088070677,
       "switch_operations": 24,
-      "mean_decision_ms": 59.453433331630855,
-      "max_decision_ms": 75.42139999713982,
+      "mean_decision_ms": 50.419441666842125,
+      "max_decision_ms": 116.37500000506407,
       "total_steps": 12
     },
     {
@@ -1382,8 +1382,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9393891068887156,
       "switch_operations": 22,
-      "mean_decision_ms": 44.53099166736744,
-      "max_decision_ms": 54.70380000042496,
+      "mean_decision_ms": 41.916166665032506,
+      "max_decision_ms": 57.42360000294866,
       "total_steps": 12
     },
     {
@@ -1397,8 +1397,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9396716088921314,
       "switch_operations": 15,
-      "mean_decision_ms": 43.90920833369213,
-      "max_decision_ms": 63.52619999961462,
+      "mean_decision_ms": 52.56319999959184,
+      "max_decision_ms": 84.79699999588775,
       "total_steps": 12
     },
     {
@@ -1412,8 +1412,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.943499183348536,
       "switch_operations": 12,
-      "mean_decision_ms": 45.26080833359932,
-      "max_decision_ms": 56.877900002291426,
+      "mean_decision_ms": 60.0081000005351,
+      "max_decision_ms": 88.93260000331793,
       "total_steps": 12
     },
     {
@@ -1427,8 +1427,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.9485304512939032,
       "switch_operations": 26,
-      "mean_decision_ms": 46.27136666689088,
-      "max_decision_ms": 51.1601000034716,
+      "mean_decision_ms": 42.85527499814634,
+      "max_decision_ms": 83.48370000021532,
       "total_steps": 12
     },
     {
@@ -1442,8 +1442,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.9465812653580821,
       "switch_operations": 29,
-      "mean_decision_ms": 45.97659166635518,
-      "max_decision_ms": 56.931799997983035,
+      "mean_decision_ms": 47.93680000026749,
+      "max_decision_ms": 98.32629999436904,
       "total_steps": 12
     },
     {
@@ -1457,8 +1457,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9423779247531613,
       "switch_operations": 21,
-      "mean_decision_ms": 47.07844166781191,
-      "max_decision_ms": 79.87660000071628,
+      "mean_decision_ms": 44.10804999921917,
+      "max_decision_ms": 77.19830000132788,
       "total_steps": 12
     },
     {
@@ -1472,8 +1472,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.9315784723528566,
       "switch_operations": 22,
-      "mean_decision_ms": 46.774375000798806,
-      "max_decision_ms": 77.29899999685585,
+      "mean_decision_ms": 48.45219166782044,
+      "max_decision_ms": 88.07670000533108,
       "total_steps": 12
     },
     {
@@ -1487,8 +1487,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.9468938882740078,
       "switch_operations": 25,
-      "mean_decision_ms": 45.602075001321886,
-      "max_decision_ms": 50.70569999952568,
+      "mean_decision_ms": 39.723383333087746,
+      "max_decision_ms": 43.05490000115242,
       "total_steps": 12
     },
     {
@@ -1502,8 +1502,8 @@
       "voltage_violation_steps": 0,
       "min_voltage_pu": 0.9524658504185859,
       "switch_operations": 13,
-      "mean_decision_ms": 44.64214999885977,
-      "max_decision_ms": 55.066599998099264,
+      "mean_decision_ms": 47.06581666505372,
+      "max_decision_ms": 61.837900000682566,
       "total_steps": 12
     },
     {
@@ -1517,8 +1517,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.923522700399361,
       "switch_operations": 21,
-      "mean_decision_ms": 46.066000000185646,
-      "max_decision_ms": 74.81489999918267,
+      "mean_decision_ms": 44.05077500086918,
+      "max_decision_ms": 48.707800000556745,
       "total_steps": 12
     },
     {
@@ -1532,8 +1532,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9450031378592219,
       "switch_operations": 21,
-      "mean_decision_ms": 43.9942500009541,
-      "max_decision_ms": 48.419500002637506,
+      "mean_decision_ms": 44.743875001586275,
+      "max_decision_ms": 79.15240000147605,
       "total_steps": 12
     },
     {
@@ -1547,8 +1547,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9389530065531783,
       "switch_operations": 26,
-      "mean_decision_ms": 44.9221916666526,
-      "max_decision_ms": 53.78919999930076,
+      "mean_decision_ms": 45.23139999946579,
+      "max_decision_ms": 84.6058000024641,
       "total_steps": 12
     },
     {
@@ -1562,8 +1562,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.933710024238472,
       "switch_operations": 13,
-      "mean_decision_ms": 46.31090833269506,
-      "max_decision_ms": 60.33880000177305,
+      "mean_decision_ms": 42.043475000051934,
+      "max_decision_ms": 50.64519999723416,
       "total_steps": 12
     },
     {
@@ -1577,8 +1577,8 @@
       "voltage_violation_steps": 7,
       "min_voltage_pu": 0.9325296609322623,
       "switch_operations": 19,
-      "mean_decision_ms": 44.11187499984711,
-      "max_decision_ms": 48.15020000387449,
+      "mean_decision_ms": 48.77841666833168,
+      "max_decision_ms": 99.04770000139251,
       "total_steps": 12
     },
     {
@@ -1592,8 +1592,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9296823603288991,
       "switch_operations": 25,
-      "mean_decision_ms": 45.106449999366305,
-      "max_decision_ms": 79.57589999568881,
+      "mean_decision_ms": 51.11090000051869,
+      "max_decision_ms": 90.58480000385316,
       "total_steps": 12
     },
     {
@@ -1607,8 +1607,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9437327724781701,
       "switch_operations": 25,
-      "mean_decision_ms": 44.707641667628195,
-      "max_decision_ms": 53.955499999574386,
+      "mean_decision_ms": 45.98747500009873,
+      "max_decision_ms": 98.05799999594456,
       "total_steps": 12
     },
     {
@@ -1622,8 +1622,8 @@
       "voltage_violation_steps": 6,
       "min_voltage_pu": 0.9373878367663262,
       "switch_operations": 21,
-      "mean_decision_ms": 51.78345833398149,
-      "max_decision_ms": 98.23899999901187,
+      "mean_decision_ms": 42.6869750002273,
+      "max_decision_ms": 58.47780000476632,
       "total_steps": 12
     },
     {
@@ -1637,8 +1637,8 @@
       "voltage_violation_steps": 7,
       "min_voltage_pu": 0.9280060758220574,
       "switch_operations": 14,
-      "mean_decision_ms": 43.30549166722145,
-      "max_decision_ms": 54.29100000037579,
+      "mean_decision_ms": 52.508166666181445,
+      "max_decision_ms": 106.24919999827398,
       "total_steps": 12
     },
     {
@@ -1652,8 +1652,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.938471428876436,
       "switch_operations": 16,
-      "mean_decision_ms": 43.81460833368086,
-      "max_decision_ms": 55.83620000106748,
+      "mean_decision_ms": 46.301825000531004,
+      "max_decision_ms": 68.6000000059721,
       "total_steps": 12
     },
     {
@@ -1667,8 +1667,8 @@
       "voltage_violation_steps": 0,
       "min_voltage_pu": 0.9503013759802221,
       "switch_operations": 23,
-      "mean_decision_ms": 95.67722500105447,
-      "max_decision_ms": 104.60590000002412,
+      "mean_decision_ms": 40.08245833392721,
+      "max_decision_ms": 46.80039999948349,
       "total_steps": 12
     },
     {
@@ -1682,8 +1682,8 @@
       "voltage_violation_steps": 6,
       "min_voltage_pu": 0.9380721183550814,
       "switch_operations": 14,
-      "mean_decision_ms": 93.92772500056405,
-      "max_decision_ms": 117.50160000519827,
+      "mean_decision_ms": 45.153158333657,
+      "max_decision_ms": 100.07380000024568,
       "total_steps": 12
     },
     {
@@ -1697,8 +1697,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.9327208745767354,
       "switch_operations": 18,
-      "mean_decision_ms": 96.97580833380925,
-      "max_decision_ms": 120.12089999916498,
+      "mean_decision_ms": 46.21948333381928,
+      "max_decision_ms": 102.99370000575436,
       "total_steps": 12
     },
     {
@@ -1712,8 +1712,8 @@
       "voltage_violation_steps": 6,
       "min_voltage_pu": 0.9344891757791243,
       "switch_operations": 17,
-      "mean_decision_ms": 88.3811833330886,
-      "max_decision_ms": 102.30510000110371,
+      "mean_decision_ms": 47.52787500062065,
+      "max_decision_ms": 75.66509999742266,
       "total_steps": 12
     },
     {
@@ -1727,8 +1727,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.934884609288592,
       "switch_operations": 16,
-      "mean_decision_ms": 101.02741666681443,
-      "max_decision_ms": 111.56080000364454,
+      "mean_decision_ms": 43.24415833252715,
+      "max_decision_ms": 64.9113999970723,
       "total_steps": 12
     },
     {
@@ -1742,8 +1742,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.947414662030325,
       "switch_operations": 28,
-      "mean_decision_ms": 88.61199999955716,
-      "max_decision_ms": 104.06820000207517,
+      "mean_decision_ms": 39.70451666646113,
+      "max_decision_ms": 43.29860000143526,
       "total_steps": 12
     },
     {
@@ -1757,8 +1757,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9403167877605623,
       "switch_operations": 25,
-      "mean_decision_ms": 100.46674166612017,
-      "max_decision_ms": 108.29000000376254,
+      "mean_decision_ms": 46.93522499898487,
+      "max_decision_ms": 71.68449999880977,
       "total_steps": 12
     },
     {
@@ -1772,8 +1772,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9320659313959823,
       "switch_operations": 20,
-      "mean_decision_ms": 102.87944166642167,
-      "max_decision_ms": 116.30999999761116,
+      "mean_decision_ms": 40.92327500014411,
+      "max_decision_ms": 48.26809999940451,
       "total_steps": 12
     },
     {
@@ -1787,8 +1787,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.9283619379035348,
       "switch_operations": 19,
-      "mean_decision_ms": 98.7903833326224,
-      "max_decision_ms": 111.56959999789251,
+      "mean_decision_ms": 43.233116665457295,
+      "max_decision_ms": 68.148199999996,
       "total_steps": 12
     },
     {
@@ -1802,8 +1802,912 @@
       "voltage_violation_steps": 0,
       "min_voltage_pu": 0.9506565968108391,
       "switch_operations": 24,
-      "mean_decision_ms": 99.23561666801106,
-      "max_decision_ms": 108.68540000228677,
+      "mean_decision_ms": 39.894958333510054,
+      "max_decision_ms": 44.0969999981462,
+      "total_steps": 12
+    }
+  ],
+  "random_proposals_raw": [
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1000,
+      "heat_mj": 600.8990968958078,
+      "entropy_kj_per_k": 1973.148420401341,
+      "exergy_destroyed_mj": 588.2942015426597,
+      "peak_temp_c": 44.5522055833556,
+      "peak_temp_excl_head_c": 44.5522055833556,
+      "voltage_violation_steps": 8,
+      "min_voltage_pu": 0.6275863132926547,
+      "switch_operations": 43,
+      "mean_decision_ms": 2.262383333800244,
+      "max_decision_ms": 3.0139999944367446,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1001,
+      "heat_mj": 502.1068840664362,
+      "entropy_kj_per_k": 1653.1990566407958,
+      "exergy_destroyed_mj": 492.90129873745326,
+      "peak_temp_c": 36.01147026131645,
+      "peak_temp_excl_head_c": 36.01147026131645,
+      "voltage_violation_steps": 8,
+      "min_voltage_pu": 0.7376327886726324,
+      "switch_operations": 49,
+      "mean_decision_ms": 0.9807833321247017,
+      "max_decision_ms": 2.328700000362005,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1002,
+      "heat_mj": 1117.9123819492145,
+      "entropy_kj_per_k": 3560.991731379119,
+      "exergy_destroyed_mj": 1061.709684710684,
+      "peak_temp_c": 53.047474256875375,
+      "peak_temp_excl_head_c": 53.047474256875375,
+      "voltage_violation_steps": 7,
+      "min_voltage_pu": 0.5915287585806938,
+      "switch_operations": 49,
+      "mean_decision_ms": 0.8411666652439939,
+      "max_decision_ms": 1.3691999993170612,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1003,
+      "heat_mj": 483.6374044064254,
+      "entropy_kj_per_k": 1593.5612831651338,
+      "exergy_destroyed_mj": 475.1202965756846,
+      "peak_temp_c": 43.6517229189642,
+      "peak_temp_excl_head_c": 43.6517229189642,
+      "voltage_violation_steps": 8,
+      "min_voltage_pu": 0.7534070035978913,
+      "switch_operations": 41,
+      "mean_decision_ms": 0.8367500013264362,
+      "max_decision_ms": 1.1257000005571172,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1004,
+      "heat_mj": 407.1220705550852,
+      "entropy_kj_per_k": 1348.484472853491,
+      "exergy_destroyed_mj": 402.0506455812683,
+      "peak_temp_c": 41.340932554261144,
+      "peak_temp_excl_head_c": 41.340932554261144,
+      "voltage_violation_steps": 6,
+      "min_voltage_pu": 0.8018519858911766,
+      "switch_operations": 43,
+      "mean_decision_ms": 0.9201416675447641,
+      "max_decision_ms": 1.162399996246677,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1005,
+      "heat_mj": 474.53767540691763,
+      "entropy_kj_per_k": 1552.8143240286822,
+      "exergy_destroyed_mj": 462.97159070915154,
+      "peak_temp_c": 42.328031261620026,
+      "peak_temp_excl_head_c": 42.328031261620026,
+      "voltage_violation_steps": 6,
+      "min_voltage_pu": 0.7648752670055657,
+      "switch_operations": 44,
+      "mean_decision_ms": 1.5450750003462115,
+      "max_decision_ms": 2.1792000043205917,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1006,
+      "heat_mj": 499.0278755927373,
+      "entropy_kj_per_k": 1637.81681804351,
+      "exergy_destroyed_mj": 488.3150842996725,
+      "peak_temp_c": 37.08460805164958,
+      "peak_temp_excl_head_c": 37.08460805164958,
+      "voltage_violation_steps": 10,
+      "min_voltage_pu": 0.8430587674388521,
+      "switch_operations": 47,
+      "mean_decision_ms": 0.9104583338436593,
+      "max_decision_ms": 1.1988999976892956,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1007,
+      "heat_mj": 1035.91212513351,
+      "entropy_kj_per_k": 3348.9931304680167,
+      "exergy_destroyed_mj": 998.5023018490391,
+      "peak_temp_c": 47.134895864760836,
+      "peak_temp_excl_head_c": 47.134895864760836,
+      "voltage_violation_steps": 8,
+      "min_voltage_pu": 0.5666868329928916,
+      "switch_operations": 47,
+      "mean_decision_ms": 0.8486083333991701,
+      "max_decision_ms": 1.7332999996142462,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1008,
+      "heat_mj": 524.111940836816,
+      "entropy_kj_per_k": 1735.0042520889756,
+      "exergy_destroyed_mj": 517.291517760328,
+      "peak_temp_c": 37.63781046181731,
+      "peak_temp_excl_head_c": 37.63781046181731,
+      "voltage_violation_steps": 7,
+      "min_voltage_pu": 0.6552540421508507,
+      "switch_operations": 48,
+      "mean_decision_ms": 0.8776833328738576,
+      "max_decision_ms": 1.0815999994520098,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1009,
+      "heat_mj": 547.3547928157589,
+      "entropy_kj_per_k": 1807.008269904524,
+      "exergy_destroyed_mj": 538.7595156720338,
+      "peak_temp_c": 38.95973295420856,
+      "peak_temp_excl_head_c": 38.95973295420856,
+      "voltage_violation_steps": 9,
+      "min_voltage_pu": 0.8099960189169707,
+      "switch_operations": 44,
+      "mean_decision_ms": 1.0005500001473895,
+      "max_decision_ms": 1.8973999976878986,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1010,
+      "heat_mj": 697.523612501248,
+      "entropy_kj_per_k": 2273.7140292152926,
+      "exergy_destroyed_mj": 677.9078378105394,
+      "peak_temp_c": 48.727768745995434,
+      "peak_temp_excl_head_c": 48.727768745995434,
+      "voltage_violation_steps": 9,
+      "min_voltage_pu": 0.7768444423637191,
+      "switch_operations": 44,
+      "mean_decision_ms": 1.075291667196628,
+      "max_decision_ms": 1.9398000004002824,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1011,
+      "heat_mj": 405.5443209235974,
+      "entropy_kj_per_k": 1335.8856037764906,
+      "exergy_destroyed_mj": 398.2942927659606,
+      "peak_temp_c": 36.993246216580644,
+      "peak_temp_excl_head_c": 36.993246216580644,
+      "voltage_violation_steps": 6,
+      "min_voltage_pu": 0.8194599073534801,
+      "switch_operations": 48,
+      "mean_decision_ms": 1.475183333241148,
+      "max_decision_ms": 2.1101999955135398,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1012,
+      "heat_mj": 516.9835130498958,
+      "entropy_kj_per_k": 1699.5906579177854,
+      "exergy_destroyed_mj": 506.7329546581877,
+      "peak_temp_c": 40.739025286924175,
+      "peak_temp_excl_head_c": 40.739025286924175,
+      "voltage_violation_steps": 9,
+      "min_voltage_pu": 0.7766380299576136,
+      "switch_operations": 52,
+      "mean_decision_ms": 1.1663333328518395,
+      "max_decision_ms": 1.7296000005444512,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1013,
+      "heat_mj": 1110.6796577974226,
+      "entropy_kj_per_k": 3521.342882097995,
+      "exergy_destroyed_mj": 1049.888380297517,
+      "peak_temp_c": 106.4369842420648,
+      "peak_temp_excl_head_c": 106.4369842420648,
+      "voltage_violation_steps": 11,
+      "min_voltage_pu": 0.5539232104796047,
+      "switch_operations": 40,
+      "mean_decision_ms": 0.817750000351225,
+      "max_decision_ms": 1.0719999991124496,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1014,
+      "heat_mj": 947.2287489303782,
+      "entropy_kj_per_k": 3087.9593392823576,
+      "exergy_destroyed_mj": 920.6750770070349,
+      "peak_temp_c": 48.542542381840576,
+      "peak_temp_excl_head_c": 48.542542381840576,
+      "voltage_violation_steps": 11,
+      "min_voltage_pu": 0.624021218804562,
+      "switch_operations": 42,
+      "mean_decision_ms": 1.8648583336471347,
+      "max_decision_ms": 5.071699997643009,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1015,
+      "heat_mj": 464.43180447035684,
+      "entropy_kj_per_k": 1516.9299526826962,
+      "exergy_destroyed_mj": 452.27266539234586,
+      "peak_temp_c": 42.88971625919913,
+      "peak_temp_excl_head_c": 42.88971625919913,
+      "voltage_violation_steps": 9,
+      "min_voltage_pu": 0.8057029001929139,
+      "switch_operations": 44,
+      "mean_decision_ms": 0.8644166664453223,
+      "max_decision_ms": 1.4459000012720935,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1016,
+      "heat_mj": 443.0091558653668,
+      "entropy_kj_per_k": 1460.5987679244192,
+      "exergy_destroyed_mj": 435.4775226566655,
+      "peak_temp_c": 41.56921156830833,
+      "peak_temp_excl_head_c": 41.56921156830833,
+      "voltage_violation_steps": 9,
+      "min_voltage_pu": 0.8349744667458736,
+      "switch_operations": 46,
+      "mean_decision_ms": 1.1218333329452435,
+      "max_decision_ms": 1.764300002832897,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1017,
+      "heat_mj": 981.756133688104,
+      "entropy_kj_per_k": 3126.4092652356917,
+      "exergy_destroyed_mj": 932.1389224300214,
+      "peak_temp_c": 84.5161763734738,
+      "peak_temp_excl_head_c": 84.5161763734738,
+      "voltage_violation_steps": 10,
+      "min_voltage_pu": 0.7350284333383504,
+      "switch_operations": 46,
+      "mean_decision_ms": 0.842433333673398,
+      "max_decision_ms": 1.4723999993293546,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1018,
+      "heat_mj": 790.1324154348024,
+      "entropy_kj_per_k": 2554.709657548147,
+      "exergy_destroyed_mj": 761.6866843979799,
+      "peak_temp_c": 58.76710114195902,
+      "peak_temp_excl_head_c": 58.76710114195902,
+      "voltage_violation_steps": 10,
+      "min_voltage_pu": 0.7416778729956475,
+      "switch_operations": 50,
+      "mean_decision_ms": 0.9483750006135475,
+      "max_decision_ms": 1.3001999977859668,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1019,
+      "heat_mj": 686.9459306500428,
+      "entropy_kj_per_k": 2269.1894557049054,
+      "exergy_destroyed_mj": 676.5588362184176,
+      "peak_temp_c": 42.30820152199021,
+      "peak_temp_excl_head_c": 42.30820152199021,
+      "voltage_violation_steps": 8,
+      "min_voltage_pu": 0.7066000608424168,
+      "switch_operations": 45,
+      "mean_decision_ms": 1.4586416673409985,
+      "max_decision_ms": 1.698000000033062,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1020,
+      "heat_mj": 406.26759481397175,
+      "entropy_kj_per_k": 1341.7747944072103,
+      "exergy_destroyed_mj": 400.05015495250973,
+      "peak_temp_c": 33.63281937405537,
+      "peak_temp_excl_head_c": 33.63281937405537,
+      "voltage_violation_steps": 4,
+      "min_voltage_pu": 0.7590495264448136,
+      "switch_operations": 45,
+      "mean_decision_ms": 0.7368666677696941,
+      "max_decision_ms": 0.8508000028086826,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1021,
+      "heat_mj": 770.5410161979789,
+      "entropy_kj_per_k": 2519.419038407325,
+      "exergy_destroyed_mj": 751.1647863011439,
+      "peak_temp_c": 58.66510194678432,
+      "peak_temp_excl_head_c": 58.66510194678432,
+      "voltage_violation_steps": 11,
+      "min_voltage_pu": 0.7027867015927194,
+      "switch_operations": 45,
+      "mean_decision_ms": 0.9852083330770256,
+      "max_decision_ms": 1.352999999653548,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1022,
+      "heat_mj": 614.2050763996758,
+      "entropy_kj_per_k": 2021.0296057138216,
+      "exergy_destroyed_mj": 602.5699769435759,
+      "peak_temp_c": 48.796219597360164,
+      "peak_temp_excl_head_c": 48.796219597360164,
+      "voltage_violation_steps": 11,
+      "min_voltage_pu": 0.7769377530242643,
+      "switch_operations": 47,
+      "mean_decision_ms": 0.9170166667900048,
+      "max_decision_ms": 1.7521999980090186,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1023,
+      "heat_mj": 661.2293335833061,
+      "entropy_kj_per_k": 2151.512913632926,
+      "exergy_destroyed_mj": 641.4735751996568,
+      "peak_temp_c": 57.85145676673733,
+      "peak_temp_excl_head_c": 57.85145676673733,
+      "voltage_violation_steps": 9,
+      "min_voltage_pu": 0.7797047769507253,
+      "switch_operations": 41,
+      "mean_decision_ms": 0.8701166661921889,
+      "max_decision_ms": 1.0384999986854382,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1024,
+      "heat_mj": 552.8736714276253,
+      "entropy_kj_per_k": 1818.1243743152393,
+      "exergy_destroyed_mj": 542.0737822020886,
+      "peak_temp_c": 47.3033784963842,
+      "peak_temp_excl_head_c": 47.3033784963842,
+      "voltage_violation_steps": 7,
+      "min_voltage_pu": 0.7947960037149997,
+      "switch_operations": 51,
+      "mean_decision_ms": 0.844949998887993,
+      "max_decision_ms": 1.3847999944118783,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1025,
+      "heat_mj": 605.05026104525,
+      "entropy_kj_per_k": 1989.3670953956687,
+      "exergy_destroyed_mj": 593.1297994922186,
+      "peak_temp_c": 40.43170120712222,
+      "peak_temp_excl_head_c": 40.43170120712222,
+      "voltage_violation_steps": 10,
+      "min_voltage_pu": 0.8068300382054403,
+      "switch_operations": 48,
+      "mean_decision_ms": 1.1418916656111833,
+      "max_decision_ms": 2.9548999955295585,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1026,
+      "heat_mj": 515.7389591415547,
+      "entropy_kj_per_k": 1693.2899030099973,
+      "exergy_destroyed_mj": 504.85438458243067,
+      "peak_temp_c": 42.641805947361775,
+      "peak_temp_excl_head_c": 42.641805947361775,
+      "voltage_violation_steps": 8,
+      "min_voltage_pu": 0.8039285012976164,
+      "switch_operations": 52,
+      "mean_decision_ms": 0.7638416670185203,
+      "max_decision_ms": 1.0293000013916753,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1027,
+      "heat_mj": 583.3311056328948,
+      "entropy_kj_per_k": 1910.9531757203672,
+      "exergy_destroyed_mj": 569.7506893410274,
+      "peak_temp_c": 42.27902906016493,
+      "peak_temp_excl_head_c": 42.27902906016493,
+      "voltage_violation_steps": 9,
+      "min_voltage_pu": 0.714628383118368,
+      "switch_operations": 45,
+      "mean_decision_ms": 0.8628416653664317,
+      "max_decision_ms": 0.9999000030802563,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1028,
+      "heat_mj": 484.96748797311415,
+      "entropy_kj_per_k": 1581.1983369240943,
+      "exergy_destroyed_mj": 471.43428415391867,
+      "peak_temp_c": 49.006854655266466,
+      "peak_temp_excl_head_c": 49.006854655266466,
+      "voltage_violation_steps": 9,
+      "min_voltage_pu": 0.7895654727720032,
+      "switch_operations": 50,
+      "mean_decision_ms": 1.0649333344190381,
+      "max_decision_ms": 1.9293000004836358,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_raw",
+      "seed": 1029,
+      "heat_mj": 381.60489118127623,
+      "entropy_kj_per_k": 1259.6115467581924,
+      "exergy_destroyed_mj": 375.55318266595503,
+      "peak_temp_c": 36.75469392952846,
+      "peak_temp_excl_head_c": 36.75469392952846,
+      "voltage_violation_steps": 6,
+      "min_voltage_pu": 0.8054879511079954,
+      "switch_operations": 46,
+      "mean_decision_ms": 0.9255333340358144,
+      "max_decision_ms": 1.2303999974392354,
+      "total_steps": 12
+    }
+  ],
+  "random_proposals_filtered": [
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1000,
+      "heat_mj": 277.2055475973915,
+      "entropy_kj_per_k": 909.5720463539743,
+      "exergy_destroyed_mj": 271.18890562043737,
+      "peak_temp_c": 36.72609031444415,
+      "peak_temp_excl_head_c": 36.72609031444415,
+      "voltage_violation_steps": 3,
+      "min_voltage_pu": 0.935416773198562,
+      "switch_operations": 37,
+      "mean_decision_ms": 16.013674998854793,
+      "max_decision_ms": 38.56380000070203,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1001,
+      "heat_mj": 212.03967531706775,
+      "entropy_kj_per_k": 699.9407766390173,
+      "exergy_destroyed_mj": 208.687342554923,
+      "peak_temp_c": 34.73374864162622,
+      "peak_temp_excl_head_c": 34.73374864162622,
+      "voltage_violation_steps": 0,
+      "min_voltage_pu": 0.9545294522469527,
+      "switch_operations": 36,
+      "mean_decision_ms": 12.714950000978812,
+      "max_decision_ms": 14.283099997555837,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1002,
+      "heat_mj": 323.93519576436864,
+      "entropy_kj_per_k": 1061.5143450069716,
+      "exergy_destroyed_mj": 316.49050196382854,
+      "peak_temp_c": 41.35870648034961,
+      "peak_temp_excl_head_c": 41.35870648034961,
+      "voltage_violation_steps": 3,
+      "min_voltage_pu": 0.9378590008015294,
+      "switch_operations": 40,
+      "mean_decision_ms": 17.348233332086238,
+      "max_decision_ms": 39.10119999636663,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1003,
+      "heat_mj": 261.6252516897691,
+      "entropy_kj_per_k": 861.2910824976957,
+      "exergy_destroyed_mj": 256.79393624668796,
+      "peak_temp_c": 38.7698395589527,
+      "peak_temp_excl_head_c": 38.7698395589527,
+      "voltage_violation_steps": 3,
+      "min_voltage_pu": 0.9465288472230299,
+      "switch_operations": 37,
+      "mean_decision_ms": 18.65245833384203,
+      "max_decision_ms": 32.26339999673655,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1004,
+      "heat_mj": 197.53848457355667,
+      "entropy_kj_per_k": 651.9634055649723,
+      "exergy_destroyed_mj": 194.38288936919648,
+      "peak_temp_c": 35.227479903200106,
+      "peak_temp_excl_head_c": 35.227479903200106,
+      "voltage_violation_steps": 0,
+      "min_voltage_pu": 0.9560446581901825,
+      "switch_operations": 34,
+      "mean_decision_ms": 12.468424999193909,
+      "max_decision_ms": 15.48239999829093,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1005,
+      "heat_mj": 224.1659024748788,
+      "entropy_kj_per_k": 739.6446153207063,
+      "exergy_destroyed_mj": 220.52504205786857,
+      "peak_temp_c": 34.71243346033401,
+      "peak_temp_excl_head_c": 34.71243346033401,
+      "voltage_violation_steps": 1,
+      "min_voltage_pu": 0.9457837264909167,
+      "switch_operations": 38,
+      "mean_decision_ms": 12.702983332928852,
+      "max_decision_ms": 17.86780000111321,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1006,
+      "heat_mj": 240.7904342631117,
+      "entropy_kj_per_k": 793.2278149191511,
+      "exergy_destroyed_mj": 236.50087301814492,
+      "peak_temp_c": 35.40765277716429,
+      "peak_temp_excl_head_c": 35.40765277716429,
+      "voltage_violation_steps": 3,
+      "min_voltage_pu": 0.9404396372152193,
+      "switch_operations": 36,
+      "mean_decision_ms": 13.159316666133236,
+      "max_decision_ms": 17.808199998398777,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1007,
+      "heat_mj": 302.96808609085235,
+      "entropy_kj_per_k": 994.2077775295533,
+      "exergy_destroyed_mj": 296.42304887043633,
+      "peak_temp_c": 40.46940264020856,
+      "peak_temp_excl_head_c": 40.46940264020856,
+      "voltage_violation_steps": 5,
+      "min_voltage_pu": 0.9387348873160082,
+      "switch_operations": 36,
+      "mean_decision_ms": 14.725766668561846,
+      "max_decision_ms": 20.559900003718212,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1008,
+      "heat_mj": 210.32353562962976,
+      "entropy_kj_per_k": 696.8322185270054,
+      "exergy_destroyed_mj": 207.76052595382663,
+      "peak_temp_c": 36.298200935723,
+      "peak_temp_excl_head_c": 36.298200935723,
+      "voltage_violation_steps": 1,
+      "min_voltage_pu": 0.9495373116232041,
+      "switch_operations": 38,
+      "mean_decision_ms": 14.18658333386702,
+      "max_decision_ms": 19.548099997336976,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1009,
+      "heat_mj": 188.81732404295983,
+      "entropy_kj_per_k": 624.6723939524695,
+      "exergy_destroyed_mj": 186.2460742569288,
+      "peak_temp_c": 33.55199348165985,
+      "peak_temp_excl_head_c": 33.55199348165985,
+      "voltage_violation_steps": 1,
+      "min_voltage_pu": 0.9499211722879635,
+      "switch_operations": 38,
+      "mean_decision_ms": 14.347516667839955,
+      "max_decision_ms": 20.237100005033426,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1010,
+      "heat_mj": 353.4798995243636,
+      "entropy_kj_per_k": 1155.992106942607,
+      "exergy_destroyed_mj": 344.65904668493823,
+      "peak_temp_c": 42.44488885029489,
+      "peak_temp_excl_head_c": 42.44488885029489,
+      "voltage_violation_steps": 3,
+      "min_voltage_pu": 0.9366043908523621,
+      "switch_operations": 36,
+      "mean_decision_ms": 14.28749166613367,
+      "max_decision_ms": 19.910700000764336,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1011,
+      "heat_mj": 216.29381074248803,
+      "entropy_kj_per_k": 714.7421132642804,
+      "exergy_destroyed_mj": 213.1003610697452,
+      "peak_temp_c": 34.89864408785644,
+      "peak_temp_excl_head_c": 34.89864408785644,
+      "voltage_violation_steps": 0,
+      "min_voltage_pu": 0.9531307559512648,
+      "switch_operations": 39,
+      "mean_decision_ms": 13.187758332302716,
+      "max_decision_ms": 16.044799995142967,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1012,
+      "heat_mj": 238.666881116241,
+      "entropy_kj_per_k": 787.076144947589,
+      "exergy_destroyed_mj": 234.66675261612366,
+      "peak_temp_c": 35.753470197899276,
+      "peak_temp_excl_head_c": 35.753470197899276,
+      "voltage_violation_steps": 2,
+      "min_voltage_pu": 0.9326049963440217,
+      "switch_operations": 45,
+      "mean_decision_ms": 12.631833333216491,
+      "max_decision_ms": 14.684699999634176,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1013,
+      "heat_mj": 322.71872218808664,
+      "entropy_kj_per_k": 1059.1002323259324,
+      "exergy_destroyed_mj": 315.77073426797676,
+      "peak_temp_c": 42.45900505024008,
+      "peak_temp_excl_head_c": 42.45900505024008,
+      "voltage_violation_steps": 3,
+      "min_voltage_pu": 0.9319592980396842,
+      "switch_operations": 38,
+      "mean_decision_ms": 18.158099998496862,
+      "max_decision_ms": 38.36310000042431,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1014,
+      "heat_mj": 385.750957544523,
+      "entropy_kj_per_k": 1255.9098181911938,
+      "exergy_destroyed_mj": 374.4495122937044,
+      "peak_temp_c": 45.51593844515929,
+      "peak_temp_excl_head_c": 45.51593844515929,
+      "voltage_violation_steps": 7,
+      "min_voltage_pu": 0.9362300462356575,
+      "switch_operations": 40,
+      "mean_decision_ms": 14.633999999811445,
+      "max_decision_ms": 30.37929999845801,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1015,
+      "heat_mj": 298.2623711426055,
+      "entropy_kj_per_k": 978.8636759938408,
+      "exergy_destroyed_mj": 291.8482049975636,
+      "peak_temp_c": 40.313162333998434,
+      "peak_temp_excl_head_c": 40.313162333998434,
+      "voltage_violation_steps": 2,
+      "min_voltage_pu": 0.9256825271609397,
+      "switch_operations": 39,
+      "mean_decision_ms": 15.737608334044731,
+      "max_decision_ms": 26.949899998726323,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1016,
+      "heat_mj": 249.77182070275296,
+      "entropy_kj_per_k": 823.2497865415392,
+      "exergy_destroyed_mj": 245.45192385735987,
+      "peak_temp_c": 37.02831786741211,
+      "peak_temp_excl_head_c": 37.02831786741211,
+      "voltage_violation_steps": 2,
+      "min_voltage_pu": 0.949259677886385,
+      "switch_operations": 34,
+      "mean_decision_ms": 15.328933333876194,
+      "max_decision_ms": 21.372999995946884,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1017,
+      "heat_mj": 397.8242428358125,
+      "entropy_kj_per_k": 1295.091501384898,
+      "exergy_destroyed_mj": 386.1315311379073,
+      "peak_temp_c": 46.01009116969266,
+      "peak_temp_excl_head_c": 46.01009116969266,
+      "voltage_violation_steps": 7,
+      "min_voltage_pu": 0.9319505883881521,
+      "switch_operations": 37,
+      "mean_decision_ms": 12.793849999676846,
+      "max_decision_ms": 15.207099997496698,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1018,
+      "heat_mj": 367.13148812531125,
+      "entropy_kj_per_k": 1199.7852003241999,
+      "exergy_destroyed_mj": 357.71595747666015,
+      "peak_temp_c": 43.45990491189576,
+      "peak_temp_excl_head_c": 43.45990491189576,
+      "voltage_violation_steps": 4,
+      "min_voltage_pu": 0.9345725587071478,
+      "switch_operations": 41,
+      "mean_decision_ms": 11.039191665986436,
+      "max_decision_ms": 13.670899999851827,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1019,
+      "heat_mj": 265.9097197194008,
+      "entropy_kj_per_k": 875.2832223624871,
+      "exergy_destroyed_mj": 260.9656927473755,
+      "peak_temp_c": 37.11305200912062,
+      "peak_temp_excl_head_c": 37.11305200912062,
+      "voltage_violation_steps": 3,
+      "min_voltage_pu": 0.9424975343497715,
+      "switch_operations": 37,
+      "mean_decision_ms": 15.38714166478409,
+      "max_decision_ms": 23.50029999797698,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1020,
+      "heat_mj": 191.14180838876533,
+      "entropy_kj_per_k": 633.5158492265217,
+      "exergy_destroyed_mj": 188.88275044688743,
+      "peak_temp_c": 33.153985916482384,
+      "peak_temp_excl_head_c": 33.153985916482384,
+      "voltage_violation_steps": 1,
+      "min_voltage_pu": 0.9485183922189645,
+      "switch_operations": 43,
+      "mean_decision_ms": 12.777250000605514,
+      "max_decision_ms": 16.545099999348167,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1021,
+      "heat_mj": 373.9527717563445,
+      "entropy_kj_per_k": 1220.2572396167018,
+      "exergy_destroyed_mj": 363.8196959917196,
+      "peak_temp_c": 44.56682312391405,
+      "peak_temp_excl_head_c": 44.56682312391405,
+      "voltage_violation_steps": 5,
+      "min_voltage_pu": 0.9361711676125224,
+      "switch_operations": 40,
+      "mean_decision_ms": 16.061474999029695,
+      "max_decision_ms": 30.172099999617785,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1022,
+      "heat_mj": 295.75278549713255,
+      "entropy_kj_per_k": 971.5205257102334,
+      "exergy_destroyed_mj": 289.658844740506,
+      "peak_temp_c": 39.49659036041413,
+      "peak_temp_excl_head_c": 39.49659036041413,
+      "voltage_violation_steps": 3,
+      "min_voltage_pu": 0.9289995048139111,
+      "switch_operations": 36,
+      "mean_decision_ms": 16.220974999669124,
+      "max_decision_ms": 21.657899997080676,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1023,
+      "heat_mj": 387.59460311980945,
+      "entropy_kj_per_k": 1264.4807619123856,
+      "exergy_destroyed_mj": 377.0049391641777,
+      "peak_temp_c": 45.342757679650276,
+      "peak_temp_excl_head_c": 45.342757679650276,
+      "voltage_violation_steps": 6,
+      "min_voltage_pu": 0.9292031477102881,
+      "switch_operations": 43,
+      "mean_decision_ms": 14.273233334582377,
+      "max_decision_ms": 18.0257999963942,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1024,
+      "heat_mj": 248.8642272216363,
+      "entropy_kj_per_k": 819.5491908494089,
+      "exergy_destroyed_mj": 244.34859125175123,
+      "peak_temp_c": 38.82322375477122,
+      "peak_temp_excl_head_c": 38.82322375477122,
+      "voltage_violation_steps": 2,
+      "min_voltage_pu": 0.9457938094898284,
+      "switch_operations": 35,
+      "mean_decision_ms": 12.052733333500024,
+      "max_decision_ms": 13.257400001748465,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1025,
+      "heat_mj": 216.20774542120577,
+      "entropy_kj_per_k": 713.044985588263,
+      "exergy_destroyed_mj": 212.5943624531406,
+      "peak_temp_c": 35.13875474463822,
+      "peak_temp_excl_head_c": 35.13875474463822,
+      "voltage_violation_steps": 1,
+      "min_voltage_pu": 0.9442787700371513,
+      "switch_operations": 38,
+      "mean_decision_ms": 12.774691666587993,
+      "max_decision_ms": 15.759699999762233,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1026,
+      "heat_mj": 218.37115152011353,
+      "entropy_kj_per_k": 721.855542688545,
+      "exergy_destroyed_mj": 215.22123005258968,
+      "peak_temp_c": 35.377170894931,
+      "peak_temp_excl_head_c": 35.377170894931,
+      "voltage_violation_steps": 1,
+      "min_voltage_pu": 0.9360460803704536,
+      "switch_operations": 34,
+      "mean_decision_ms": 16.84420833286519,
+      "max_decision_ms": 44.695800002955366,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1027,
+      "heat_mj": 285.6407103251141,
+      "entropy_kj_per_k": 934.7754064978706,
+      "exergy_destroyed_mj": 278.7032874473401,
+      "peak_temp_c": 37.83541439459276,
+      "peak_temp_excl_head_c": 37.83541439459276,
+      "voltage_violation_steps": 1,
+      "min_voltage_pu": 0.9439664231482346,
+      "switch_operations": 38,
+      "mean_decision_ms": 13.600974999765944,
+      "max_decision_ms": 15.34949999768287,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1028,
+      "heat_mj": 327.0511325335868,
+      "entropy_kj_per_k": 1069.5601298612837,
+      "exergy_destroyed_mj": 318.8893527181417,
+      "peak_temp_c": 42.565837123642154,
+      "peak_temp_excl_head_c": 42.565837123642154,
+      "voltage_violation_steps": 3,
+      "min_voltage_pu": 0.9417934828642658,
+      "switch_operations": 40,
+      "mean_decision_ms": 12.452158332962426,
+      "max_decision_ms": 15.106300001207273,
+      "total_steps": 12
+    },
+    {
+      "policy": "random_proposals_filtered",
+      "seed": 1029,
+      "heat_mj": 204.65005671522712,
+      "entropy_kj_per_k": 676.9275946451025,
+      "exergy_destroyed_mj": 201.82596234343728,
+      "peak_temp_c": 33.27595323940699,
+      "peak_temp_excl_head_c": 33.27595323940699,
+      "voltage_violation_steps": 0,
+      "min_voltage_pu": 0.9526414559645535,
+      "switch_operations": 39,
+      "mean_decision_ms": 12.14145833485721,
+      "max_decision_ms": 12.623900001926813,
       "total_steps": 12
     }
   ],
@@ -1819,8 +2723,8 @@
       "voltage_violation_steps": 10,
       "min_voltage_pu": 0.7659112076691722,
       "switch_operations": 49,
-      "mean_decision_ms": 0.03373333250541085,
-      "max_decision_ms": 0.1066999975591898,
+      "mean_decision_ms": 0.03027500012346233,
+      "max_decision_ms": 0.07349999941652641,
       "total_steps": 12
     },
     {
@@ -1834,8 +2738,8 @@
       "voltage_violation_steps": 10,
       "min_voltage_pu": 0.7834564453479769,
       "switch_operations": 50,
-      "mean_decision_ms": 0.031116667135696236,
-      "max_decision_ms": 0.05989999772282317,
+      "mean_decision_ms": 0.060441666088687875,
+      "max_decision_ms": 0.11020000238204375,
       "total_steps": 12
     },
     {
@@ -1849,8 +2753,8 @@
       "voltage_violation_steps": 11,
       "min_voltage_pu": 0.6580388834258135,
       "switch_operations": 50,
-      "mean_decision_ms": 0.03642499965887206,
-      "max_decision_ms": 0.07699999696342275,
+      "mean_decision_ms": 0.030558332582586445,
+      "max_decision_ms": 0.05419999797595665,
       "total_steps": 12
     },
     {
@@ -1864,8 +2768,8 @@
       "voltage_violation_steps": 8,
       "min_voltage_pu": 0.6501126277023576,
       "switch_operations": 50,
-      "mean_decision_ms": 0.05517500054944927,
-      "max_decision_ms": 0.10689999908208847,
+      "mean_decision_ms": 0.05763333441185144,
+      "max_decision_ms": 0.0864000030560419,
       "total_steps": 12
     },
     {
@@ -1879,8 +2783,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.877950431774299,
       "switch_operations": 51,
-      "mean_decision_ms": 0.032858333725016564,
-      "max_decision_ms": 0.06280000525293872,
+      "mean_decision_ms": 0.04367500029426689,
+      "max_decision_ms": 0.0788000033935532,
       "total_steps": 12
     },
     {
@@ -1894,8 +2798,8 @@
       "voltage_violation_steps": 10,
       "min_voltage_pu": 0.7935017198888115,
       "switch_operations": 53,
-      "mean_decision_ms": 0.02982500094124892,
-      "max_decision_ms": 0.06920000305399299,
+      "mean_decision_ms": 0.03211666686790219,
+      "max_decision_ms": 0.0718000010238029,
       "total_steps": 12
     },
     {
@@ -1909,8 +2813,8 @@
       "voltage_violation_steps": 11,
       "min_voltage_pu": 0.7015078954207553,
       "switch_operations": 52,
-      "mean_decision_ms": 0.02879999980602103,
-      "max_decision_ms": 0.06579999899258837,
+      "mean_decision_ms": 0.03739166641025804,
+      "max_decision_ms": 0.07069999992381781,
       "total_steps": 12
     },
     {
@@ -1924,8 +2828,8 @@
       "voltage_violation_steps": 11,
       "min_voltage_pu": 0.7851962190743094,
       "switch_operations": 56,
-      "mean_decision_ms": 0.029749999157502316,
-      "max_decision_ms": 0.0670000008540228,
+      "mean_decision_ms": 0.03192500116711017,
+      "max_decision_ms": 0.06259999645408243,
       "total_steps": 12
     },
     {
@@ -1939,8 +2843,8 @@
       "voltage_violation_steps": 11,
       "min_voltage_pu": 0.7651054286886652,
       "switch_operations": 51,
-      "mean_decision_ms": 0.049558334164127395,
-      "max_decision_ms": 0.1353999978164211,
+      "mean_decision_ms": 0.03099166800287397,
+      "max_decision_ms": 0.06079999729990959,
       "total_steps": 12
     },
     {
@@ -1954,8 +2858,8 @@
       "voltage_violation_steps": 12,
       "min_voltage_pu": 0.5970805541580968,
       "switch_operations": 55,
-      "mean_decision_ms": 0.047341667595901527,
-      "max_decision_ms": 0.12280000373721123,
+      "mean_decision_ms": 0.03749999814317562,
+      "max_decision_ms": 0.06029999349266291,
       "total_steps": 12
     },
     {
@@ -1969,8 +2873,8 @@
       "voltage_violation_steps": 12,
       "min_voltage_pu": 0.7689519867074789,
       "switch_operations": 47,
-      "mean_decision_ms": 0.030100000609915394,
-      "max_decision_ms": 0.06429999484680593,
+      "mean_decision_ms": 0.03665000015947347,
+      "max_decision_ms": 0.12570000399136916,
       "total_steps": 12
     },
     {
@@ -1984,8 +2888,8 @@
       "voltage_violation_steps": 9,
       "min_voltage_pu": 0.7850041281831688,
       "switch_operations": 52,
-      "mean_decision_ms": 0.029658331186510623,
-      "max_decision_ms": 0.07580000237794593,
+      "mean_decision_ms": 0.03647499943326693,
+      "max_decision_ms": 0.06179999763844535,
       "total_steps": 12
     },
     {
@@ -1999,8 +2903,8 @@
       "voltage_violation_steps": 9,
       "min_voltage_pu": 0.793155216283761,
       "switch_operations": 47,
-      "mean_decision_ms": 0.02898333271635541,
-      "max_decision_ms": 0.06569999823113903,
+      "mean_decision_ms": 0.04237500130936193,
+      "max_decision_ms": 0.09390000195708126,
       "total_steps": 12
     },
     {
@@ -2014,8 +2918,8 @@
       "voltage_violation_steps": 12,
       "min_voltage_pu": 0.608487368803246,
       "switch_operations": 51,
-      "mean_decision_ms": 0.033475000236649066,
-      "max_decision_ms": 0.07580000237794593,
+      "mean_decision_ms": 0.03243333352050589,
+      "max_decision_ms": 0.0664000035612844,
       "total_steps": 12
     },
     {
@@ -2029,8 +2933,8 @@
       "voltage_violation_steps": 11,
       "min_voltage_pu": 0.6164775908003846,
       "switch_operations": 54,
-      "mean_decision_ms": 0.04658333333888246,
-      "max_decision_ms": 0.0872999953571707,
+      "mean_decision_ms": 0.030591667382395826,
+      "max_decision_ms": 0.08179999713320285,
       "total_steps": 12
     },
     {
@@ -2044,8 +2948,8 @@
       "voltage_violation_steps": 9,
       "min_voltage_pu": 0.5632063664024877,
       "switch_operations": 48,
-      "mean_decision_ms": 0.04819166800492288,
-      "max_decision_ms": 0.10199999815085903,
+      "mean_decision_ms": 0.030091665394138545,
+      "max_decision_ms": 0.06609999400097877,
       "total_steps": 12
     },
     {
@@ -2059,8 +2963,8 @@
       "voltage_violation_steps": 9,
       "min_voltage_pu": 0.700419411661618,
       "switch_operations": 51,
-      "mean_decision_ms": 0.03772500167542603,
-      "max_decision_ms": 0.07870000263210386,
+      "mean_decision_ms": 0.03463333208249727,
+      "max_decision_ms": 0.076299998909235,
       "total_steps": 12
     },
     {
@@ -2074,8 +2978,8 @@
       "voltage_violation_steps": 12,
       "min_voltage_pu": 0.588537559407798,
       "switch_operations": 50,
-      "mean_decision_ms": 0.0518750008874728,
-      "max_decision_ms": 0.11250000534346327,
+      "mean_decision_ms": 0.03296666545793414,
+      "max_decision_ms": 0.07139999797800556,
       "total_steps": 12
     },
     {
@@ -2089,8 +2993,8 @@
       "voltage_violation_steps": 12,
       "min_voltage_pu": 0.6602234432166171,
       "switch_operations": 54,
-      "mean_decision_ms": 0.03571666699523727,
-      "max_decision_ms": 0.13349999790079892,
+      "mean_decision_ms": 0.03398333319637459,
+      "max_decision_ms": 0.0827999974717386,
       "total_steps": 12
     },
     {
@@ -2104,8 +3008,8 @@
       "voltage_violation_steps": 10,
       "min_voltage_pu": 0.6801120077669496,
       "switch_operations": 49,
-      "mean_decision_ms": 0.043016668011356764,
-      "max_decision_ms": 0.08180000440916047,
+      "mean_decision_ms": 0.03907500043472586,
+      "max_decision_ms": 0.06949999806238338,
       "total_steps": 12
     },
     {
@@ -2119,8 +3023,8 @@
       "voltage_violation_steps": 10,
       "min_voltage_pu": 0.7337731122736629,
       "switch_operations": 55,
-      "mean_decision_ms": 0.06632500177753779,
-      "max_decision_ms": 0.13240000407677144,
+      "mean_decision_ms": 0.03798333394418781,
+      "max_decision_ms": 0.07340000593103468,
       "total_steps": 12
     },
     {
@@ -2134,8 +3038,8 @@
       "voltage_violation_steps": 10,
       "min_voltage_pu": 0.6762042892330913,
       "switch_operations": 51,
-      "mean_decision_ms": 0.061658332318377994,
-      "max_decision_ms": 0.10599999950500205,
+      "mean_decision_ms": 0.028375000207840156,
+      "max_decision_ms": 0.0625000029685907,
       "total_steps": 12
     },
     {
@@ -2149,8 +3053,8 @@
       "voltage_violation_steps": 12,
       "min_voltage_pu": 0.8134145664808163,
       "switch_operations": 48,
-      "mean_decision_ms": 0.07619999996677507,
-      "max_decision_ms": 0.11770000128308311,
+      "mean_decision_ms": 0.03029166752336702,
+      "max_decision_ms": 0.06169999687699601,
       "total_steps": 12
     },
     {
@@ -2164,8 +3068,8 @@
       "voltage_violation_steps": 12,
       "min_voltage_pu": 0.5934708448911978,
       "switch_operations": 52,
-      "mean_decision_ms": 0.07224166680922887,
-      "max_decision_ms": 0.11850000009872019,
+      "mean_decision_ms": 0.0434333336064204,
+      "max_decision_ms": 0.1412999990861863,
       "total_steps": 12
     },
     {
@@ -2179,8 +3083,8 @@
       "voltage_violation_steps": 11,
       "min_voltage_pu": 0.7293903762902505,
       "switch_operations": 49,
-      "mean_decision_ms": 0.12069166587025393,
-      "max_decision_ms": 0.7130999947548844,
+      "mean_decision_ms": 0.027549999989181135,
+      "max_decision_ms": 0.05830000009154901,
       "total_steps": 12
     },
     {
@@ -2194,8 +3098,8 @@
       "voltage_violation_steps": 11,
       "min_voltage_pu": 0.7656723643134381,
       "switch_operations": 55,
-      "mean_decision_ms": 0.09978333340162256,
-      "max_decision_ms": 0.2693999995244667,
+      "mean_decision_ms": 0.03560833283700049,
+      "max_decision_ms": 0.0596999961999245,
       "total_steps": 12
     },
     {
@@ -2209,8 +3113,8 @@
       "voltage_violation_steps": 9,
       "min_voltage_pu": 0.7436355928475827,
       "switch_operations": 53,
-      "mean_decision_ms": 0.09808333500889906,
-      "max_decision_ms": 0.2708999963942915,
+      "mean_decision_ms": 0.031450001188204624,
+      "max_decision_ms": 0.07220000406960025,
       "total_steps": 12
     },
     {
@@ -2224,8 +3128,8 @@
       "voltage_violation_steps": 9,
       "min_voltage_pu": 0.7147798683755981,
       "switch_operations": 46,
-      "mean_decision_ms": 0.09323333445839428,
-      "max_decision_ms": 0.17070000467356294,
+      "mean_decision_ms": 0.030433331630774774,
+      "max_decision_ms": 0.06350000330712646,
       "total_steps": 12
     },
     {
@@ -2239,8 +3143,8 @@
       "voltage_violation_steps": 11,
       "min_voltage_pu": 0.6080199863601756,
       "switch_operations": 51,
-      "mean_decision_ms": 0.09818333213236959,
-      "max_decision_ms": 0.16419999883510172,
+      "mean_decision_ms": 0.03635833551622151,
+      "max_decision_ms": 0.07660000119358301,
       "total_steps": 12
     },
     {
@@ -2254,8 +3158,8 @@
       "voltage_violation_steps": 9,
       "min_voltage_pu": 0.6880335521194031,
       "switch_operations": 53,
-      "mean_decision_ms": 0.07713333373734106,
-      "max_decision_ms": 0.13169999874662608,
+      "mean_decision_ms": 0.03833333418394128,
+      "max_decision_ms": 0.14960000407882035,
       "total_steps": 12
     }
   ],
@@ -2271,8 +3175,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9394822727724728,
       "switch_operations": 40,
-      "mean_decision_ms": 8.745791665811945,
-      "max_decision_ms": 9.7650000025169,
+      "mean_decision_ms": 7.97473333356417,
+      "max_decision_ms": 8.760900003835559,
       "total_steps": 12
     },
     {
@@ -2286,8 +3190,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.931619218384953,
       "switch_operations": 43,
-      "mean_decision_ms": 7.975625000957128,
-      "max_decision_ms": 8.770600004936568,
+      "mean_decision_ms": 9.15085833366902,
+      "max_decision_ms": 14.295499997388106,
       "total_steps": 12
     },
     {
@@ -2301,8 +3205,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.9353600930420255,
       "switch_operations": 42,
-      "mean_decision_ms": 9.659166666703337,
-      "max_decision_ms": 15.651399997295812,
+      "mean_decision_ms": 10.75854166689775,
+      "max_decision_ms": 22.71140000084415,
       "total_steps": 12
     },
     {
@@ -2316,8 +3220,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9376543738074175,
       "switch_operations": 45,
-      "mean_decision_ms": 9.153275000547486,
-      "max_decision_ms": 11.941500000830274,
+      "mean_decision_ms": 9.576883333162792,
+      "max_decision_ms": 14.418399994610809,
       "total_steps": 12
     },
     {
@@ -2331,8 +3235,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.9423550518963677,
       "switch_operations": 44,
-      "mean_decision_ms": 9.15720833472733,
-      "max_decision_ms": 11.709099999279715,
+      "mean_decision_ms": 8.169099998970827,
+      "max_decision_ms": 10.071400000015274,
       "total_steps": 12
     },
     {
@@ -2346,8 +3250,8 @@
       "voltage_violation_steps": 0,
       "min_voltage_pu": 0.9554085303949291,
       "switch_operations": 47,
-      "mean_decision_ms": 8.284483332317905,
-      "max_decision_ms": 10.25909999589203,
+      "mean_decision_ms": 12.761366665775617,
+      "max_decision_ms": 24.053599998296704,
       "total_steps": 12
     },
     {
@@ -2361,8 +3265,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9378034505433546,
       "switch_operations": 44,
-      "mean_decision_ms": 8.319574999404722,
-      "max_decision_ms": 10.943699999188539,
+      "mean_decision_ms": 7.557625000117696,
+      "max_decision_ms": 9.268300003896002,
       "total_steps": 12
     },
     {
@@ -2376,8 +3280,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.9379165994580371,
       "switch_operations": 45,
-      "mean_decision_ms": 9.039808333303275,
-      "max_decision_ms": 11.03309999598423,
+      "mean_decision_ms": 10.135516667408714,
+      "max_decision_ms": 22.63870000024326,
       "total_steps": 12
     },
     {
@@ -2391,8 +3295,8 @@
       "voltage_violation_steps": 0,
       "min_voltage_pu": 0.9540841956220638,
       "switch_operations": 48,
-      "mean_decision_ms": 9.779208334293799,
-      "max_decision_ms": 12.177800002973527,
+      "mean_decision_ms": 8.243408334844085,
+      "max_decision_ms": 9.642000004532747,
       "total_steps": 12
     },
     {
@@ -2406,8 +3310,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9380500043939546,
       "switch_operations": 44,
-      "mean_decision_ms": 10.061266666525626,
-      "max_decision_ms": 16.00250000046799,
+      "mean_decision_ms": 11.49611666611842,
+      "max_decision_ms": 20.275999995647,
       "total_steps": 12
     },
     {
@@ -2421,8 +3325,8 @@
       "voltage_violation_steps": 7,
       "min_voltage_pu": 0.9305382468518146,
       "switch_operations": 49,
-      "mean_decision_ms": 8.76172500041624,
-      "max_decision_ms": 11.850199996843003,
+      "mean_decision_ms": 7.930325000415905,
+      "max_decision_ms": 9.123099996941164,
       "total_steps": 12
     },
     {
@@ -2436,8 +3340,8 @@
       "voltage_violation_steps": 0,
       "min_voltage_pu": 0.9502478864224858,
       "switch_operations": 43,
-      "mean_decision_ms": 9.069341667782282,
-      "max_decision_ms": 12.34649999969406,
+      "mean_decision_ms": 8.215858334248574,
+      "max_decision_ms": 9.780299995327368,
       "total_steps": 12
     },
     {
@@ -2451,8 +3355,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.9493879311465501,
       "switch_operations": 45,
-      "mean_decision_ms": 8.146766666565478,
-      "max_decision_ms": 9.219600004144013,
+      "mean_decision_ms": 8.115966666082386,
+      "max_decision_ms": 9.416299995791633,
       "total_steps": 12
     },
     {
@@ -2466,8 +3370,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.9354943778376525,
       "switch_operations": 51,
-      "mean_decision_ms": 9.642300000753798,
-      "max_decision_ms": 11.812700002337806,
+      "mean_decision_ms": 8.26976666636862,
+      "max_decision_ms": 12.403499997162726,
       "total_steps": 12
     },
     {
@@ -2481,8 +3385,8 @@
       "voltage_violation_steps": 8,
       "min_voltage_pu": 0.9225953534115696,
       "switch_operations": 45,
-      "mean_decision_ms": 9.13277500027713,
-      "max_decision_ms": 10.656600003130734,
+      "mean_decision_ms": 8.04390833400248,
+      "max_decision_ms": 9.938499999407213,
       "total_steps": 12
     },
     {
@@ -2496,8 +3400,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9380426712749074,
       "switch_operations": 46,
-      "mean_decision_ms": 9.134991666845357,
-      "max_decision_ms": 11.525799993250985,
+      "mean_decision_ms": 7.962975000433896,
+      "max_decision_ms": 9.658299997681752,
       "total_steps": 12
     },
     {
@@ -2511,8 +3415,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9440488291196772,
       "switch_operations": 48,
-      "mean_decision_ms": 10.344499998609535,
-      "max_decision_ms": 13.480200002959464,
+      "mean_decision_ms": 7.776791665188891,
+      "max_decision_ms": 9.682500000053551,
       "total_steps": 12
     },
     {
@@ -2526,8 +3430,8 @@
       "voltage_violation_steps": 8,
       "min_voltage_pu": 0.9202832131413958,
       "switch_operations": 47,
-      "mean_decision_ms": 7.829158332848844,
-      "max_decision_ms": 9.317599993664771,
+      "mean_decision_ms": 11.84915000158071,
+      "max_decision_ms": 22.167500006617047,
       "total_steps": 12
     },
     {
@@ -2541,8 +3445,8 @@
       "voltage_violation_steps": 10,
       "min_voltage_pu": 0.9039918144293422,
       "switch_operations": 42,
-      "mean_decision_ms": 8.147524999609837,
-      "max_decision_ms": 10.426000000734348,
+      "mean_decision_ms": 9.945041667985302,
+      "max_decision_ms": 12.374500001897104,
       "total_steps": 12
     },
     {
@@ -2556,8 +3460,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9463659791989385,
       "switch_operations": 49,
-      "mean_decision_ms": 10.135150000375384,
-      "max_decision_ms": 14.105800000834279,
+      "mean_decision_ms": 10.11675833372768,
+      "max_decision_ms": 13.532600001781248,
       "total_steps": 12
     },
     {
@@ -2571,8 +3475,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.941263875337528,
       "switch_operations": 43,
-      "mean_decision_ms": 18.500966666882352,
-      "max_decision_ms": 26.655099994968623,
+      "mean_decision_ms": 14.831933333577277,
+      "max_decision_ms": 35.70130000298377,
       "total_steps": 12
     },
     {
@@ -2586,8 +3490,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.9262477210042028,
       "switch_operations": 47,
-      "mean_decision_ms": 19.347308332726243,
-      "max_decision_ms": 24.379400005273055,
+      "mean_decision_ms": 9.186275000198899,
+      "max_decision_ms": 15.260000000125729,
       "total_steps": 12
     },
     {
@@ -2601,8 +3505,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9324819193166962,
       "switch_operations": 43,
-      "mean_decision_ms": 17.126900000827543,
-      "max_decision_ms": 20.654199994169176,
+      "mean_decision_ms": 8.546033332701578,
+      "max_decision_ms": 13.821000000461936,
       "total_steps": 12
     },
     {
@@ -2616,8 +3520,8 @@
       "voltage_violation_steps": 7,
       "min_voltage_pu": 0.9252071395016979,
       "switch_operations": 46,
-      "mean_decision_ms": 17.787058331426426,
-      "max_decision_ms": 21.314300000085495,
+      "mean_decision_ms": 7.4416416670525605,
+      "max_decision_ms": 8.19220000266796,
       "total_steps": 12
     },
     {
@@ -2631,8 +3535,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9358932172679609,
       "switch_operations": 49,
-      "mean_decision_ms": 18.567391666389693,
-      "max_decision_ms": 21.396700001787394,
+      "mean_decision_ms": 8.191958332342134,
+      "max_decision_ms": 9.37740000517806,
       "total_steps": 12
     },
     {
@@ -2646,8 +3550,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.9446895331520054,
       "switch_operations": 44,
-      "mean_decision_ms": 19.510750000335975,
-      "max_decision_ms": 29.801299999235198,
+      "mean_decision_ms": 7.896774999608169,
+      "max_decision_ms": 9.764000002178364,
       "total_steps": 12
     },
     {
@@ -2661,8 +3565,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.9383573030765437,
       "switch_operations": 42,
-      "mean_decision_ms": 21.28896666666454,
-      "max_decision_ms": 26.625099999364465,
+      "mean_decision_ms": 9.140358334358703,
+      "max_decision_ms": 11.508100003993604,
       "total_steps": 12
     },
     {
@@ -2676,8 +3580,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9438118033574738,
       "switch_operations": 42,
-      "mean_decision_ms": 21.764491666544927,
-      "max_decision_ms": 28.078500006813556,
+      "mean_decision_ms": 9.282558332415647,
+      "max_decision_ms": 12.253799999598414,
       "total_steps": 12
     },
     {
@@ -2691,8 +3595,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.924860607929061,
       "switch_operations": 52,
-      "mean_decision_ms": 20.69025000067389,
-      "max_decision_ms": 35.940499998105224,
+      "mean_decision_ms": 8.865416666594683,
+      "max_decision_ms": 10.903599999437574,
       "total_steps": 12
     },
     {
@@ -2706,8 +3610,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.9256922422533695,
       "switch_operations": 50,
-      "mean_decision_ms": 21.349716667221703,
-      "max_decision_ms": 25.73159999883501,
+      "mean_decision_ms": 8.484850000362107,
+      "max_decision_ms": 13.175400003092363,
       "total_steps": 12
     }
   ],
@@ -2723,8 +3627,8 @@
       "voltage_violation_steps": 7,
       "min_voltage_pu": 0.828077360856665,
       "switch_operations": 29,
-      "mean_decision_ms": 298.5422416659276,
-      "max_decision_ms": 378.25319999683416,
+      "mean_decision_ms": 134.5251333344398,
+      "max_decision_ms": 177.14329999580514,
       "total_steps": 12
     },
     {
@@ -2738,8 +3642,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.896317761913837,
       "switch_operations": 29,
-      "mean_decision_ms": 279.39860833369795,
-      "max_decision_ms": 365.8093000049121,
+      "mean_decision_ms": 143.77329166745767,
+      "max_decision_ms": 179.75310000474565,
       "total_steps": 12
     },
     {
@@ -2753,8 +3657,8 @@
       "voltage_violation_steps": 6,
       "min_voltage_pu": 0.792085654927464,
       "switch_operations": 27,
-      "mean_decision_ms": 129.28930833368213,
-      "max_decision_ms": 144.36480000586016,
+      "mean_decision_ms": 138.37264999771529,
+      "max_decision_ms": 174.88369999773568,
       "total_steps": 12
     },
     {
@@ -2768,8 +3672,8 @@
       "voltage_violation_steps": 8,
       "min_voltage_pu": 0.8243888551318909,
       "switch_operations": 29,
-      "mean_decision_ms": 140.9176583323036,
-      "max_decision_ms": 196.9870999964769,
+      "mean_decision_ms": 136.42654166687862,
+      "max_decision_ms": 159.90140000212705,
       "total_steps": 12
     },
     {
@@ -2783,8 +3687,8 @@
       "voltage_violation_steps": 6,
       "min_voltage_pu": 0.786740110675266,
       "switch_operations": 28,
-      "mean_decision_ms": 136.54065833240261,
-      "max_decision_ms": 170.30769999837503,
+      "mean_decision_ms": 131.19729999925767,
+      "max_decision_ms": 167.6937000011094,
       "total_steps": 12
     },
     {
@@ -2798,8 +3702,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.905289329553413,
       "switch_operations": 27,
-      "mean_decision_ms": 143.75231666538943,
-      "max_decision_ms": 182.2600999948918,
+      "mean_decision_ms": 131.7923416669752,
+      "max_decision_ms": 151.0584999996354,
       "total_steps": 12
     },
     {
@@ -2813,8 +3717,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.8489898349290494,
       "switch_operations": 26,
-      "mean_decision_ms": 142.44905833159768,
-      "max_decision_ms": 151.41310000035446,
+      "mean_decision_ms": 142.59730833327922,
+      "max_decision_ms": 177.77669999486534,
       "total_steps": 12
     },
     {
@@ -2828,8 +3732,8 @@
       "voltage_violation_steps": 8,
       "min_voltage_pu": 0.9184284417897524,
       "switch_operations": 28,
-      "mean_decision_ms": 142.99067499996454,
-      "max_decision_ms": 162.5382000056561,
+      "mean_decision_ms": 137.1761833330917,
+      "max_decision_ms": 184.24170000071172,
       "total_steps": 12
     },
     {
@@ -2843,8 +3747,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.860489298515932,
       "switch_operations": 29,
-      "mean_decision_ms": 143.66356666747984,
-      "max_decision_ms": 165.8702999993693,
+      "mean_decision_ms": 141.8738583324739,
+      "max_decision_ms": 211.52849999634782,
       "total_steps": 12
     },
     {
@@ -2858,8 +3762,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.82011780488867,
       "switch_operations": 31,
-      "mean_decision_ms": 137.89671666624295,
-      "max_decision_ms": 171.7380999980378,
+      "mean_decision_ms": 137.27525000103924,
+      "max_decision_ms": 188.31990000035148,
       "total_steps": 12
     },
     {
@@ -2873,8 +3777,8 @@
       "voltage_violation_steps": 10,
       "min_voltage_pu": 0.8353335248493762,
       "switch_operations": 27,
-      "mean_decision_ms": 136.88610000038656,
-      "max_decision_ms": 154.5029999979306,
+      "mean_decision_ms": 126.90003333227651,
+      "max_decision_ms": 139.37579999765148,
       "total_steps": 12
     },
     {
@@ -2888,8 +3792,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.8814400961216118,
       "switch_operations": 32,
-      "mean_decision_ms": 139.00067500132232,
-      "max_decision_ms": 161.0701000026893,
+      "mean_decision_ms": 142.04334166667346,
+      "max_decision_ms": 197.83340000140015,
       "total_steps": 12
     },
     {
@@ -2903,8 +3807,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.7689898668024326,
       "switch_operations": 33,
-      "mean_decision_ms": 142.70899166695017,
-      "max_decision_ms": 176.4301000002888,
+      "mean_decision_ms": 122.90125833290706,
+      "max_decision_ms": 138.66050000069663,
       "total_steps": 12
     },
     {
@@ -2918,8 +3822,8 @@
       "voltage_violation_steps": 7,
       "min_voltage_pu": 0.908178811432345,
       "switch_operations": 29,
-      "mean_decision_ms": 136.43759166673894,
-      "max_decision_ms": 155.1781999951345,
+      "mean_decision_ms": 127.42599166570774,
+      "max_decision_ms": 140.29740000114543,
       "total_steps": 12
     },
     {
@@ -2933,8 +3837,8 @@
       "voltage_violation_steps": 12,
       "min_voltage_pu": 0.8464267191180357,
       "switch_operations": 27,
-      "mean_decision_ms": 137.44719166788855,
-      "max_decision_ms": 149.35430000332417,
+      "mean_decision_ms": 155.6796833331949,
+      "max_decision_ms": 206.71659999788972,
       "total_steps": 12
     },
     {
@@ -2948,8 +3852,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.8178064577781597,
       "switch_operations": 28,
-      "mean_decision_ms": 163.94459166682887,
-      "max_decision_ms": 229.37330000422662,
+      "mean_decision_ms": 130.37827500071822,
+      "max_decision_ms": 150.4551000034553,
       "total_steps": 12
     },
     {
@@ -2963,8 +3867,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.947649590356301,
       "switch_operations": 25,
-      "mean_decision_ms": 135.88012500258628,
-      "max_decision_ms": 162.34280000207946,
+      "mean_decision_ms": 131.5042000011696,
+      "max_decision_ms": 184.4494000033592,
       "total_steps": 12
     },
     {
@@ -2978,8 +3882,8 @@
       "voltage_violation_steps": 11,
       "min_voltage_pu": 0.803624593636507,
       "switch_operations": 27,
-      "mean_decision_ms": 140.26930833400306,
-      "max_decision_ms": 157.5989999982994,
+      "mean_decision_ms": 126.50523333165135,
+      "max_decision_ms": 153.98979999736184,
       "total_steps": 12
     },
     {
@@ -2993,8 +3897,8 @@
       "voltage_violation_steps": 11,
       "min_voltage_pu": 0.8375487556146249,
       "switch_operations": 28,
-      "mean_decision_ms": 135.73435000034806,
-      "max_decision_ms": 146.70140000089305,
+      "mean_decision_ms": 136.99759166775038,
+      "max_decision_ms": 202.97869999922113,
       "total_steps": 12
     },
     {
@@ -3008,8 +3912,8 @@
       "voltage_violation_steps": 7,
       "min_voltage_pu": 0.8566959379585357,
       "switch_operations": 31,
-      "mean_decision_ms": 130.2973166675656,
-      "max_decision_ms": 140.99579999310663,
+      "mean_decision_ms": 128.12715833266944,
+      "max_decision_ms": 133.8938999979291,
       "total_steps": 12
     },
     {
@@ -3023,8 +3927,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9384444282797417,
       "switch_operations": 27,
-      "mean_decision_ms": 404.8069583332108,
-      "max_decision_ms": 456.0157999949297,
+      "mean_decision_ms": 128.5256916671642,
+      "max_decision_ms": 196.73580000380753,
       "total_steps": 12
     },
     {
@@ -3038,8 +3942,8 @@
       "voltage_violation_steps": 10,
       "min_voltage_pu": 0.7062272488917685,
       "switch_operations": 25,
-      "mean_decision_ms": 387.6167583336307,
-      "max_decision_ms": 446.8483999953605,
+      "mean_decision_ms": 134.47738333343295,
+      "max_decision_ms": 177.92200000258163,
       "total_steps": 12
     },
     {
@@ -3053,8 +3957,8 @@
       "voltage_violation_steps": 8,
       "min_voltage_pu": 0.8179679859156632,
       "switch_operations": 24,
-      "mean_decision_ms": 409.61368333410064,
-      "max_decision_ms": 433.82109999947716,
+      "mean_decision_ms": 150.10989166694344,
+      "max_decision_ms": 203.65460000175517,
       "total_steps": 12
     },
     {
@@ -3068,8 +3972,8 @@
       "voltage_violation_steps": 10,
       "min_voltage_pu": 0.8590372792892257,
       "switch_operations": 30,
-      "mean_decision_ms": 401.67444999982155,
-      "max_decision_ms": 444.85920000443,
+      "mean_decision_ms": 131.95089999984097,
+      "max_decision_ms": 202.11320000089472,
       "total_steps": 12
     },
     {
@@ -3083,8 +3987,8 @@
       "voltage_violation_steps": 9,
       "min_voltage_pu": 0.8362292584375213,
       "switch_operations": 24,
-      "mean_decision_ms": 431.77580833374424,
-      "max_decision_ms": 459.53000000008615,
+      "mean_decision_ms": 128.29749166727802,
+      "max_decision_ms": 177.8894000017317,
       "total_steps": 12
     },
     {
@@ -3098,8 +4002,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.9251373519465688,
       "switch_operations": 25,
-      "mean_decision_ms": 395.2096916655137,
-      "max_decision_ms": 429.09489999874495,
+      "mean_decision_ms": 134.60445000055188,
+      "max_decision_ms": 146.30940000643022,
       "total_steps": 12
     },
     {
@@ -3113,8 +4017,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.8067859436807181,
       "switch_operations": 32,
-      "mean_decision_ms": 437.4112000011034,
-      "max_decision_ms": 455.3959000040777,
+      "mean_decision_ms": 162.89880000052412,
+      "max_decision_ms": 217.0341999953962,
       "total_steps": 12
     },
     {
@@ -3128,8 +4032,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.9007990648010639,
       "switch_operations": 25,
-      "mean_decision_ms": 419.4010666669783,
-      "max_decision_ms": 489.45459999958985,
+      "mean_decision_ms": 131.19156666592366,
+      "max_decision_ms": 156.6032999980962,
       "total_steps": 12
     },
     {
@@ -3143,8 +4047,8 @@
       "voltage_violation_steps": 7,
       "min_voltage_pu": 0.833853306613314,
       "switch_operations": 29,
-      "mean_decision_ms": 413.00320833215665,
-      "max_decision_ms": 458.3425000018906,
+      "mean_decision_ms": 139.67552500010547,
+      "max_decision_ms": 182.93000000267057,
       "total_steps": 12
     },
     {
@@ -3158,8 +4062,8 @@
       "voltage_violation_steps": 6,
       "min_voltage_pu": 0.8006129331934496,
       "switch_operations": 26,
-      "mean_decision_ms": 446.7358916669279,
-      "max_decision_ms": 482.48819999571424,
+      "mean_decision_ms": 126.05579166787113,
+      "max_decision_ms": 146.69100000173785,
       "total_steps": 12
     }
   ],
@@ -3175,8 +4079,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.842072664369494,
       "switch_operations": 46,
-      "mean_decision_ms": 281.22762500121706,
-      "max_decision_ms": 425.39480000414187,
+      "mean_decision_ms": 139.19804166653194,
+      "max_decision_ms": 224.63880000577774,
       "total_steps": 12
     },
     {
@@ -3190,8 +4094,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9318204115682532,
       "switch_operations": 48,
-      "mean_decision_ms": 352.6828333336501,
-      "max_decision_ms": 457.58879999630153,
+      "mean_decision_ms": 135.36705000054403,
+      "max_decision_ms": 173.13409999769647,
       "total_steps": 12
     },
     {
@@ -3205,8 +4109,8 @@
       "voltage_violation_steps": 6,
       "min_voltage_pu": 0.9074308904880519,
       "switch_operations": 49,
-      "mean_decision_ms": 132.8963916663876,
-      "max_decision_ms": 155.05229999689618,
+      "mean_decision_ms": 149.25946666638387,
+      "max_decision_ms": 200.28050000109943,
       "total_steps": 12
     },
     {
@@ -3220,8 +4124,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.9363031738682325,
       "switch_operations": 45,
-      "mean_decision_ms": 148.00348333362004,
-      "max_decision_ms": 193.8713999988977,
+      "mean_decision_ms": 146.66973333442002,
+      "max_decision_ms": 171.5215000003809,
       "total_steps": 12
     },
     {
@@ -3235,8 +4139,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9295227584019867,
       "switch_operations": 47,
-      "mean_decision_ms": 140.5463499995676,
-      "max_decision_ms": 167.8267999959644,
+      "mean_decision_ms": 141.12039166684553,
+      "max_decision_ms": 196.01329999568406,
       "total_steps": 12
     },
     {
@@ -3250,8 +4154,8 @@
       "voltage_violation_steps": 1,
       "min_voltage_pu": 0.9418143833191079,
       "switch_operations": 52,
-      "mean_decision_ms": 144.9654333324967,
-      "max_decision_ms": 169.6142000000691,
+      "mean_decision_ms": 144.43673333274396,
+      "max_decision_ms": 247.9181999951834,
       "total_steps": 12
     },
     {
@@ -3265,8 +4169,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.8406087472485675,
       "switch_operations": 47,
-      "mean_decision_ms": 142.8692833342211,
-      "max_decision_ms": 157.77499999967404,
+      "mean_decision_ms": 137.92375833387874,
+      "max_decision_ms": 190.18330000108108,
       "total_steps": 12
     },
     {
@@ -3280,8 +4184,8 @@
       "voltage_violation_steps": 6,
       "min_voltage_pu": 0.9004818060937256,
       "switch_operations": 49,
-      "mean_decision_ms": 149.46779166772708,
-      "max_decision_ms": 174.7888999962015,
+      "mean_decision_ms": 150.80648333362964,
+      "max_decision_ms": 204.56759999797214,
       "total_steps": 12
     },
     {
@@ -3295,8 +4199,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.9147920830327692,
       "switch_operations": 49,
-      "mean_decision_ms": 145.73841666788212,
-      "max_decision_ms": 176.60080000496237,
+      "mean_decision_ms": 145.00618333416546,
+      "max_decision_ms": 192.62190000154078,
       "total_steps": 12
     },
     {
@@ -3310,8 +4214,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9327295424602542,
       "switch_operations": 46,
-      "mean_decision_ms": 138.50625833341232,
-      "max_decision_ms": 150.04909999697702,
+      "mean_decision_ms": 133.37149166606346,
+      "max_decision_ms": 172.38309999811463,
       "total_steps": 12
     },
     {
@@ -3325,8 +4229,8 @@
       "voltage_violation_steps": 10,
       "min_voltage_pu": 0.9313296910474202,
       "switch_operations": 42,
-      "mean_decision_ms": 139.67062500038688,
-      "max_decision_ms": 181.042799995339,
+      "mean_decision_ms": 138.17154166705828,
+      "max_decision_ms": 184.65000000287546,
       "total_steps": 12
     },
     {
@@ -3340,8 +4244,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.9185191325485859,
       "switch_operations": 49,
-      "mean_decision_ms": 142.0268666673413,
-      "max_decision_ms": 160.18829999666195,
+      "mean_decision_ms": 147.70734166510616,
+      "max_decision_ms": 186.19439999747556,
       "total_steps": 12
     },
     {
@@ -3355,8 +4259,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.9375059464881504,
       "switch_operations": 46,
-      "mean_decision_ms": 144.96278333293353,
-      "max_decision_ms": 178.3562000055099,
+      "mean_decision_ms": 146.124849999372,
+      "max_decision_ms": 192.38290000066627,
       "total_steps": 12
     },
     {
@@ -3370,8 +4274,8 @@
       "voltage_violation_steps": 6,
       "min_voltage_pu": 0.9316672962968723,
       "switch_operations": 42,
-      "mean_decision_ms": 142.87317500081068,
-      "max_decision_ms": 171.91820000152802,
+      "mean_decision_ms": 128.2369166662344,
+      "max_decision_ms": 140.50370000040857,
       "total_steps": 12
     },
     {
@@ -3385,8 +4289,8 @@
       "voltage_violation_steps": 9,
       "min_voltage_pu": 0.8409341698350619,
       "switch_operations": 50,
-      "mean_decision_ms": 139.62251666574352,
-      "max_decision_ms": 177.4805999957607,
+      "mean_decision_ms": 162.2384000014184,
+      "max_decision_ms": 227.92580000532325,
       "total_steps": 12
     },
     {
@@ -3400,8 +4304,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.935909845417809,
       "switch_operations": 45,
-      "mean_decision_ms": 142.1794583323693,
-      "max_decision_ms": 156.96469999966212,
+      "mean_decision_ms": 154.68600833446544,
+      "max_decision_ms": 217.99190000456292,
       "total_steps": 12
     },
     {
@@ -3415,8 +4319,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.8635079512720393,
       "switch_operations": 46,
-      "mean_decision_ms": 139.0234916658907,
-      "max_decision_ms": 158.7470000013127,
+      "mean_decision_ms": 135.92629166729844,
+      "max_decision_ms": 173.7490000014077,
       "total_steps": 12
     },
     {
@@ -3430,8 +4334,8 @@
       "voltage_violation_steps": 9,
       "min_voltage_pu": 0.8994766142212003,
       "switch_operations": 47,
-      "mean_decision_ms": 146.43374166735157,
-      "max_decision_ms": 224.3573000014294,
+      "mean_decision_ms": 130.24598333140602,
+      "max_decision_ms": 156.0613999972702,
       "total_steps": 12
     },
     {
@@ -3445,8 +4349,8 @@
       "voltage_violation_steps": 8,
       "min_voltage_pu": 0.9056611506296609,
       "switch_operations": 44,
-      "mean_decision_ms": 147.02277500024744,
-      "max_decision_ms": 167.39769999549026,
+      "mean_decision_ms": 147.2241583323921,
+      "max_decision_ms": 192.07150000147521,
       "total_steps": 12
     },
     {
@@ -3460,8 +4364,8 @@
       "voltage_violation_steps": 8,
       "min_voltage_pu": 0.8760595158489295,
       "switch_operations": 45,
-      "mean_decision_ms": 249.37206666618295,
-      "max_decision_ms": 490.36449999402976,
+      "mean_decision_ms": 128.3528416667347,
+      "max_decision_ms": 156.06000000116182,
       "total_steps": 12
     },
     {
@@ -3475,8 +4379,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.9312144513236097,
       "switch_operations": 44,
-      "mean_decision_ms": 410.607283334078,
-      "max_decision_ms": 451.0015999985626,
+      "mean_decision_ms": 144.82698333328395,
+      "max_decision_ms": 187.5404000020353,
       "total_steps": 12
     },
     {
@@ -3490,8 +4394,8 @@
       "voltage_violation_steps": 12,
       "min_voltage_pu": 0.8398785257444563,
       "switch_operations": 49,
-      "mean_decision_ms": 393.2967416658357,
-      "max_decision_ms": 425.4421000005095,
+      "mean_decision_ms": 127.15540833414707,
+      "max_decision_ms": 154.94740000576712,
       "total_steps": 12
     },
     {
@@ -3505,8 +4409,8 @@
       "voltage_violation_steps": 7,
       "min_voltage_pu": 0.9298008331208155,
       "switch_operations": 41,
-      "mean_decision_ms": 422.2838583336852,
-      "max_decision_ms": 449.1158999953768,
+      "mean_decision_ms": 130.02884999999273,
+      "max_decision_ms": 149.65799999481533,
       "total_steps": 12
     },
     {
@@ -3520,8 +4424,8 @@
       "voltage_violation_steps": 9,
       "min_voltage_pu": 0.8910621430766196,
       "switch_operations": 48,
-      "mean_decision_ms": 405.0475499989261,
-      "max_decision_ms": 463.03449999686563,
+      "mean_decision_ms": 131.65716666723407,
+      "max_decision_ms": 158.73120000469498,
       "total_steps": 12
     },
     {
@@ -3535,8 +4439,8 @@
       "voltage_violation_steps": 5,
       "min_voltage_pu": 0.900361587169483,
       "switch_operations": 43,
-      "mean_decision_ms": 422.6798083327594,
-      "max_decision_ms": 464.8678000012296,
+      "mean_decision_ms": 140.87870833403335,
+      "max_decision_ms": 191.06070000270847,
       "total_steps": 12
     },
     {
@@ -3550,8 +4454,8 @@
       "voltage_violation_steps": 3,
       "min_voltage_pu": 0.9224288135163816,
       "switch_operations": 45,
-      "mean_decision_ms": 403.7750083334686,
-      "max_decision_ms": 440.2415000004112,
+      "mean_decision_ms": 154.71440833304464,
+      "max_decision_ms": 247.7431000006618,
       "total_steps": 12
     },
     {
@@ -3565,8 +4469,8 @@
       "voltage_violation_steps": 4,
       "min_voltage_pu": 0.8780950880793676,
       "switch_operations": 46,
-      "mean_decision_ms": 446.1495250009951,
-      "max_decision_ms": 496.9539000012446,
+      "mean_decision_ms": 159.8559333342564,
+      "max_decision_ms": 221.0685000027297,
       "total_steps": 12
     },
     {
@@ -3580,8 +4484,8 @@
       "voltage_violation_steps": 6,
       "min_voltage_pu": 0.9009831129503046,
       "switch_operations": 48,
-      "mean_decision_ms": 422.7944416682779,
-      "max_decision_ms": 449.4574000054854,
+      "mean_decision_ms": 140.03414166654693,
+      "max_decision_ms": 174.2073999994318,
       "total_steps": 12
     },
     {
@@ -3595,8 +4499,8 @@
       "voltage_violation_steps": 10,
       "min_voltage_pu": 0.8618940992338652,
       "switch_operations": 43,
-      "mean_decision_ms": 420.5229416675138,
-      "max_decision_ms": 488.5844000018551,
+      "mean_decision_ms": 157.6076583314716,
+      "max_decision_ms": 219.35819999634987,
       "total_steps": 12
     },
     {
@@ -3610,8 +4514,8 @@
       "voltage_violation_steps": 2,
       "min_voltage_pu": 0.9311917314576934,
       "switch_operations": 45,
-      "mean_decision_ms": 443.489999999656,
-      "max_decision_ms": 485.85080000339076,
+      "mean_decision_ms": 133.6285083337619,
+      "max_decision_ms": 150.0716000009561,
       "total_steps": 12
     }
   ]

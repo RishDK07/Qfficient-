@@ -187,6 +187,106 @@ class RandomTreePolicy(Policy):
         return chosen, latency_ms
 
 
+class UnionFind:
+    __slots__ = ('parent', 'rank')
+
+    def __init__(self, n: int):
+        self.parent = list(range(n))
+        self.rank = [0] * n
+
+    def find(self, i: int) -> int:
+        root = i
+        while root != self.parent[root]:
+            root = self.parent[root]
+        curr = i
+        while curr != root:
+            nxt = self.parent[curr]
+            self.parent[curr] = root
+            curr = nxt
+        return root
+
+    def union(self, i: int, j: int) -> bool:
+        root_i = self.find(i)
+        root_j = self.find(j)
+        if root_i == root_j:
+            return False
+        if self.rank[root_i] < self.rank[root_j]:
+            self.parent[root_i] = root_j
+        elif self.rank[root_i] > self.rank[root_j]:
+            self.parent[root_j] = root_i
+        else:
+            self.parent[root_j] = root_i
+            self.rank[root_i] += 1
+        return True
+
+
+class RandomProposalsPolicy(Policy):
+    """Random Proposals Control (Ablation Baseline):
+    Generates K random switch proposals in the configuration space, and applies
+    the exact same repair and power-flow filtering as the QUBO policy.
+    This establishes a rigorous control: does the quantum Hamiltonian guide the search,
+    or does the post-processing filter/repair heuristic do all the work?
+    """
+
+    def __init__(self, k_samples: int = 50, mode: str = "filtered", seed: int = 42):
+        self.k_samples = k_samples
+        self.mode = mode
+        self.name = f"random_proposals_{mode}"
+        self.rng = np.random.default_rng(seed)
+
+    def reset(self, grid, fast, timeline):
+        pass
+
+    def _repair_to_tree(self, active_edges: Set[int], fast: FastFeeder, weights: Dict[int, float]) -> Tuple[int, ...]:
+        if fast.is_tree(tuple(active_edges)):
+            return tuple(sorted(active_edges))
+
+        all_edges = list(range(fast.m))
+        all_edges.sort(key=lambda e: (0 if e in active_edges else 1, -weights.get(e, 0.0)))
+
+        uf = UnionFind(fast.n)
+        chosen = []
+        for e in all_edges:
+            u, v = fast.eu[e], fast.ev[e]
+            if uf.union(u, v):
+                chosen.append(e)
+                if len(chosen) == fast.n - 1:
+                    break
+        return tuple(sorted(chosen))
+
+    def decide(self, ctx: DecisionContext) -> Tuple[Tuple[int, ...], float]:
+        t0 = time.perf_counter()
+        target_edges = ctx.fast.n - 1
+
+        temps_dict = {e: ctx.temps_k[i] for i, e in enumerate(ctx.fast.edge_ids)}
+        i_mesh = mesh_branch_currents(ctx.grid, ctx.injections, temps_dict)
+        weights = {}
+        for i, e in enumerate(ctx.fast.edge_ids):
+            i_val = i_mesh.get(e, 30.0)
+            p_loss = 3.0 * (i_val ** 2) * ctx.resistances[i]
+            weights[i] = p_loss / max(ctx.temps_k[i], 273.15)
+
+        proposals = []
+        for _ in range(self.k_samples):
+            sample_edges = set(self.rng.choice(ctx.fast.m, size=target_edges, replace=False))
+            proposals.append(sample_edges)
+
+        if self.mode == "raw":
+            chosen = self._repair_to_tree(proposals[0], ctx.fast, weights)
+        else:
+            candidate_trees = [self._repair_to_tree(p, ctx.fast, weights) for p in proposals]
+            best_loss = 1e12
+            chosen = candidate_trees[0]
+            for t in candidate_trees:
+                ok, _, _, loss, _ = ctx.fast.evaluate(t, ctx.p_pu, ctx.q_pu, ctx.resistances)
+                if ok and loss < best_loss:
+                    best_loss = loss
+                    chosen = t
+
+        latency_ms = (time.perf_counter() - t0) * 1e3
+        return chosen, latency_ms
+
+
 class QUBOPolicy(Policy):
     """Thermodynamic QUBO Policy with Simulated Annealing.
     Modes:
@@ -238,17 +338,14 @@ class QUBOPolicy(Policy):
         all_edges = list(range(fast.m))
         all_edges.sort(key=lambda e: (0 if e in active_edges else 1, -weights.get(e, 0.0)))
 
-        import networkx as nx
-        G = nx.Graph()
-        G.add_nodes_from(range(fast.n))
+        uf = UnionFind(fast.n)
         chosen = []
         for e in all_edges:
             u, v = fast.eu[e], fast.ev[e]
-            if not nx.has_path(G, u, v):
-                G.add_edge(u, v)
+            if uf.union(u, v):
                 chosen.append(e)
-            if len(chosen) == fast.n - 1:
-                break
+                if len(chosen) == fast.n - 1:
+                    break
         return tuple(sorted(chosen))
 
     def decide(self, ctx: DecisionContext) -> Tuple[Tuple[int, ...], float]:

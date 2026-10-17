@@ -124,23 +124,32 @@ class ThermodynamicQUBOBuilder:
             bqm.add_variable(f"x_{e}", - self.l_thermo * w)
 
         # ------------------------------------------------------------------
-        # Term 2: Fundamental Cycle Breaking Constraints H_cycle(x)
-        # Each fundamental loop k must have exactly |C_k| - 1 active branches:
-        # (Sum_{e in C_k} x_e - (|C_k| - 1))^2
-        # = Sum_{e} (1 - 2*target)*x_e + 2 * Sum_{a < b} x_a * x_b + target^2
+        # Term 2: Fundamental Cycle Breaking Constraints H_cycle(x) with Slacks
+        # For each loop k, enforce inequality: Sum_{e in C_k} x_e <= |C_k| - 1
+        # via: (Sum_{e in C_k} x_e + Sum_j c_j s_{k,j} - (|C_k| - 1))^2
+        # where c_j are binary expansion coefficients covering {0 .. |C_k| - 2}
         # ------------------------------------------------------------------
-        for ce in self.cycle_edge_ids:
-            target = len(ce) - 1
-            lin_coeff = self.l_cycle * (1.0 - 2.0 * float(target))
-            for e_idx in ce:
-                bqm.add_variable(f"x_{e_idx}", lin_coeff)
+        for k, ce in enumerate(self.cycle_edge_ids):
+            max_slack = max(len(ce) - 2, 1)
+            coeffs = bounded_binary_coeffs(max_slack)
+            target = float(len(ce) - 1)
 
-            quad_coeff = 2.0 * self.l_cycle
-            for a in range(len(ce)):
-                for b in range(a + 1, len(ce)):
-                    bqm.add_interaction(f"x_{ce[a]}", f"x_{ce[b]}", quad_coeff)
-            
-            bqm.offset += self.l_cycle * (float(target) ** 2)
+            terms: List[Tuple[str, float]] = [(f"x_{e}", 1.0) for e in ce]
+            for j, c in enumerate(coeffs):
+                s_name = f"s_{k}_{j}"
+                bqm.add_variable(s_name, 0.0)
+                terms.append((s_name, float(c)))
+
+            for name_i, a_i in terms:
+                bqm.add_variable(name_i, self.l_cycle * (a_i ** 2 - 2.0 * target * a_i))
+
+            for a in range(len(terms)):
+                name_a, a_val = terms[a]
+                for b in range(a + 1, len(terms)):
+                    name_b, b_val = terms[b]
+                    bqm.add_interaction(name_a, name_b, 2.0 * self.l_cycle * a_val * b_val)
+
+            bqm.offset += self.l_cycle * (target ** 2)
 
         # ------------------------------------------------------------------
         # Term 3: Radiality / Tree Topology Constraint H_radiality(x)
