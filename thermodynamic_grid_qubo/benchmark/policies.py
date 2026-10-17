@@ -313,8 +313,10 @@ class QUBOPolicy(Policy):
         self.builder: Optional[ThermodynamicQUBOBuilder] = None
         self.calculator = EntropyCalculator()
         self.all_trees: List[Tuple[int, ...]] = []
+        self.feasible_fractions: List[float] = []
 
     def reset(self, grid, fast, timeline):
+        self.feasible_fractions = []
         edges = [(grid.lines[e].u, grid.lines[e].v) for e in fast.edge_ids]
         self.builder = ThermodynamicQUBOBuilder(
             num_buses=fast.n,
@@ -375,6 +377,10 @@ class QUBOPolicy(Policy):
         )
 
         X, E, sample_ms = self.sampler.sample(qubo_model.Q, num_reads=self.num_reads, offset=qubo_model.offset)
+
+        # Track feasible read fraction
+        is_tree_flags = [ctx.fast.is_tree(tuple(np.nonzero(X[r, :ctx.fast.m])[0])) for r in range(len(X))]
+        self.feasible_fractions.append(float(np.mean(is_tree_flags)))
 
         if self.selection == "raw":
             # Rank STRICTLY by raw lowest QUBO Hamiltonian energy

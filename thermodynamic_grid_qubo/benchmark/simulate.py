@@ -219,6 +219,7 @@ def simulate(
         "switch_operations": int(switch_ops),
         "mean_decision_ms": float(np.mean(decision_times_ms)),
         "max_decision_ms": float(np.max(decision_times_ms)),
+        "feasible_read_fraction": float(np.mean(policy.feasible_fractions)) if hasattr(policy, "feasible_fractions") and policy.feasible_fractions else 1.0,
         "total_steps": sc.time_steps,
     }
 

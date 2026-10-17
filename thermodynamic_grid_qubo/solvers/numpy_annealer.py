@@ -144,11 +144,83 @@ class OpenJijSampler:
         bqm = dimod.BinaryQuadraticModel.from_qubo(qubo_dict, offset=offset)
 
         if self.use_sqa:
-            sampler = oj.SQASampler(trotter=self.trotter, num_sweeps=self.num_sweeps, seed=self.seed)
+            sampler = oj.SQASampler()
+            response = sampler.sample(
+                bqm,
+                num_reads=num_reads,
+                num_sweeps=self.num_sweeps,
+                trotter=self.trotter,
+                seed=self.seed,
+            )
         else:
-            sampler = oj.SASampler(num_sweeps=self.num_sweeps, seed=self.seed)
+            sampler = oj.SASampler()
+            response = sampler.sample(
+                bqm,
+                num_reads=num_reads,
+                num_sweeps=self.num_sweeps,
+                seed=self.seed,
+            )
+        samples = []
+        energies = []
+        for sample, energy in response.data(fields=["sample", "energy"]):
+            vec = np.array([sample[i] for i in range(N)], dtype=np.int8)
+            samples.append(vec)
+            energies.append(float(energy))
 
-        response = sampler.sample(bqm, num_reads=num_reads)
+        X = np.array(samples)
+        E = np.array(energies)
+        sort_idx = np.argsort(E)
+        X = X[sort_idx]
+        E = E[sort_idx]
+
+        elapsed_ms = (time.perf_counter() - t0) * 1e3
+        return X, E, elapsed_ms
+
+
+class NealSampler:
+    """Adapter with the same interface as NumpyAnnealer, backed by dwave-neal SimulatedAnnealingSampler."""
+
+    def __init__(
+        self,
+        seed: int = 42,
+        num_sweeps: int = 300,
+        beta_range: Optional[Tuple[float, float]] = None,
+    ):
+        self.seed = seed
+        self.num_sweeps = num_sweeps
+        self.beta_range = beta_range
+
+    def sample(
+        self,
+        qubo_matrix: np.ndarray,
+        num_reads: int = 100,
+        offset: float = 0.0,
+    ) -> Tuple[np.ndarray, np.ndarray, float]:
+        import dimod
+        try:
+            import neal
+        except ImportError:
+            fallback = NumpyAnnealer(sweeps=self.num_sweeps, seed=self.seed)
+            return fallback.sample(qubo_matrix, num_reads=num_reads, offset=offset)
+
+        t0 = time.perf_counter()
+        N = qubo_matrix.shape[0]
+        qubo_dict = {}
+        for i in range(N):
+            for j in range(i, N):
+                val = float(qubo_matrix[i, j])
+                if i != j and qubo_matrix[j, i] != 0.0:
+                    val += float(qubo_matrix[j, i])
+                if abs(val) > 1e-12:
+                    qubo_dict[(i, j)] = val
+
+        bqm = dimod.BinaryQuadraticModel.from_qubo(qubo_dict, offset=offset)
+        sampler = neal.SimulatedAnnealingSampler()
+        kwargs = {"num_reads": num_reads, "num_sweeps": self.num_sweeps, "seed": self.seed}
+        if self.beta_range:
+            kwargs["beta_range"] = self.beta_range
+        response = sampler.sample(bqm, **kwargs)
+
         samples = []
         energies = []
         for sample, energy in response.data(fields=["sample", "energy"]):

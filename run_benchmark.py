@@ -340,16 +340,41 @@ def generate_report_and_plots(
     update_readme_from_summary(sum_file, root_readme)
 
 
-def run_benchmark(num_scenarios: int = 30, time_steps: int = 12, dt_seconds: float = 300.0, output_dir: str = "results"):
+from thermodynamic_grid_qubo.solvers.numpy_annealer import NumpyAnnealer, OpenJijSampler, NealSampler
+
+
+def run_benchmark(
+    num_scenarios: int = 30,
+    time_steps: int = 12,
+    dt_seconds: float = 300.0,
+    output_dir: str = "results",
+    sampler_type: str = "numpy-sa",
+    num_reads: int = 50,
+    sweeps: Optional[int] = None,
+    trotter: int = 16,
+):
     out_path = Path(output_dir)
     out_path.mkdir(parents=True, exist_ok=True)
 
-    print(f"=== Starting Multi-Scenario Benchmark ({num_scenarios} scenarios, {time_steps} steps/scenario, dt={dt_seconds}s) ===")
+    print(f"=== Starting Multi-Scenario Benchmark ({num_scenarios} scenarios, {time_steps} steps/scenario, dt={dt_seconds}s, sampler={sampler_type}) ===")
     grid = IEEEFeederLoader.load_ieee33()
     fast = FastFeeder(grid)
 
     candidate_trees = fast.enumerate_radial_configs()
     print(f"Loaded {len(candidate_trees)} IEEE-33 radial spanning trees.")
+
+    if sampler_type == "openjij":
+        sw = sweeps or 300
+        qubo_sampler = OpenJijSampler(use_sqa=False, num_sweeps=sw, seed=200)
+    elif sampler_type == "openjij-sqa":
+        sw = sweeps or 300
+        qubo_sampler = OpenJijSampler(use_sqa=True, trotter=trotter, num_sweeps=sw, seed=200)
+    elif sampler_type == "neal":
+        sw = sweeps or 300
+        qubo_sampler = NealSampler(num_sweeps=sw, seed=200)
+    else:
+        sw = sweeps or 100
+        qubo_sampler = NumpyAnnealer(sweeps=sw, seed=200)
 
     policies = [
         StandardStaticPolicy(),
@@ -360,8 +385,8 @@ def run_benchmark(num_scenarios: int = 30, time_steps: int = 12, dt_seconds: flo
         RandomProposalsPolicy(k_samples=50, mode="filtered", seed=100),
         RandomTreePolicy(k_samples=50, mode="raw", seed=100),
         RandomTreePolicy(k_samples=50, mode="filtered", seed=100),
-        QUBOPolicy(num_reads=50, sweeps=100, selection="raw", weight_mode="mesh_current", seed=200),
-        QUBOPolicy(num_reads=50, sweeps=100, selection="filtered", weight_mode="mesh_current", seed=200),
+        QUBOPolicy(sampler=qubo_sampler, num_reads=num_reads, sweeps=sw, selection="raw", weight_mode="mesh_current", seed=200),
+        QUBOPolicy(sampler=qubo_sampler, num_reads=num_reads, sweeps=sw, selection="filtered", weight_mode="mesh_current", seed=200),
     ]
 
     policy_names = [p.name for p in policies]
@@ -399,18 +424,26 @@ if __name__ == "__main__":
     parser.add_argument("--n", type=int, default=30, help="Number of scenarios (default: 30)")
     parser.add_argument("--steps", type=int, default=12, help="Time steps per scenario (default: 12)")
     parser.add_argument("--dt", type=float, default=300.0, help="Decision interval in seconds (default: 300)")
-    parser.add_argument("--output-dir", type=str, default="results", help="Output directory")
+    parser.add_argument("--output-dir", type=str, default=None, help="Output directory (default: results or results/<sampler>)")
+    parser.add_argument("--sampler", type=str, default="numpy-sa", choices=["numpy-sa", "openjij", "openjij-sqa", "neal"], help="Sampler engine")
+    parser.add_argument("--sweeps", type=int, default=None, help="Sweeps per run")
+    parser.add_argument("--reads", type=int, default=50, help="Number of reads")
+    parser.add_argument("--trotter", type=int, default=16, help="Trotter slices for SQA")
     parser.add_argument("--from-json", action="store_true", help="Generate from existing benchmark_raw.json")
     args = parser.parse_args()
 
+    out_dir = args.output_dir
+    if out_dir is None:
+        out_dir = f"results/{args.sampler}" if args.sampler != "numpy-sa" else "results"
+
     if args.from_json:
-        raw_p = Path(args.output_dir) / "benchmark_raw.json"
+        raw_p = Path(out_dir) / "benchmark_raw.json"
         if raw_p.exists():
             with open(raw_p, "r", encoding="utf-8") as f:
                 data = json.load(f)
             generate_report_and_plots(
                 data,
-                output_dir=args.output_dir,
+                output_dir=out_dir,
                 num_scenarios=len(next(iter(data.values()))),
                 time_steps=args.steps,
                 dt_seconds=args.dt,
@@ -418,4 +451,13 @@ if __name__ == "__main__":
         else:
             print(f"No existing benchmark_raw.json found at {raw_p}.")
     else:
-        run_benchmark(num_scenarios=args.n, time_steps=args.steps, dt_seconds=args.dt, output_dir=args.output_dir)
+        run_benchmark(
+            num_scenarios=args.n,
+            time_steps=args.steps,
+            dt_seconds=args.dt,
+            output_dir=out_dir,
+            sampler_type=args.sampler,
+            num_reads=args.reads,
+            sweeps=args.sweeps,
+            trotter=args.trotter,
+        )
