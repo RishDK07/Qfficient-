@@ -321,19 +321,19 @@ def run_voltage_support_analysis(output_dir: Path = Path("results")) -> Dict[str
         "standard_static": {
             "heat_mj": res_std["heat_mj"],
             "min_voltage_pu": res_std["min_voltage_pu"],
-            "violation_steps": res_std["violation_steps"],
+            "violation_steps": res_std["voltage_violation_steps"],
         },
         "branch_exchange": {
             "heat_mj": res_be["heat_mj"],
             "min_voltage_pu": res_be["min_voltage_pu"],
-            "violation_steps": res_be["violation_steps"],
+            "violation_steps": res_be["voltage_violation_steps"],
             "heat_reduction_pct": (res_std["heat_mj"] - res_be["heat_mj"]) / res_std["heat_mj"] * 100.0,
         },
     }
 
     print(f"Heavy Load / Severe EV Surge Stress Test:")
-    print(f"  Standard Static : V_min = {res_std['min_voltage_pu']:.4f} pu, Violations = {res_std['violation_steps']}/12 steps, Heat = {res_std['heat_mj']:.2f} MJ")
-    print(f"  Reconfiguration : V_min = {res_be['min_voltage_pu']:.4f} pu, Violations = {res_be['violation_steps']}/12 steps, Heat = {res_be['heat_mj']:.2f} MJ")
+    print(f"  Standard Static : V_min = {res_std['min_voltage_pu']:.4f} pu, Violations = {res_std['voltage_violation_steps']}/12 steps, Heat = {res_std['heat_mj']:.2f} MJ")
+    print(f"  Reconfiguration : V_min = {res_be['min_voltage_pu']:.4f} pu, Violations = {res_be['voltage_violation_steps']}/12 steps, Heat = {res_be['heat_mj']:.2f} MJ")
     return summary
 
 
