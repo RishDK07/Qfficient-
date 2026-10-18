@@ -28,10 +28,9 @@
 7. [Multi-Solver Architecture & Scalable Quantum Annealing](#-multi-solver-architecture--scalable-quantum-annealing)
 8. [Visual Diagnostics & Network Topologies](#-visual-diagnostics--network-topologies)
 9. [Interactive Review Portal (Streamlit 2.0 Web Dashboard)](#-interactive-review-portal-streamlit-20-web-dashboard)
-10. [Minute-by-Minute Engineering Changelog](#-minute-by-minute-engineering-changelog)
-11. [Quickstart & CLI Commands](#-quickstart--cli-commands)
-12. [Repository Architecture](#-repository-architecture)
-13. [License & Citation](#-license--citation)
+10. [Quickstart & CLI Commands](#-quickstart--cli-commands)
+11. [Repository Architecture](#-repository-architecture)
+12. [License & Citation](#-license--citation)
 
 ---
 
@@ -260,39 +259,6 @@ streamlit run app.py
 4. **Executive Performance Table**: Direct comparison of Joule heat dissipation, entropy generation, exergy preserved, peak conductor temperature, and breaker switch counts.
 5. **Interactive Topology Canvas**: Scrub through simulation time steps to inspect switch actions, active routes, and thermal states.
 6. **Line-by-Line Operating State Table**: Detailed breakdown of line current, resistance, loading %, and temperature at any selected second.
-
----
-
-## ⏱️ Minute-by-Minute Engineering Changelog
-
-```
-01:26 AM ──── 01:38 AM ──── 02:30 AM ──── 02:36 AM ──── 03:05 AM ──── 03:15 AM ──── 03:25 AM ──── 03:32 AM
-  Init        Bootstrap      Classical    33-Bus Vis    Benchmark &   Multi-Solver   Custom 10-100   Release
-  Repo        Platform       Exact Base   Layout        LinDistFlow   Pipeline       Microgrids      Package
-```
-
-### Phase 1: Platform Bootstrap (01:26 – 01:38 AM)
-* `3a28612` (01:26:12): Initial repository structure and Apache 2.0 license.
-* `be06050` (01:30:06): Built core Thermodynamic-Mapped QUBO engine with 12-component visualizer, thermal dynamics model ($I^2 R(T)$), non-equilibrium entropy calculator, and initial Streamlit dashboard.
-* `f72a5b5` (01:36:07): Configured `.gitignore` for Python environments and binary caches.
-* `cfcbe85` (01:38:25): Authored initial publication-grade README with core physics and Gouy-Stodola formulation.
-
-### Phase 2: Classical Exact Baseline & 33-Bus Expansion (02:30 – 02:36 AM)
-* `b06f285` (02:30:52): Implemented exact loss-minimizing classical baseline (`exact_classical_solver.py`), closed-state current estimation, raw QUBO energy ranking, and ablation suite (`ablation_suite.py`).
-* `5003b46` (02:34:14): Scaled topology visualizer to the full 33-component IEEE benchmark (`visualize_microgrid.py`).
-* `8c61d0f` (02:36:12): Refined 33-component layout coordinates, bus labeling, and aesthetic routing curves.
-
-### Phase 3: Research-Grade Benchmark & LinDistFlow Engine (02:55 – 03:05 AM)
-* `a718233` (03:05:13): Complete research-grade benchmark suite across 100 scenario evaluations (`run_benchmark.py`). Integrated fast LinDistFlow power flow solver (`fast_flow.py`, `ieee33_trees.npy`), rigorous claim reconciliation, and comprehensive automated report card generator (`report_card.py`).
-
-### Phase 4: Scalable Custom Microgrids & Multi-Solver Pipeline (03:05 – 03:25 AM)
-* `88d4fac` (03:15:01): Added `exact_oracle` and `numpy_annealer` directly to pipeline solver choices.
-* `a3adf00` (03:24:47): Developed standalone runner (`run_custom_grid.py`) and dynamic support for custom 60-100 component microgrids.
-* **Production Polish (03:25 – 03:32 AM)**:
-  * Implemented `custom_grid_generator.py` supporting 10 to 100 buses with user-defined DER mixes and tie switches.
-  * Added quantum ensemble MST extraction and loop-exchange repair in `openjij_annealer.py` for scalable quantum annealing on large grids.
-  * Extended `app.py` with custom grid UI controls, executive comparison tables, and line-by-line power flow tables.
-  * Added unit and integration tests (`tests/test_custom_grid.py`) bringing the test suite to **17 passing tests**.
 
 ---
 
