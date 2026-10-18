@@ -28,9 +28,11 @@ class Scenario:
         ev_surge_kw: Optional[float] = None,
         load_scale: Optional[float] = None,
         randomize: bool = True,
+        grid: Optional[DistributionGrid] = None,
     ) -> "Scenario":
         rng = np.random.default_rng(seed)
-        grid = IEEEFeederLoader.load_ieee33()
+        if grid is None:
+            grid = IEEEFeederLoader.load_ieee33()
 
         timeline: List[Dict[int, Tuple[float, float]]] = []
 

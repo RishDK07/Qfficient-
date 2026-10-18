@@ -7,7 +7,7 @@
 [![Quantum](https://img.shields.io/badge/Quantum-D--Wave%20%7C%20OpenJij%20%7C%20Neal-4A154B?style=for-the-badge&logo=quantum&logoColor=white)](https://www.dwavesys.com/)
 [![Framework](https://img.shields.io/badge/Streamlit-2.0%20App-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=for-the-badge)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-Passing%20(26%2F26)-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-Passing%20(37%2F37)-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
 [![Grid Scale](https://img.shields.io/badge/Grid%20Scale-10%20to%20100%20Components-orange?style=for-the-badge&logo=target&logoColor=white)](#-custom-microgrid-generator-10-to-100-components)
 
 <p align="center">
@@ -328,7 +328,7 @@ pip install -r requirements.txt
 | **Custom 40-Bus Script** | `python run_custom_40.py` | Evaluates 40-component microgrid with transient plots |
 | **Custom 60-Bus Script** | `python run_custom_60.py` | Evaluates 60-component microgrid with transient plots |
 | **IEEE 33-Bus Visualizer**| `python visualize_microgrid.py` | Generates high-res `optimized_microgrid.png` |
-| **Run Test Suite** | `pytest tests/` | Runs all 26 unit, physics, and report integrity tests |
+| **Run Test Suite** | `pytest tests/` | Runs all 37 unit, AC power flow, IEEE 69-bus, and report integrity tests |
 
 ### 3. One-Click Launchers
 * **Windows**: Double-click `run_dashboard.bat`
@@ -342,6 +342,7 @@ pip install -r requirements.txt
 ```
 Qfficient-/
 ├── run.py                                             # Unified CLI entry point & scaling sweep runner
+├── run_phase3_validation.py                           # Phase 3 comprehensive validation suite (pandapower, IEEE 69)
 ├── MANUAL.md                                          # Complete technical stack specification & user manual
 ├── QFFICIENT_SYSTEM_MANUAL.docx                       # Comprehensive formatted Word technical manual
 ├── generate_docx_manual.py                            # Automated generator for the Word technical manual
@@ -368,9 +369,10 @@ Qfficient-/
 │   ├── benchmark_raw.json                             # Raw scenario execution telemetry
 │   └── benchmark_summary.json                         # Mean, std, and p-value summary table
 │
-├── tests/                                             # Automated test suite (26 passed tests)
+├── tests/                                             # Automated test suite (37 passed tests)
 │   ├── test_custom_grid.py                            # Custom 30, 60, 100 component topology & pipeline tests
 │   ├── test_fast_flow.py                              # LinDistFlow accuracy & voltage tests
+│   ├── test_pandapower_and_ieee69.py                  # Pandapower AC cross-validation & IEEE 69-bus tests
 │   ├── test_pipeline.py                               # Pipeline config & multi-solver tests
 │   ├── test_qubo_grid.py                              # Physics verifier, thermal dynamics, and QUBO tests
 │   └── test_report_integrity.py                       # Automated verification of report cards & HTML exports

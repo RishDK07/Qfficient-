@@ -188,3 +188,38 @@ class IEEEFeederLoader:
         grid.der_nodes[11] = "bess"
 
         return grid
+
+    @staticmethod
+    def load_ieee69() -> DistributionGrid:
+        """
+        Builds the standard IEEE 69-Bus distribution test system with 5 tie-switches.
+        Total: 69 buses, 68 sectionalizing lines (normally closed), 5 tie lines (normally open).
+        Origin: M. E. Baran and F. F. Wu, 'Optimal capacitor placement on radial distribution systems',
+        IEEE Trans. Power Delivery, vol. 4, no. 1, pp. 725-734, Jan 1989.
+        Tie switches (69-73): D. Das (2008) / Savic & Walters (1989): (11-43, 13-21, 15-46, 50-59, 27-65).
+        """
+        from .ieee69_data import RAW_BUSES, RAW_BRANCHES, RAW_TIE_LINES
+
+        grid = DistributionGrid("IEEE_69_Bus", v_base_kv=12.66, s_base_mva=10.0)
+
+        # Bus 1 is the substation slack bus
+        for bus_id, p_kw, q_kvar in RAW_BUSES:
+            grid.add_bus(bus_id, p_kw=p_kw, q_kvar=q_kvar, is_substation=(bus_id == 1))
+
+        edge_idx = 0
+        for from_b, to_b, r, x in RAW_BRANCHES:
+            grid.add_branch(edge_idx, from_b, to_b, r_ohm=r, x_ohm=x, is_tie=False, i_max=400.0)
+            edge_idx += 1
+
+        for from_b, to_b, r, x in RAW_TIE_LINES:
+            grid.add_branch(edge_idx, from_b, to_b, r_ohm=r, x_ohm=x, is_tie=True, i_max=400.0)
+            edge_idx += 1
+
+        # Representative DER locations across major laterals
+        grid.der_nodes[11] = "pv"
+        grid.der_nodes[21] = "ev"
+        grid.der_nodes[50] = "pv"
+        grid.der_nodes[64] = "bess"
+
+        return grid
+
