@@ -320,6 +320,9 @@ pip install -r requirements.txt
 | :--- | :--- | :--- |
 | **Unified CLI Suite** | `python run.py -n 60` | Full CLI & automated export suite (CSV, figures, reports) |
 | **Parametric Sweep** | `python run.py --sweep` | Multi-scale scaling sweep across sizes [20, 40, 60, 80, 100] |
+| **Phase 3 Validation** | `python run_phase3_validation.py` | Full validation suite: pandapower AC cross-val, IEEE 69-bus, N=100, EV stress |
+| **Phase 2 Ablations** | `python run_phase2_ablations.py` | QUBO formulation ablations, quadratic surrogate, and hybrid policies |
+| **Sampler Comparison** | `python run_sampler_comparison.py` | Multi-sampler benchmarks: NumPy SA, OpenJij SQA, and D-Wave Neal |
 | **Launch Dashboard** | `streamlit run app.py` | Full interactive review portal & custom grid designer |
 | **Standalone Web Suite**| Open `dashboard.html` | Self-contained single-page executive web app with SVG topology |
 | **Build HTML Dashboard**| `python build_dashboard_html.py` | Compiles simulation telemetry into `dashboard.html` |
