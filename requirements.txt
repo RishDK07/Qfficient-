@@ -17,5 +17,9 @@ tabulate>=0.10.0
 # Testing & Quality Assurance
 pytest>=8.0.0
 
-# Interactive Project Review Dashboard (Optional for Live Demo)
+# Grid Physics & AC Power Flow Cross-Validation
+pandapower>=2.14.0
+
+# Interactive Project Review Dashboard & Technical Manual
 streamlit>=1.35.0
+python-docx>=1.0.0
