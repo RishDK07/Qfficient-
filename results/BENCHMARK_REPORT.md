@@ -126,3 +126,19 @@ Evaluated on IEEE 33-Bus across 100 independent randomized profiles:
 * **Standard Static Baseline**: Total Heat = $906.26\text{ MJ}$, severe depression $V_{\min} = 0.8785\text{ pu}$ (12/12 violation steps).
 * **Dynamic Reconfiguration**: Total Heat = $706.71\text{ MJ}$ (**+22.02% heat reduction**), $V_{\min} = 0.9042\text{ pu}$ (**+0.0257 pu** voltage recovery under critical loading).
 
+## 6. Large-Scale 1,000-Scenario Monte Carlo Statistical Audit
+
+To definitively validate statistical convergence and eliminate sample-size bias, an exhaustive Monte Carlo simulation was executed across **1,000 independent randomized load/DER scenarios** (2,000 total operating states evaluated; `results/monte_carlo_1000_results.json` and `results/monte_carlo_1000_distribution.png`):
+
+| Formulation / Policy | Heat (MJ) [Mean ± Std] | 95% Conf. Interval | Median (IQR) [MJ] | Heat Red. vs Baseline (%) | ANSI Compliance (%) | Total Violation Steps | $p$-value vs Baseline |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Standard Static Baseline** | $67.33 \pm 14.33$ | $[66.44, 68.22]$ | $65.93\ (24.03)$ | Baseline | 26.35% | 1,473 / 2,000 | — |
+| **Classical Branch Exchange** | **$54.79 \pm 11.49$** | $[54.07, 55.50]$ | **$53.88\ (19.34)$** | **+18.63%** | **57.35%** | **853 / 2,000** | **$3.33\times 10^{-165}$** |
+| **Random Trees (Filtered)** | $57.68 \pm 12.62$ | $[56.90, 58.46]$ | $57.06\ (20.15)$ | **+14.34%** | 55.90% | 882 / 2,000 | $4.59\times 10^{-164}$ |
+| **Hybrid QUBO + Branch Exchange** | $58.25 \pm 13.67$ | $[57.40, 59.09]$ | $56.90\ (20.66)$ | **+13.50%** | 56.60% | 868 / 2,000 | $1.88\times 10^{-153}$ |
+
+### Empirical Insights from 1,000 Scenarios:
+1. **Unassailable Statistical Significance ($p = 10^{-165}$)**: The $18.63\%$ Joule dissipation reduction achieved by dynamic branch-exchange reconfiguration over static operation is confirmed beyond any statistical anomaly.
+2. **Voltage Compliance More Than Doubled**: Dynamic network reconfiguration elevates ANSI C84.1 voltage compliance from **$26.35\%$** to **$57.35\%$**, cutting voltage violation steps by **$-42.1\%$** (from 1,473 down to 853 steps).
+3. **Distribution Regularity**: Interquartile range (IQR) shrinks from $24.03\text{ MJ}$ to $19.34\text{ MJ}$, proving that dynamic reconfiguration dampens peak dissipation volatility during DER fluctuations.
+

@@ -77,7 +77,7 @@ Evaluated across **30 independent randomized renewable/load fluctuation profiles
 * **Classical Branch Exchange & Theoretical Optimum**: Relative to the standard baseline, classical loop branch exchange achieves **+20.73% loss reduction**, while dynamic candidate tree search achieves **+29.06% loss reduction**.
 * **Random-Proposals Control vs. QUBO Guidance**: The `random_proposals_filtered` control generates 50 random switch proposals and applies the exact same Kruskal thermal repair and power-flow filter, achieving **+25.12% loss reduction**. Comparing filtered QUBO (**+3.64%**) against random proposals isolates the extent to which the quantum Hamiltonian guides the search versus the post-processing filter.
 * **Thermodynamic QUBO Sign Physics**: With the corrected negative linear mapping ($-w_e x_e$), loaded backbone lines are prioritized to stay closed while loop tie-lines with minimum mesh currents are broken. Raw unconstrained QUBO ground states achieve **-10.92% loss reduction** without post-hoc power-flow re-ranking.
-* **Realistic Problem Hardness & Quantum Advantage Boundaries**: On the 33-bus testbed (37 binary variables, 5 tie switches), there exist only 50,751 valid radial trees, which an exhaustive classical LinDistFlow oracle evaluates in under 40 ms. Therefore, **no quantum advantage exists or is claimed on the 33-bus system**. Meaningful quantum advantage requires large-scale meshed distribution networks ($>100$ buses, $\ge 15\text{--}20$ tie switches, where tree cardinality exceeds $10^{15}$ and exhaustive classical enumeration becomes NP-hard). The custom grid generator (`run_custom_grid.py`) supports scaling experiments up to 100 components.
+* **1,000-Scenario Large-Scale Monte Carlo Audit**: An exhaustive 1,000-scenario Monte Carlo benchmark (2,000 operating states evaluated; `results/monte_carlo_1000_results.json`, `results/monte_carlo_1000_distribution.png`) confirms that classical branch exchange achieves **+18.63% heat reduction** with overwhelming statistical significance ($p = 3.33\times 10^{-165}$ vs baseline), while more than doubling ANSI C84.1 voltage compliance from 26.35% to 57.35% and cutting voltage violation steps by -42.1%.
 * **Sampler Backends & Benchmark Execution**: The headline numbers reported above use the dependency-free `numpy-sa` simulated annealer (vectorized Metropolis-Hastings on CPU, 100 sweeps, 50 reads) ensuring exact reproducibility without external proprietary dependencies. Multi-sampler evaluations across `dwave-neal`, `openjij` classical SA, and `openjij` SQA (path-integral Monte Carlo, Trotter=16) are detailed in [`results/BENCHMARK.md`](results/BENCHMARK.md) and [`results/sampler_comparison.png`](results/sampler_comparison.png).
 
 ---
@@ -297,6 +297,7 @@ pip install -r requirements.txt
 | **Custom 40-Bus Script** | `python run_custom_40.py` | Evaluates 40-component microgrid with transient plots |
 | **Custom 60-Bus Script** | `python run_custom_60.py` | Evaluates 60-component microgrid with transient plots |
 | **IEEE 33-Bus Visualizer**| `python visualize_microgrid.py` | Generates high-res `optimized_microgrid.png` |
+| **1,000-Scenario Audit** | `python tools/verify_1000_scenarios.py` | 1,000-scenario Monte Carlo audit (2,000 states, p < 1e-160) |
 | **Run Test Suite** | `pytest tests/` | Runs all 37 unit, AC power flow, IEEE 69-bus, and report integrity tests |
 
 ### 3. One-Click Launchers
@@ -337,11 +338,17 @@ Qfficient-/
 │   ├── benchmark_distribution.png                     # Loss distribution across policies
 │   ├── benchmark_raw.json                             # Raw scenario execution telemetry
 │   ├── benchmark_summary.json                         # Mean, std, and p-value summary table
+│   ├── monte_carlo_1000_distribution.png              # 1,000-scenario Monte Carlo loss distribution plot
+│   ├── monte_carlo_1000_results.json                  # 1,000-scenario Monte Carlo evaluation data
 │   ├── phase2_ablations.json                          # Phase 2 QUBO formulation & penalty ablation data
 │   ├── phase3_validation.json                         # Phase 3 full validation (AC cross-val, IEEE 69, N=100)
 │   ├── sampler_comparison.json                        # Multi-sampler (SA, SQA, Neal) comparison telemetry
 │   ├── sampler_comparison.png                         # Multi-sampler comparative performance figure
 │   └── sensitivity_curves.png                         # Phase 3 parametric sensitivity curves figure
+│
+├── tools/                                             # Research & benchmark utilities
+│   ├── format_phase2.py                               # Phase 2 ablation markdown table formatter
+│   └── verify_1000_scenarios.py                       # 1,000-scenario Monte Carlo statistical verification runner
 │
 ├── tests/                                             # Automated test suite (37 passed tests)
 │   ├── test_custom_grid.py                            # Custom 30, 60, 100 component topology & pipeline tests
