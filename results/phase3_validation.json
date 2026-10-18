@@ -1,0 +1,205 @@
+{
+  "ac_validation": {
+    "num_evaluations": 60,
+    "mean_loss_error_pct": 36.18008374852534,
+    "max_loss_error_pct": 55.743208883455196,
+    "mean_vmin_diff_pu": 0.027960094079848435,
+    "max_vmin_diff_pu": 0.07865758504701847,
+    "records_sample": [
+      {
+        "scenario": 0,
+        "step": 1,
+        "policy": "standard_static",
+        "ld_loss_kw": 67.50223880944625,
+        "ac_loss_kw": 116.38325490286573,
+        "loss_error_pct": 42.000042131676,
+        "ld_vmin": 0.9647418622532918,
+        "ac_vmin": 0.9345460297177274,
+        "vmin_diff_pu": 0.03019583253556446
+      },
+      {
+        "scenario": 0,
+        "step": 1,
+        "policy": "oracle",
+        "ld_loss_kw": 49.730767353308956,
+        "ac_loss_kw": 82.22403543641043,
+        "loss_error_pct": 39.517968086388535,
+        "ld_vmin": 0.977131705418171,
+        "ac_vmin": 0.9489305813406357,
+        "vmin_diff_pu": 0.028201124077535278
+      },
+      {
+        "scenario": 0,
+        "step": 1,
+        "policy": "branch_exchange",
+        "ld_loss_kw": 52.59416568046687,
+        "ac_loss_kw": 83.75479657500706,
+        "loss_error_pct": 37.2045926547432,
+        "ld_vmin": 0.9695684043275803,
+        "ac_vmin": 0.9518458283622182,
+        "vmin_diff_pu": 0.017722575965362086
+      },
+      {
+        "scenario": 0,
+        "step": 1,
+        "policy": "qubo_surrogate",
+        "ld_loss_kw": 102.94870469637267,
+        "ac_loss_kw": 232.61673993776446,
+        "loss_error_pct": 55.743208883455196,
+        "ld_vmin": 0.927531744558076,
+        "ac_vmin": 0.8488741595110575,
+        "vmin_diff_pu": 0.07865758504701847
+      },
+      {
+        "scenario": 0,
+        "step": 3,
+        "policy": "standard_static",
+        "ld_loss_kw": 87.80596876942822,
+        "ac_loss_kw": 151.47687348476958,
+        "loss_error_pct": 42.03341622425501,
+        "ld_vmin": 0.9462570373004171,
+        "ac_vmin": 0.9223652382185341,
+        "vmin_diff_pu": 0.02389179908188299
+      },
+      {
+        "scenario": 0,
+        "step": 3,
+        "policy": "oracle",
+        "ld_loss_kw": 64.83907356526491,
+        "ac_loss_kw": 141.64535673094838,
+        "loss_error_pct": 54.22435647613566,
+        "ld_vmin": 0.9555186330581661,
+        "ac_vmin": 0.9015547095720026,
+        "vmin_diff_pu": 0.05396392348616352
+      },
+      {
+        "scenario": 0,
+        "step": 3,
+        "policy": "branch_exchange",
+        "ld_loss_kw": 74.39347409006636,
+        "ac_loss_kw": 114.47197551719546,
+        "loss_error_pct": 35.011627296594256,
+        "ld_vmin": 0.9548573421615377,
+        "ac_vmin": 0.9410528834396624,
+        "vmin_diff_pu": 0.013804458721875301
+      },
+      {
+        "scenario": 0,
+        "step": 3,
+        "policy": "qubo_surrogate",
+        "ld_loss_kw": 79.16819985328775,
+        "ac_loss_kw": 138.56730097543524,
+        "loss_error_pct": 42.86660756470791,
+        "ld_vmin": 0.9553175856715139,
+        "ac_vmin": 0.9268794763674244,
+        "vmin_diff_pu": 0.02843810930408952
+      }
+    ]
+  },
+  "ieee69_feeder": {
+    "feeder": "IEEE 69-Bus",
+    "num_scenarios": 15,
+    "standard_static_mean_heat_mj": 714.7211598716278,
+    "branch_exchange_mean_heat_mj": 336.5563527137436,
+    "branch_exchange_reduction_pct": 52.91081730752269,
+    "branch_exchange_min_v_pu": 0.9377610972342304,
+    "standard_static_min_v_pu": 0.9070871669604781,
+    "random_be_mean_heat_mj": 714.7211598716278,
+    "random_be_reduction_pct": 0.0
+  },
+  "sensitivity": {
+    "60s": {
+      "dt_seconds": 60.0,
+      "steps": 60,
+      "mean_heat_std_mj": 325.04434222371265,
+      "mean_heat_be_mj": 262.77762155213816,
+      "reduction_pct": 19.156377325503254
+    },
+    "300s": {
+      "dt_seconds": 300.0,
+      "steps": 12,
+      "mean_heat_std_mj": 320.0935197104065,
+      "mean_heat_be_mj": 259.1090388804158,
+      "reduction_pct": 19.052082305560035
+    },
+    "900s": {
+      "dt_seconds": 900.0,
+      "steps": 4,
+      "mean_heat_std_mj": 320.7154590212373,
+      "mean_heat_be_mj": 258.96072983965337,
+      "reduction_pct": 19.255301683943653
+    }
+  },
+  "n100_confirmation": {
+    "standard_static": {
+      "mean_heat_mj": 376.2932733335563,
+      "std_heat_mj": 84.04211157914885,
+      "reduction_pct": 0.0,
+      "min_v_pu": 0.9270361796683194,
+      "mean_latency_ms": 0.00017649998577932519,
+      "p_vs_random": 3.8965598450959084e-18,
+      "p_vs_oracle": 3.8965598450959084e-18
+    },
+    "loss_optimal_candidate_search": {
+      "mean_heat_mj": 266.57961556334857,
+      "std_heat_mj": 58.369183167789494,
+      "reduction_pct": 29.15642280773768,
+      "min_v_pu": 0.9397846547872776,
+      "mean_latency_ms": 24.785813666894686,
+      "p_vs_random": 3.8965598450959084e-18,
+      "p_vs_oracle": NaN
+    },
+    "branch_exchange": {
+      "mean_heat_mj": 302.0304362468965,
+      "std_heat_mj": 65.90601194678825,
+      "reduction_pct": 19.73536131240678,
+      "min_v_pu": 0.9418777735497386,
+      "mean_latency_ms": 29.253631999842277,
+      "p_vs_random": 4.159221788308028e-12,
+      "p_vs_oracle": 3.8965598450959084e-18
+    },
+    "random_trees_filtered": {
+      "mean_heat_mj": 296.8938717911094,
+      "std_heat_mj": 66.39325517229697,
+      "reduction_pct": 21.10040417120748,
+      "min_v_pu": 0.9347444708189502,
+      "mean_latency_ms": 8.500102750282773,
+      "p_vs_random": NaN,
+      "p_vs_oracle": 3.8965598450959084e-18
+    },
+    "qubo_quadratic_surrogate_filtered": {
+      "mean_heat_mj": 340.6976626279497,
+      "std_heat_mj": 81.97210301864517,
+      "reduction_pct": 9.459539467784667,
+      "min_v_pu": 0.9145783928659209,
+      "mean_latency_ms": 156.31446050019196,
+      "p_vs_random": 3.8965598450959084e-18,
+      "p_vs_oracle": 3.8965598450959084e-18
+    },
+    "hybrid_qubo_branch_exchange": {
+      "mean_heat_mj": 312.8007546595835,
+      "std_heat_mj": 72.35907100263462,
+      "reduction_pct": 16.873147402157073,
+      "min_v_pu": 0.9384655496107392,
+      "mean_latency_ms": 155.63727058324733,
+      "p_vs_random": 1.3105832102334346e-16,
+      "p_vs_oracle": 3.8965598450959084e-18
+    }
+  },
+  "voltage_support": {
+    "extreme_load_scale": 1.35,
+    "extreme_ev_surge_kw": 1400.0,
+    "standard_static": {
+      "heat_mj": 906.262319388575,
+      "min_voltage_pu": 0.8785194231491793,
+      "violation_steps": 12
+    },
+    "branch_exchange": {
+      "heat_mj": 706.7058721992438,
+      "min_voltage_pu": 0.9042097471723971,
+      "violation_steps": 12,
+      "heat_reduction_pct": 22.019722426942042
+    }
+  },
+  "execution_time_seconds": 567.8548092842102
+}

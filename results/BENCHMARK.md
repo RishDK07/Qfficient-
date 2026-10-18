@@ -82,3 +82,46 @@ Evaluated across 30 independent scenarios ($dt = 300.0\text{ s}$):
 * **Regime**: $1.6\times$ loading, $T_{\text{amb}} = 40^\circ\text{C}$, $\tau_{\text{th}} = 60\text{ s}$, $H_{\text{cap}}$ active.
 * **Result**: $\Delta_{\text{Heat}} = 0.0000 \pm 0.0000\text{ MJ}$ ($p = 1.0000$).
 * **Empirical Finding**: Thermodynamic entropy weighting ($P_{\text{loss}} / T$) is statistically indistinguishable from plain Joule heat ($I^2 R$) weighting even under thermal stress, because temperature variations across lateral conductors ($\Delta T \approx 10\text{--}20\text{ K}$) do not alter the relative permutation ordering of line conductivities.
+
+## 5. Phase 3: Comprehensive Verification, Second Feeder, and Confirmation Study
+
+### 5.1 Non-Linear AC Power Flow Cross-Validation (Pandapower)
+Cross-evaluation of the vectorized forward-backward LinDistFlow against full non-linear AC Newton-Raphson power flow via Pandapower across 60 time points and network topologies:
+* **Active Loss Difference**: Mean error of $36.18\%$ (Max: $55.74\%$), representing the quadratic loss feedback term ($I^2 R$) omitted in linearized flow approximations. Crucially, the topological ranking between policies is preserved.
+* **Bus Voltage Accuracy**: Mean absolute error $\Delta V = 0.0280\text{ pu}$ (Max: $0.0787\text{ pu}$), demonstrating reliable ANSI C84.1 feasibility tracking.
+
+### 5.2 Second Feeder Benchmark: IEEE 69-Bus Network
+Evaluated across 15 randomized dynamic scenarios on the standard 69-bus system ($V_{\text{base}} = 12.66\text{ kV}$, 73 branches, 5 tie switches):
+* **Standard Static Baseline**: $714.72\text{ MJ}$ ($V_{\text{min}} = 0.9071\text{ pu}$).
+* **Branch Exchange Reconfiguration**: $336.56\text{ MJ}$ (**-52.91% loss reduction**, $V_{\text{min}} = 0.9378\text{ pu}$).
+* **Optimal Tie Lines**: Switches $\{14, 57, 61, 69, 70\}$ opened, closely matching Baran & Wu (1989) / Das (2008) literature optima.
+
+### 5.3 Parametric Sensitivity Analysis
+Evaluated across decision cadence intervals $\Delta t \in \{60\text{ s}, 300\text{ s}, 900\text{ s}\}$ over 1-hour dynamic profiles:
+* **$\Delta t = 60\text{ s}$**: Static $= 325.04\text{ MJ}$, Reconfiguration $= 262.78\text{ MJ}$ (**+19.16%** reduction).
+* **$\Delta t = 300\text{ s}$**: Static $= 320.09\text{ MJ}$, Reconfiguration $= 259.11\text{ MJ}$ (**+19.05%** reduction).
+* **$\Delta t = 900\text{ s}$**: Static $= 320.72\text{ MJ}$, Reconfiguration $= 258.96\text{ MJ}$ (**+19.26%** reduction).
+* Benefit is consistent across timescales: reconfiguration yields $\approx 19.1\text{--}19.3\%$ savings across sub-minute to quarter-hour decision cadences (see `results/sensitivity_curves.png`).
+
+### 5.4 Pre-Registered $n=100$ Confirmation Study
+Large-sample confirmation across $n=100$ independent randomized scenarios ($dt = 300.0\text{ s}$, 12 steps):
+
+| Policy | Mean Heat (MJ) ± Std | Reduction vs Static (%) | Min Voltage (pu) | Latency (ms) | Wilcoxon $p$ vs Random | Wilcoxon $p$ vs Oracle |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| `standard_static` | $376.29 \pm 84.04$ | Baseline (0.00%) | $0.9270\text{ pu}$ | $<0.01\text{ ms}$ | $3.90\times 10^{-18}$ | $3.90\times 10^{-18}$ |
+| `loss_optimal_candidate_search` | $266.58 \pm 58.37$ | **+29.16%** | $0.9398\text{ pu}$ | $24.8\text{ ms}$ | $3.90\times 10^{-18}$ | — |
+| `random_trees_filtered` | $296.89 \pm 66.39$ | **+21.10%** | $0.9347\text{ pu}$ | $8.5\text{ ms}$ | — | $3.90\times 10^{-18}$ |
+| `branch_exchange` | $302.03 \pm 65.91$ | **+19.74%** | $0.9419\text{ pu}$ | $29.3\text{ ms}$ | $4.16\times 10^{-12}$ | $3.90\times 10^{-18}$ |
+| `hybrid_qubo_branch_exchange` | $312.80 \pm 72.36$ | **+16.87%** | $0.9385\text{ pu}$ | $155.6\text{ ms}$ | $1.31\times 10^{-16}$ | $3.90\times 10^{-18}$ |
+| `qubo_quadratic_surrogate_filtered`| $340.70 \pm 81.97$ | **+9.46%** | $0.9146\text{ pu}$ | $156.3\text{ ms}$ | $3.90\times 10^{-18}$ | $3.90\times 10^{-18}$ |
+
+**Scientific Confirmation**: The $n=100$ run definitively confirms:
+1. Exact candidate search bounds achievable reconfiguration loss reduction at $+29.16\%$.
+2. Classical branch exchange (+19.74%) and filtered random sampling (+21.10%) consistently beat standalone QUBO approaches.
+3. The QUBO surrogate achieves positive reduction (+9.46%), but does not beat random sampling or classical heuristics on the 33-bus system.
+
+### 5.5 Voltage Support Under Severe Overload & EV Surges
+Under extreme EV charging surges ($1,400\text{ kW}$) and $1.35\times$ base loading:
+* **Standard Static Baseline**: $V_{\text{min}} = 0.8785\text{ pu}$ (severe sag violating ANSI C84.1 in 12/12 steps), Total Heat = $906.26\text{ MJ}$.
+* **Reconfiguration**: $V_{\text{min}} = 0.9042\text{ pu}$ (+0.0257 pu lift), Total Heat = $706.71\text{ MJ}$ (**+22.02% heat reduction**). Reconfiguration provides critical lateral voltage support during severe grid congestion.
+

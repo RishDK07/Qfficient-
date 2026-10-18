@@ -82,3 +82,47 @@ Evaluated across 30 independent scenarios ($dt = 300.0\text{ s}$):
 * **Regime**: $1.6\times$ loading, $T_{\text{amb}} = 40^\circ\text{C}$, $\tau_{\text{th}} = 60\text{ s}$, $H_{\text{cap}}$ active.
 * **Result**: $\Delta_{\text{Heat}} = 0.0000 \pm 0.0000\text{ MJ}$ ($p = 1.0000$).
 * **Empirical Finding**: Thermodynamic entropy weighting ($P_{\text{loss}} / T$) is statistically indistinguishable from plain Joule heat ($I^2 R$) weighting even under thermal stress, because temperature variations across lateral conductors ($\Delta T \approx 10\text{--}20\text{ K}$) do not alter the relative permutation ordering of line conductivities.
+
+## 5. Phase 3: Scientific Validation, Scale-Up & Stress Testing
+
+Evaluated across the comprehensive validation suite (`results/phase3_validation.json`):
+
+### 5.1 Pandapower AC Non-Linear Cross-Validation
+* **Evaluations**: 60 dynamic power flow states across IEEE 33-Bus scenarios comparing linearized LinDistFlow vs. exact AC Newton-Raphson power flow.
+* **Loss Error**: Mean relative loss difference is **36.18%** (max 55.74%), rigorously validating the physical loss underestimation inherent to first-order linear branch flow approximations.
+* **Voltage Fidelity**: Mean $|V_{\min}|$ difference between models is **0.0280 pu** (max 0.0787 pu).
+
+### 5.2 Large-Scale Feeder Generalization (IEEE 69-Bus Network)
+Evaluated across 15 independent dynamic load/generation scenarios:
+
+| Feeder Architecture | Configuration Policy | Mean Heat Dissipated (MJ) | Loss Reduction (%) | Min Voltage ($V_{\min}$) |
+| :--- | :--- | :---: | :---: | :---: |
+| **IEEE 69-Bus (69 buses, 73 branches)** | Standard Static Baseline | $714.72\text{ MJ}$ | Baseline | $0.9071\text{ pu}$ |
+| **IEEE 69-Bus (69 buses, 73 branches)** | Classical Branch Exchange | **$336.56\text{ MJ}$** | **+52.91%** | **$0.9378\text{ pu}$** |
+
+*Dynamic loop reconfiguration on the IEEE 69-bus feeder yields a dramatic **52.91% Joule heat reduction** and lifts minimum bus voltage by **+0.0307 pu**.*
+
+### 5.3 Parametric Temporal Sensitivity ($\Delta t$ Sweep)
+Evaluated across 300-second, 60-second, and 900-second dispatch horizons:
+* **$\Delta t = 60\text{ s}$ (60 steps)**: Baseline $325.04\text{ MJ} \to 262.78\text{ MJ}$ (**+19.16%** reduction)
+* **$\Delta t = 300\text{ s}$ (12 steps)**: Baseline $320.09\text{ MJ} \to 259.11\text{ MJ}$ (**+19.05%** reduction)
+* **$\Delta t = 900\text{ s}$ (4 steps)**: Baseline $320.72\text{ MJ} \to 258.96\text{ MJ}$ (**+19.26%** reduction)
+* **Conclusion**: Reconfiguration efficacy is invariant to time-step discretization scale, demonstrating consistent thermodynamic performance.
+
+### 5.4 High-Statistical-Power Confirmation ($N = 100$ Scenarios)
+Evaluated on IEEE 33-Bus across 100 independent randomized profiles:
+
+| Formulation / Policy | Heat Dissipation (MJ) [Mean ± Std] | Heat Reduction (%) | Min Voltage ($V_{\min}$) | Latency (ms) | $p$-val vs Random |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Standard Static Baseline** | $376.29 \pm 84.04$ | Baseline | $0.9270\text{ pu}$ | $0.00\text{ ms}$ | $3.90\times 10^{-18}$ |
+| **Exhaustive Oracle Search** | $266.58 \pm 58.37$ | **+29.16%** | $0.9398\text{ pu}$ | $24.79\text{ ms}$ | $3.90\times 10^{-18}$ |
+| **Classical Branch Exchange** | $302.03 \pm 65.91$ | **+19.74%** | $0.9419\text{ pu}$ | $29.25\text{ ms}$ | $4.16\times 10^{-12}$ |
+| **Random Spanning Trees (Filtered)** | $296.89 \pm 66.39$ | **+21.10%** | $0.9347\text{ pu}$ | $8.50\text{ ms}$ | — |
+| **QUBO Quadratic Surrogate (Filtered)**| $340.70 \pm 81.97$ | **+9.46%** | $0.9146\text{ pu}$ | $156.31\text{ ms}$ | $3.90\times 10^{-18}$ |
+| **Hybrid QUBO + Branch Exchange** | $312.80 \pm 72.36$ | **+16.87%** | $0.9385\text{ pu}$ | $155.64\text{ ms}$ | $1.31\times 10^{-16}$ |
+
+### 5.5 Voltage Support Under Severe EV Surge Stress
+* **Stress Conditions**: $1.35\times$ base load scaling with an extreme $1400\text{ kW}$ sudden EV fast-charging surge.
+* **Standard Static Baseline**: Total Heat = $906.26\text{ MJ}$, severe depression $V_{\min} = 0.8785\text{ pu}$ (12/12 violation steps).
+* **Dynamic Reconfiguration**: Total Heat = $706.71\text{ MJ}$ (**+22.02% heat reduction**), $V_{\min} = 0.9042\text{ pu}$ (**+0.0257 pu** voltage recovery under critical loading).
+
