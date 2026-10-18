@@ -367,7 +367,12 @@ Qfficient-/
 │   ├── BENCHMARK_REPORT.md                            # Comprehensive statistical report & claim reconciliation
 │   ├── benchmark_distribution.png                     # Loss distribution across policies
 │   ├── benchmark_raw.json                             # Raw scenario execution telemetry
-│   └── benchmark_summary.json                         # Mean, std, and p-value summary table
+│   ├── benchmark_summary.json                         # Mean, std, and p-value summary table
+│   ├── phase2_ablations.json                          # Phase 2 QUBO formulation & penalty ablation data
+│   ├── phase3_validation.json                         # Phase 3 full validation (AC cross-val, IEEE 69, N=100)
+│   ├── sampler_comparison.json                        # Multi-sampler (SA, SQA, Neal) comparison telemetry
+│   ├── sampler_comparison.png                         # Multi-sampler comparative performance figure
+│   └── sensitivity_curves.png                         # Phase 3 parametric sensitivity curves figure
 │
 ├── tests/                                             # Automated test suite (37 passed tests)
 │   ├── test_custom_grid.py                            # Custom 30, 60, 100 component topology & pipeline tests
