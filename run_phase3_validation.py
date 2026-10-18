@@ -60,11 +60,14 @@ def run_ac_validation_study(num_scenarios: int = 5, output_dir: Path = Path("res
 
     for s_idx in range(num_scenarios):
         sc = Scenario.sample(seed=2000 + s_idx, time_steps=6, dt_seconds=300.0, randomize=True)
+        # Reset each policy once per scenario
+        for policy in policies.values():
+            policy.reset(grid, verifier.fast, sc.timeline)
+
         # Sample 3 time points per scenario: early (step 1), mid (step 3), late (step 5)
         for step in [1, 3, 5]:
             inj = sc.timeline[step]
             for p_name, policy in policies.items():
-                policy.reset(grid, verifier.fast, sc.timeline)
                 p_pu, q_pu = verifier.fast.vectors(inj)
                 r0 = verifier.fast.resistances()
 
