@@ -230,10 +230,10 @@ def run_preregistered_n100_confirmation(output_dir: Path = Path("results")) -> D
 
     policies = [
         StandardStaticPolicy(),
-        LossOptimalCandidateSearchPolicy(candidate_trees=trees, pool_size=200),
+        LossOptimalCandidateSearchPolicy(candidate_trees=trees, pool_size=150),
         BranchExchangePolicy(max_iterations=3),
         RandomTreePolicy(k_samples=50, mode="filtered", seed=888),
-        QUBOQuadraticSurrogatePolicy(num_reads=50, sweeps=200, selection="filtered", seed=888),
+        QUBOQuadraticSurrogatePolicy(num_reads=35, sweeps=120, selection="filtered", seed=888),
         HybridBranchExchangePolicy(max_iterations=2, seed=888),
     ]
 

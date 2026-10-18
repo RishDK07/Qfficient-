@@ -115,6 +115,8 @@ class LossOptimalCandidateSearchPolicy(Policy):
         self.active_pool: List[Tuple[int, ...]] = []
 
     def reset(self, grid, fast, timeline):
+        if self.active_pool and len(self.active_pool) >= self.pool_size:
+            return
         trees = self.candidate_trees or fast.enumerate_radial_configs()
         # Pre-filter to top pool based on mean load to make per-step solve ultra-fast
         mean_inj = {b: (float(np.mean([inj.get(b, (0.0, 0.0))[0] for inj in timeline])),
