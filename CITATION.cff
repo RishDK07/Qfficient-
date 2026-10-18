@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Research Engineering Team"
+    given-names: "Qfficient Authors"
+title: "Qfficient: Dynamic Microgrid Distribution Network Reconfiguration via Ising/QUBO Formulations"
+version: 0.2.0-research-grade
+date-released: 2026-10-18
+url: "https://github.com/RishDK07/Qfficient-"
+keywords:
+  - distribution network reconfiguration
+  - microgrid
+  - qubo
+  - ising
+  - quantum annealing
+  - branch exchange
+  - lindistflow
+license: MIT
