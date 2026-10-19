@@ -46,6 +46,7 @@ GRID_CHOICES = {
     "custom": "Custom User-Defined Microgrid",
 }
 SOLVER_CHOICES = {
+    "hybrid_co_processor": "Symbiotic Hybrid Quantum-Classical Co-Processor (Option B)",
     "exact_oracle": "Classical Branch-Exchange Search (Baran-Wu Heuristic)",
     "numpy_annealer": "NumPy Vectorized Annealer (Native, Fast)",
     "sqa": "OpenJij Simulated Quantum Annealing (SQA)",
@@ -353,6 +354,24 @@ def run_optimization(
             exact_solver = ExactClassicalSolver(grid_qubo)
             active, best_loss, _ = exact_solver.solve_exact_loss_minimizer(scenario[t])
             ms = (time.perf_counter() - t0) * 1000.0
+            energy = best_loss
+        elif cfg.solver == "hybrid_co_processor":
+            from .solvers.hybrid_co_processor import HybridCoProcessor
+            if t == 0:
+                coprocessor = HybridCoProcessor(
+                    grid=grid_qubo,
+                    num_reads=cfg.num_reads,
+                    sweeps=100,
+                    top_basins=3,
+                    polish_iterations=5,
+                    use_sqa=False,
+                    seed=cfg.seed,
+                )
+            active, best_loss, ms, diag = coprocessor.solve(
+                scenario[t],
+                temps_dict={e: grid_qubo.lines[e].temp for e in edge_ids},
+                prev_switches=prev,
+            )
             energy = best_loss
         elif cfg.solver != "classical":
             temps_dict = {e: grid_qubo.lines[e].temp for e in edge_ids}

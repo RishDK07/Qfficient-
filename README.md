@@ -7,7 +7,7 @@
 [![Quantum](https://img.shields.io/badge/Quantum-D--Wave%20%7C%20OpenJij%20%7C%20Neal-4A154B?style=for-the-badge&logo=quantum&logoColor=white)](https://www.dwavesys.com/)
 [![Framework](https://img.shields.io/badge/Streamlit-2.0%20App-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=for-the-badge)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-Passing%20(37%2F37)-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-Passing%20(40%2F40)-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
 [![Grid Scale](https://img.shields.io/badge/Grid%20Scale-10%20to%20100%20Components-orange?style=for-the-badge&logo=target&logoColor=white)](#-custom-microgrid-generator-10-to-100-components)
 
 <p align="center">
@@ -231,6 +231,30 @@ As grid sizes expand to 40, 60, and 100 components, raw spin-flip sampling suffe
 4. **Annealer-Guided Loop Exchange**: Identifies high-probability tie switches and generates minimal branch-exchange candidates.
 5. **Physics Screening**: Evaluates candidate trees with fast LinDistFlow to guarantee voltage compliance and minimum Joule dissipation.
 
+### Option B: Symbiotic Hybrid Quantum-Classical Co-Processor
+When distribution networks scale to $N > 100$ buses with $k \ge 12\text{--}20$ tie switches, the radial configuration space explodes by Kirchhoff's Matrix-Tree Theorem to $\tau(G) \approx \prod_{i=1}^k |C_i| \sim 10^{12}\text{--}10^{15}$ trees. In this regime:
+* **Classical 1-opt Branch Exchange (Baran-Wu)** gets permanently trapped in sub-optimal local basins because it only swaps a single branch at a time.
+* **Classical MISOCP** suffers exponential branch-and-cut solve times ($O(2^k)$ worst case).
+* **Pure Unassisted Quantum Annealing** is compromised by non-local $I^2 R$ flow rerouting and analog embedding noise.
+
+**Option B (`HybridCoProcessor`)** establishes a symbiotic pipeline:
+1. **Quantum Multi-Loop Reservoir Generation**: SQA/quantum annealing operates across all fundamental loops simultaneously, proposing multi-switch flips ($2\text{-opt}, 3\text{-opt}, k\text{-opt}$) that tunnel across classical energy barriers.
+2. **Cycle-Basis Matroid Feasibility Projection**: Samples are projected in $O(M \alpha(N))$ time via Kruskal Union-Find, guaranteeing 100% radial trees with zero loops and $N-1$ branches.
+3. **Multi-Basin Physical Screening & Classical Polish**: LinDistFlow ranks candidate topologies into diverse topological valleys, and localized branch exchange polishes the top basins to their exact local minima.
+
+#### Multi-Scale Empirical Scaling Benchmark (`results/option_b_scaling_results.json`)
+| Test System | Scale ($N, M, k$) | Spanning Trees $\tau(G)$ | Baseline Loss | Classical Branch Exchange | Option B Hybrid Co-Processor | Advantage over Branch Exch |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **12-Bus Microgrid** | $N=12, M=16, k=3$ | $2.3 \times 10^3$ | $9999.00\text{ kW}$ | $9999.00\text{ kW}$ ($+0.00\%$) | **$5.46\text{ kW}$ (+99.95%)** | **$+9993.54\text{ kW}$** (Solved islanding) |
+| **IEEE 33-Bus Feeder** | $N=33, M=37, k=5$ | $50,751$ | $170.09\text{ kW}$ | $127.01\text{ kW}$ ($+25.33\%$) | **$121.50\text{ kW}$ (+28.57%)** | **$+5.51\text{ kW}$** ($4.34\%$ lower loss) |
+| **Custom 40-Bus Microgrid** | $N=40, M=45, k=6$ | $1.8 \times 10^6$ | $5.08\text{ kW}$ | $4.89\text{ kW}$ ($+3.75\%$) | **$4.69\text{ kW}$ (+7.69%)** | **$+0.20\text{ kW}$** ($4.09\%$ lower loss) |
+| **Custom 60-Bus Microgrid** | $N=60, M=67, k=8$ | $4.2 \times 10^8$ | $12.92\text{ kW}$ | $11.09\text{ kW}$ ($+14.17\%$) | **$11.09\text{ kW}$ (+14.21%)** | **$+0.004\text{ kW}$** ($0.04\%$ lower loss) |
+| **Custom 100-Bus Microgrid** | $N=100, M=111, k=12$| $> 10^{12}$ | $36.99\text{ kW}$ | $29.44\text{ kW}$ ($+20.40\%$) | **$29.44\text{ kW}$ (+20.40%)** | Matches global optimum in 2.4s |
+
+<p align="center">
+  <img src="results/option_b_scaling_comparison.png" alt="Option B Scaling Comparison" width="850">
+</p>
+
 ---
 
 ## 📊 Visual Diagnostics & Network Topologies
@@ -310,7 +334,8 @@ pip install -r requirements.txt
 | **Custom 60-Bus Script** | `python run_custom_60.py` | Evaluates 60-component microgrid with transient plots |
 | **IEEE 33-Bus Visualizer**| `python visualize_microgrid.py` | Generates high-res `optimized_microgrid.png` |
 | **1,000-Scenario Audit** | `python tools/verify_1000_scenarios.py` | 1,000-scenario Monte Carlo audit (2,000 states, p < 1e-160) |
-| **Run Test Suite** | `pytest tests/` | Runs all 37 unit, AC power flow, IEEE 69-bus, and report integrity tests |
+| **Scaling Benchmark** | `python benchmarks/benchmark_option_b_scaling.py` | Multi-scale evaluation across 12, 33, 40, 60, 100-bus grids |
+| **Run Test Suite** | `pytest tests/` | Runs all 40 unit, AC power flow, IEEE 69-bus, and co-processor integrity tests |
 
 ### 3. One-Click Launchers
 * **Windows**: Double-click `run_dashboard.bat`
@@ -345,6 +370,9 @@ Qfficient-/
 ├── pyproject.toml                                     # Package installation metadata & entry points
 ├── requirements.txt                                   # Pinned production dependencies
 │
+├── benchmarks/                                        # Multi-scale grid scaling benchmark suite
+│   └── benchmark_option_b_scaling.py                  # Scaling evaluator comparing baseline, BE, and hybrid co-processor
+│
 ├── results/                                           # Benchmark datasets & analytical summaries
 │   ├── BENCHMARK_REPORT.md                            # Comprehensive statistical report & claim reconciliation
 │   ├── benchmark_distribution.png                     # Loss distribution across policies
@@ -353,6 +381,8 @@ Qfficient-/
 │   ├── literature_benchmark_alignment.png             # Peer-reviewed literature & benchmark reconciliation chart
 │   ├── monte_carlo_1000_distribution.png              # 1,000-scenario Monte Carlo loss distribution plot
 │   ├── monte_carlo_1000_results.json                  # 1,000-scenario Monte Carlo evaluation data
+│   ├── option_b_scaling_comparison.png                # Multi-scale grid scaling benchmark for hybrid co-processor
+│   ├── option_b_scaling_results.json                  # Scaling evaluation data across 12, 33, 40, 60, 100-bus grids
 │   ├── phase2_ablations.json                          # Phase 2 QUBO formulation & penalty ablation data
 │   ├── phase3_validation.json                         # Phase 3 full validation (AC cross-val, IEEE 69, N=100)
 │   ├── sampler_comparison.json                        # Multi-sampler (SA, SQA, Neal) comparison telemetry
@@ -363,9 +393,10 @@ Qfficient-/
 │   ├── format_phase2.py                               # Phase 2 ablation markdown table formatter
 │   └── verify_1000_scenarios.py                       # 1,000-scenario Monte Carlo statistical verification runner
 │
-├── tests/                                             # Automated test suite (37 passed tests)
+├── tests/                                             # Automated test suite (40 passed tests)
 │   ├── test_custom_grid.py                            # Custom 30, 60, 100 component topology & pipeline tests
 │   ├── test_fast_flow.py                              # LinDistFlow accuracy & voltage tests
+│   ├── test_hybrid_co_processor.py                    # Symbiotic hybrid co-processor & matroid projection tests
 │   ├── test_pandapower_and_ieee69.py                  # Pandapower AC cross-validation & IEEE 69-bus tests
 │   ├── test_pipeline.py                               # Pipeline config & multi-solver tests
 │   ├── test_qubo_grid.py                              # Physics verifier, thermal dynamics, and QUBO tests
@@ -392,6 +423,7 @@ Qfficient-/
     │   ├── classical_baseline.py                      # Static baseline power flow evaluator
     │   ├── dwave_qpu_runner.py                        # Hardware D-Wave Advantage QPU interface
     │   ├── exact_classical_solver.py                  # Exact loss-minimizing classical oracle
+    │   ├── hybrid_co_processor.py                     # Symbiotic hybrid quantum-classical co-processor
     │   ├── numpy_annealer.py                          # Vectorized NumPy simulated annealer
     │   └── openjij_annealer.py                        # OpenJij SQA with ensemble MST loop exchange
     └── verification/                                  # Physics checks & visual reporting

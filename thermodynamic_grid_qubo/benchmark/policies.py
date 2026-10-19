@@ -602,39 +602,42 @@ class QUBOQuadraticSurrogatePolicy(Policy):
 
 
 class HybridBranchExchangePolicy(Policy):
-    """Hybrid Refinement: Uses QUBO proposal as the starting point for branch-exchange local search.
-    Ablated against branch-exchange started from random trees.
+    """Option B: Symbiotic Hybrid Quantum-Classical Co-Processor.
+    Generates diverse quantum candidate configurations, projects via matroid repair,
+    and polishes top candidate basins with classical branch exchange.
     """
     name = "hybrid_qubo_branch_exchange"
 
-    def __init__(self, max_iterations: int = 2, seed: int = 42):
-        self.max_iterations = max_iterations
+    def __init__(self, num_reads: int = 50, sweeps: int = 100, top_basins: int = 3, polish_iterations: int = 5, seed: int = 42):
+        self.num_reads = num_reads
+        self.sweeps = sweeps
+        self.top_basins = top_basins
+        self.polish_iterations = polish_iterations
         self.seed = seed
-        self.qubo_policy = QUBOPolicy(num_reads=50, sweeps=100, selection="filtered", seed=seed)
-        self.solver = None
+        self.coprocessor = None
 
     def reset(self, grid, fast, timeline):
-        from ..solvers.exact_classical_solver import BranchExchangeSolver
-        self.qubo_policy.reset(grid, fast, timeline)
-        self.solver = BranchExchangeSolver(grid)
+        from ..solvers.hybrid_co_processor import HybridCoProcessor
+        self.coprocessor = HybridCoProcessor(
+            grid=grid,
+            num_reads=self.num_reads,
+            sweeps=self.sweeps,
+            top_basins=self.top_basins,
+            polish_iterations=self.polish_iterations,
+            use_sqa=False,
+            seed=self.seed,
+        )
 
     def decide(self, ctx: DecisionContext) -> Tuple[Tuple[int, ...], float]:
-        t0 = time.perf_counter()
-        # 1. QUBO Proposal
-        qubo_tree, _ = self.qubo_policy.decide(ctx)
-
-        # 2. Convert to switches dict
-        init_switches = {e: (1 if e in qubo_tree else 0) for e in range(ctx.fast.m)}
-
-        # 3. Branch Exchange local refinement
-        refined_switches, _, _ = self.solver.solve_exact_loss_minimizer(
-            ctx.injections,
-            max_iterations=self.max_iterations,
-            initial_switches=init_switches,
+        prev_sw = {e: (1 if i in ctx.prev_active else 0) for i, e in enumerate(ctx.fast.edge_ids)}
+        temps_dict = {e: ctx.temps_k[i] for i, e in enumerate(ctx.fast.edge_ids)}
+        best_sw, _, total_ms, _ = self.coprocessor.solve(
+            injections=ctx.injections,
+            temps_dict=temps_dict,
+            prev_switches=prev_sw,
         )
-        active = tuple(sorted([e for e, s in refined_switches.items() if s == 1]))
-        latency_ms = (time.perf_counter() - t0) * 1e3
-        return active, latency_ms
+        active = tuple(sorted([i for i, e in enumerate(ctx.fast.edge_ids) if best_sw.get(e, 0) == 1]))
+        return active, total_ms
 
 
 class RandomBranchExchangePolicy(Policy):

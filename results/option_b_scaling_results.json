@@ -1,0 +1,182 @@
+[
+  {
+    "name": "12-Bus Microgrid",
+    "buses": 12,
+    "lines": 16,
+    "ties": 0,
+    "baseline": {
+      "loss_kw": 9999.0,
+      "ansi_valid": false,
+      "min_v": 0.9,
+      "latency_ms": 0.31
+    },
+    "branch_exchange": {
+      "loss_kw": 9999.0,
+      "reduction_pct": 0.0,
+      "ansi_valid": false,
+      "min_v": 0.9,
+      "latency_ms": 0.71
+    },
+    "option_b_hybrid": {
+      "loss_kw": 5.458,
+      "reduction_pct": 99.95,
+      "improvement_over_be_pct": 99.95,
+      "saved_vs_be_kw": 9993.542,
+      "ansi_valid": true,
+      "min_v": 1.0,
+      "latency_ms": 66.29,
+      "diagnostics": {
+        "total_candidates_generated": 29,
+        "feasible_candidates_screened": 29,
+        "basins_polished": 3,
+        "quantum_sample_ms": 51.96449998766184,
+        "total_ms": 66.2892000109423,
+        "best_loss_kw": 5.4579372268387445
+      }
+    }
+  },
+  {
+    "name": "IEEE 33-Bus Feeder",
+    "buses": 33,
+    "lines": 37,
+    "ties": 5,
+    "baseline": {
+      "loss_kw": 170.088,
+      "ansi_valid": false,
+      "min_v": 1.0,
+      "latency_ms": 0.31
+    },
+    "branch_exchange": {
+      "loss_kw": 127.007,
+      "reduction_pct": 25.33,
+      "ansi_valid": false,
+      "min_v": 1.0,
+      "latency_ms": 37.5
+    },
+    "option_b_hybrid": {
+      "loss_kw": 121.495,
+      "reduction_pct": 28.57,
+      "improvement_over_be_pct": 4.34,
+      "saved_vs_be_kw": 5.512,
+      "ansi_valid": false,
+      "min_v": 1.0,
+      "latency_ms": 435.25,
+      "diagnostics": {
+        "total_candidates_generated": 41,
+        "feasible_candidates_screened": 41,
+        "basins_polished": 3,
+        "quantum_sample_ms": 162.78460001922213,
+        "total_ms": 435.253699979512,
+        "best_loss_kw": 121.49548360235234
+      }
+    }
+  },
+  {
+    "name": "Custom 40-Bus (6 ties)",
+    "buses": 40,
+    "lines": 45,
+    "ties": 6,
+    "baseline": {
+      "loss_kw": 5.084,
+      "ansi_valid": true,
+      "min_v": 1.0,
+      "latency_ms": 1.17
+    },
+    "branch_exchange": {
+      "loss_kw": 4.893,
+      "reduction_pct": 3.75,
+      "ansi_valid": true,
+      "min_v": 1.0,
+      "latency_ms": 41.59
+    },
+    "option_b_hybrid": {
+      "loss_kw": 4.693,
+      "reduction_pct": 7.69,
+      "improvement_over_be_pct": 4.09,
+      "saved_vs_be_kw": 0.2,
+      "ansi_valid": true,
+      "min_v": 1.0,
+      "latency_ms": 561.98,
+      "diagnostics": {
+        "total_candidates_generated": 41,
+        "feasible_candidates_screened": 41,
+        "basins_polished": 3,
+        "quantum_sample_ms": 361.39320000074804,
+        "total_ms": 561.9835999968927,
+        "best_loss_kw": 4.693228996244688
+      }
+    }
+  },
+  {
+    "name": "Custom 60-Bus (8 ties)",
+    "buses": 60,
+    "lines": 67,
+    "ties": 8,
+    "baseline": {
+      "loss_kw": 12.922,
+      "ansi_valid": true,
+      "min_v": 1.0,
+      "latency_ms": 0.47
+    },
+    "branch_exchange": {
+      "loss_kw": 11.09,
+      "reduction_pct": 14.17,
+      "ansi_valid": true,
+      "min_v": 1.0,
+      "latency_ms": 85.79
+    },
+    "option_b_hybrid": {
+      "loss_kw": 11.086,
+      "reduction_pct": 14.21,
+      "improvement_over_be_pct": 0.04,
+      "saved_vs_be_kw": 0.004,
+      "ansi_valid": true,
+      "min_v": 1.0,
+      "latency_ms": 560.62,
+      "diagnostics": {
+        "total_candidates_generated": 41,
+        "feasible_candidates_screened": 41,
+        "basins_polished": 3,
+        "quantum_sample_ms": 299.28300000028685,
+        "total_ms": 560.6204000068828,
+        "best_loss_kw": 11.085945370539775
+      }
+    }
+  },
+  {
+    "name": "Custom 100-Bus (12 ties)",
+    "buses": 100,
+    "lines": 111,
+    "ties": 12,
+    "baseline": {
+      "loss_kw": 36.989,
+      "ansi_valid": true,
+      "min_v": 1.0,
+      "latency_ms": 1.11
+    },
+    "branch_exchange": {
+      "loss_kw": 29.445,
+      "reduction_pct": 20.4,
+      "ansi_valid": true,
+      "min_v": 1.0,
+      "latency_ms": 459.57
+    },
+    "option_b_hybrid": {
+      "loss_kw": 29.445,
+      "reduction_pct": 20.4,
+      "improvement_over_be_pct": 0.0,
+      "saved_vs_be_kw": 0.0,
+      "ansi_valid": true,
+      "min_v": 1.0,
+      "latency_ms": 2423.67,
+      "diagnostics": {
+        "total_candidates_generated": 41,
+        "feasible_candidates_screened": 41,
+        "basins_polished": 3,
+        "quantum_sample_ms": 655.5107999884058,
+        "total_ms": 2423.6745000234805,
+        "best_loss_kw": 29.44483328322211
+      }
+    }
+  }
+]
