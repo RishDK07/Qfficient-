@@ -7,7 +7,7 @@
 [![Quantum](https://img.shields.io/badge/Quantum-D--Wave%20%7C%20OpenJij%20%7C%20Neal-4A154B?style=for-the-badge&logo=quantum&logoColor=white)](https://www.dwavesys.com/)
 [![Framework](https://img.shields.io/badge/Streamlit-2.0%20App-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=for-the-badge)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-Passing%20(40%2F40)-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-Passing%20(44%2F44)-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
 [![Grid Scale](https://img.shields.io/badge/Grid%20Scale-10%20to%20100%20Components-orange?style=for-the-badge&logo=target&logoColor=white)](#-custom-microgrid-generator-10-to-100-components)
 
 <p align="center">
@@ -344,7 +344,7 @@ pip install -r requirements.txt
 | **IEEE 33-Bus Visualizer**| `python visualize_microgrid.py` | Generates high-res `optimized_microgrid.png` |
 | **1,000-Scenario Audit** | `python tools/verify_1000_scenarios.py` | 1,000-scenario Monte Carlo audit (2,000 states, p < 1e-160) |
 | **Scaling Benchmark** | `python benchmarks/benchmark_option_b_scaling.py` | Multi-scale evaluation across 12, 33, 40, 60, 100-bus grids |
-| **Run Test Suite** | `pytest tests/` | Runs all 40 unit, AC power flow, IEEE 69-bus, and co-processor integrity tests |
+| **Run Test Suite** | `pytest tests/` | Runs all 44 unit, AC power flow, IEEE 69-bus, and co-processor integrity tests |
 
 ### 3. One-Click Launchers
 * **Windows**: Double-click `run_dashboard.bat`
@@ -368,6 +368,7 @@ Qfficient-/
 ├── app.py                                             # Streamlit 2.0 interactive review portal & custom designer
 ├── main_experiment.py                                 # Scientific benchmark runner & figure generator
 ├── run_benchmark.py                                   # 100-scenario research-grade benchmark suite
+├── custom_grid_input.py                               # Interactive/CLI runner for arbitrary 10 to 100 component microgrids
 ├── run_custom_grid.py                                 # Standalone runner for custom 10-100 component microgrids
 ├── run_custom_40.py                                   # 40-component custom microgrid evaluation script
 ├── run_custom_60.py                                   # 60-component custom microgrid evaluation script
@@ -402,8 +403,9 @@ Qfficient-/
 │   ├── format_phase2.py                               # Phase 2 ablation markdown table formatter
 │   └── verify_1000_scenarios.py                       # 1,000-scenario Monte Carlo statistical verification runner
 │
-├── tests/                                             # Automated test suite (40 passed tests)
+├── tests/                                             # Automated test suite (44 passed tests)
 │   ├── test_custom_grid.py                            # Custom 30, 60, 100 component topology & pipeline tests
+│   ├── test_dwave_qpu.py                              # D-Wave Advantage QPU runner & fallback checks
 │   ├── test_fast_flow.py                              # LinDistFlow accuracy & voltage tests
 │   ├── test_hybrid_co_processor.py                    # Symbiotic hybrid co-processor & matroid projection tests
 │   ├── test_pandapower_and_ieee69.py                  # Pandapower AC cross-validation & IEEE 69-bus tests
