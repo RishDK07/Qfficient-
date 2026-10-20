@@ -21,6 +21,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project source code
 COPY . .
 
+# Run test suite at build time for rigorous scientific and code verification
+RUN pytest tests/ -v
+
 # Expose Streamlit default port
 EXPOSE 8501
 
