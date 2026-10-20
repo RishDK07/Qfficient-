@@ -197,7 +197,15 @@ The platform includes a procedural generator (`generate_custom_grid`) enabling s
 * **Aesthetic 2D Layout Coordinates**: Automatically generates spatial coordinates for high-resolution topology visualization.
 
 ```bash
-# Generate and optimize an 80-component microgrid with 8 tie switches
+# 1. Interactive Runner: prompt for any number of components from 10 to 100
+python custom_grid_input.py
+
+# 2. Direct CLI Input: specify any number of components (10 to 100)
+python custom_grid_input.py 45
+python custom_grid_input.py --components 75 --solver exact_oracle
+python run.py -n 42 --steps 15
+
+# 3. Dedicated Custom Microgrid Runner
 python run_custom_grid.py --components 80 --ties 8 --solver exact_oracle
 ```
 
@@ -329,7 +337,8 @@ pip install -r requirements.txt
 | **Standalone Web Suite**| Open `dashboard.html` | Self-contained single-page executive web app with SVG topology |
 | **Build HTML Dashboard**| `python build_dashboard_html.py` | Compiles simulation telemetry into `dashboard.html` |
 | **Run Benchmark** | `python run_benchmark.py` | 100-scenario statistical evaluation with LaTeX tables |
-| **Custom 60-Bus Grid** | `python run_custom_grid.py --components 60 --ties 6` | Generates 60-component microgrid and runs optimization |
+| **Custom Grid Input** | `python custom_grid_input.py [N]` | Interactive or CLI runner for ANY custom grid from 10 to 100 components |
+| **Custom Microgrid** | `python run_custom_grid.py --components N` | Generates custom N-component microgrid (10 to 100) and runs optimization |
 | **Custom 40-Bus Script** | `python run_custom_40.py` | Evaluates 40-component microgrid with transient plots |
 | **Custom 60-Bus Script** | `python run_custom_60.py` | Evaluates 60-component microgrid with transient plots |
 | **IEEE 33-Bus Visualizer**| `python visualize_microgrid.py` | Generates high-res `optimized_microgrid.png` |

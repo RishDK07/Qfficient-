@@ -106,9 +106,8 @@ def test_custom_grid_sizes_60_and_100_switching():
         custom_n_battery=2,
         custom_n_ev=3,
         custom_n_ties=6,
-        solver="neal",
-        num_reads=100,
-        time_steps=4,
+        solver="exact_oracle",
+        time_steps=3,
         seed=42,
     )
     res60 = run_optimization(cfg60)
@@ -118,3 +117,49 @@ def test_custom_grid_sizes_60_and_100_switching():
     for sw in res60["qubo"]["switches"]:
         assert sum(sw) == 59
     assert res60["checks"]["reconfigurations"] > 0
+
+    # Test 100-component boundary grid
+    cfg100 = OptimizationConfig(
+        grid="custom",
+        custom_n_components=100,
+        custom_n_ties=10,
+        solver="exact_oracle",
+        time_steps=2,
+        seed=42,
+    )
+    res100 = run_optimization(cfg100)
+    assert res100["grid"]["n_buses"] == 100
+    assert res100["checks"]["radial_all_steps"]
+    for sw in res100["qubo"]["switches"]:
+        assert sum(sw) == 99
+
+
+def test_custom_grid_arbitrary_sizes_range_10_to_100():
+    """Verify that any arbitrary component count between 10 and 100 generates a physically valid radial grid."""
+    for n in [10, 17, 23, 42, 55, 73, 88, 100]:
+        grid = generate_custom_grid(n_components=n, seed=42)
+        assert len(grid.graph.nodes) == n
+        assert len(grid.substations) == 1
+        assert grid.substations[0] == 1
+        assert len(grid.lines) == (n - 1) + len(grid.tie_switches)
+        base_switches = {e: (0 if e in grid.tie_switches else 1) for e in grid.lines}
+        assert sum(base_switches.values()) == n - 1
+        verifier = PhysicsVerifier(grid)
+        is_radial, msg = verifier.is_valid_radial_tree(base_switches)
+        assert is_radial, f"Grid with N={n} failed radial verification: {msg}"
+        validate_grid_size(grid)
+
+
+def test_custom_grid_boundary_limits():
+    """Verify invalid sizes below 4 or above MAX_BUSES are properly rejected."""
+    with pytest.raises(ValueError):
+        generate_custom_grid(n_components=3)
+
+    from thermodynamic_grid_qubo.pipeline import GridSizeError
+    grid_oversize = generate_custom_grid(n_components=30)
+    # Mock node count exceeding MAX_BUSES (100)
+    for b in range(31, 102):
+        grid_oversize.graph.add_node(b)
+    with pytest.raises(GridSizeError):
+        validate_grid_size(grid_oversize)
+

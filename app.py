@@ -52,17 +52,38 @@ with st.sidebar:
 
     cfg_custom_args = {}
     if grid_key == "custom":
-        st.subheader("⚙️ Custom Grid Topology")
-        c_nodes = st.slider("Total Components (Buses)", 10, MAX_BUSES, 30, 5,
-                            help="1 substation + (N-1) load/DER buses")
-        c_ties = st.slider("Tie Lines Available", 1, 15, 5, 1,
+        st.subheader("⚙️ Custom Grid Topology (10 - 100 Components)")
+        # Direct number input: enter ANY integer from 10 to 100
+        c_nodes = int(st.number_input(
+            "Total Components / Buses (Enter 10 to 100)",
+            min_value=10,
+            max_value=MAX_BUSES,
+            value=30,
+            step=1,
+            help="Enter any custom number of components from 10 to 100 into the program (1 substation + N-1 load/DER buses)"
+        ))
+        max_ties = min(20, max(2, c_nodes // 2))
+        default_ties = max(2, min(14, int(round(c_nodes * 0.12))))
+        c_ties = st.slider("Tie Lines Available", 1, max_ties, default_ties, 1,
                            help="Normally open tie switches for network reconfiguration")
+
         st.markdown("**DER Mix Allocation**")
-        col_a, col_b = st.columns(2)
-        c_solar = col_a.slider("Solar PV Nodes", 0, min(10, c_nodes - 1), min(3, c_nodes - 1))
-        c_wind = col_b.slider("Wind Nodes", 0, min(10, c_nodes - 1), min(2, c_nodes - 1))
-        c_bat = col_a.slider("Battery (BESS) Nodes", 0, min(10, c_nodes - 1), min(2, c_nodes - 1))
-        c_ev = col_b.slider("EV Depot Nodes", 0, min(10, c_nodes - 1), min(2, c_nodes - 1))
+        auto_der = st.checkbox("Auto-scale DER mix for this grid size", value=True,
+                               help="Automatically allocates realistic PV, Wind, Battery, and EV depots")
+        if auto_der:
+            c_solar = max(1, int(round(c_nodes * 0.08)))
+            c_wind = max(1, int(round(c_nodes * 0.05)))
+            c_bat = max(1, int(round(c_nodes * 0.05)))
+            c_ev = max(1, int(round(c_nodes * 0.05)))
+            st.caption(f"Allocated: ☀️ {c_solar} Solar PV · 💨 {c_wind} Wind · 🔋 {c_bat} Battery · 🚗 {c_ev} EV Depot")
+        else:
+            col_a, col_b = st.columns(2)
+            max_der_per_type = max(1, (c_nodes - 1) // 4)
+            c_solar = int(col_a.number_input("Solar PV Nodes", 0, max_der_per_type, min(3, max_der_per_type), 1))
+            c_wind = int(col_b.number_input("Wind Nodes", 0, max_der_per_type, min(2, max_der_per_type), 1))
+            c_bat = int(col_a.number_input("Battery (BESS) Nodes", 0, max_der_per_type, min(2, max_der_per_type), 1))
+            c_ev = int(col_b.number_input("EV Depot Nodes", 0, max_der_per_type, min(2, max_der_per_type), 1))
+
         n_comp = c_nodes
         n_lines = (c_nodes - 1) + c_ties
         cfg_custom_args = {

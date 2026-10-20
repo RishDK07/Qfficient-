@@ -557,14 +557,31 @@ def main():
     parser.add_argument("--steps", "-t", type=int, default=20, help="Number of simulation time steps (default: 20)")
     parser.add_argument("--reads", "-r", type=int, default=40, help="Number of annealer reads (default: 40)")
     parser.add_argument("--sweep", action="store_true", help="Run parametric scaling sweep across sizes [20, 40, 60, 80, 100]")
+    parser.add_argument("--interactive", "-i", action="store_true", help="Interactively enter microgrid components")
     parser.add_argument("--no-csv", action="store_true", help="Disable CSV dataset export")
     parser.add_argument("--no-report", action="store_true", help="Disable Markdown report export")
+    parser.add_argument("--no-figures", action="store_true", help="Disable publication figure export")
     default_results = str(Path(__file__).resolve().parent.parent / "results")
     parser.add_argument("--output-dir", "-o", type=str, default=default_results, help="Directory for exported outputs")
 
     args = parser.parse_args()
     out_dir = Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
+
+    # Interactive input for custom grid components if requested or if run without args in interactive TTY
+    if (args.interactive or (len(sys.argv) == 1 and sys.stdin.isatty())) and not args.sweep:
+        print(f"\n{Style.BOLD}{Style.BRIGHT_CYAN}⚡ Custom Microgrid Optimizer (10 to 100 Components){Style.RESET}")
+        try:
+            raw = input(f"Enter number of components (10 to 100) [default {args.components}]: ").strip()
+            if raw:
+                args.components = int(raw)
+        except (ValueError, EOFError, KeyboardInterrupt):
+            pass
+
+    if args.grid == "custom":
+        if not (10 <= args.components <= 100):
+            print(f"{Style.BRIGHT_RED}Error: Custom grid component count must be between 10 and 100 (got {args.components}).{Style.RESET}")
+            sys.exit(1)
 
     # -----------------------------------------------------------------------
     # Parametric Sweep Mode
