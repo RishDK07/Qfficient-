@@ -101,6 +101,11 @@ def main():
         default=42,
         help="Random seed for reproducible grid topology and transients",
     )
+    parser.add_argument(
+        "--show",
+        action="store_true",
+        help="Open generated diagram images in the default system viewer",
+    )
     args = parser.parse_args()
 
     # Determine component count: flag > positional > interactive prompt
@@ -191,6 +196,33 @@ def main():
     fig_tr.savefig(trans_file, dpi=200, bbox_inches="tight")
     print(f"[+] Saved transient performance charts to: {trans_file.resolve()}")
     print("=" * 78 + "\n")
+
+    # Automatically open or offer to open images
+    should_open = args.show
+    if not should_open and sys.stdin.isatty():
+        try:
+            ans = input("Would you like to open the generated diagrams now? [y/N]: ").strip().lower()
+            should_open = ans in ("y", "yes")
+        except (KeyboardInterrupt, EOFError):
+            pass
+
+    if should_open:
+        try:
+            import os
+            if sys.platform.startswith("win"):
+                os.startfile(str(topo_file.resolve()))
+                os.startfile(str(trans_file.resolve()))
+            elif sys.platform == "darwin":
+                import subprocess
+                subprocess.Popen(["open", str(topo_file.resolve())])
+                subprocess.Popen(["open", str(trans_file.resolve())])
+            else:
+                import subprocess
+                subprocess.Popen(["xdg-open", str(topo_file.resolve())])
+                subprocess.Popen(["xdg-open", str(trans_file.resolve())])
+            print("[+] Opened diagrams in default image viewer.")
+        except Exception as exc:
+            print(f"[-] Could not launch image viewer: {exc}")
 
 
 if __name__ == "__main__":

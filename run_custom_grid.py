@@ -24,6 +24,7 @@ def main():
                         help="Solver engine to use")
     parser.add_argument("--steps", "-t", type=int, default=15, help="Time steps to simulate")
     parser.add_argument("--save-diagram", action="store_true", default=True, help="Save PNG topology diagram")
+    parser.add_argument("--show", action="store_true", help="Open generated diagram images in the default system viewer")
     args = parser.parse_args()
 
     n = args.components
@@ -122,6 +123,24 @@ def main():
         out_tr = f"custom_microgrid_{n}_transient.png"
         fig_tr.savefig(out_tr, dpi=200, bbox_inches="tight")
         print(f"Saved {n}-component transient charts to: {Path(out_tr).resolve()}")
+
+        if args.show:
+            try:
+                import os
+                if sys.platform.startswith("win"):
+                    os.startfile(str(Path(out_file).resolve()))
+                    os.startfile(str(Path(out_tr).resolve()))
+                elif sys.platform == "darwin":
+                    import subprocess
+                    subprocess.Popen(["open", str(Path(out_file).resolve())])
+                    subprocess.Popen(["open", str(Path(out_tr).resolve())])
+                else:
+                    import subprocess
+                    subprocess.Popen(["xdg-open", str(Path(out_file).resolve())])
+                    subprocess.Popen(["xdg-open", str(Path(out_tr).resolve())])
+                print("[+] Opened diagrams in default image viewer.")
+            except Exception as exc:
+                print(f"[-] Could not launch image viewer: {exc}")
 
 
 if __name__ == "__main__":
