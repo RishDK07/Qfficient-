@@ -196,6 +196,7 @@ with tab_report:
         st.subheader("📈 Transient Behaviour Charts")
         fig_tr = rc.render_transient_figure(result)
         st.pyplot(fig_tr, **_w(st.pyplot))
+        tr_png = rc.fig_to_png(fig_tr)
         plt.close(fig_tr)
 
         # ---- checklist --------------------------------------------------------
@@ -215,7 +216,7 @@ with tab_report:
             f"QUBO size: {g['n_qubo_vars']} binary variables · {g['n_couplings']} couplings · "
             f"{g['n_cycles']} independent loops · seed {result['config']['seed']} · run {result['run_id']}"
         )
-        d1, d2, d3 = st.columns(3)
+        d1, d2, d3, d4 = st.columns(4)
         d1.download_button("⬇️ Report (JSON)", json.dumps(result, indent=2), f"qfficient_report_{result['run_id']}.json",
                            "application/json", **_w(st.download_button))
         timeline = pd.DataFrame({
@@ -228,7 +229,9 @@ with tab_report:
         })
         d2.download_button("⬇️ Timeline (CSV)", timeline.to_csv(index=False), f"qfficient_timeline_{result['run_id']}.csv",
                            "text/csv", **_w(st.download_button))
-        d3.download_button("⬇️ Network diagram (PNG)", net_png, f"qfficient_network_{result['run_id']}.png",
+        d3.download_button("⬇️ Topology (PNG)", net_png, f"qfficient_network_{result['run_id']}.png",
+                           "image/png", **_w(st.download_button))
+        d4.download_button("⬇️ Transients (PNG)", tr_png, f"qfficient_transients_{result['run_id']}.png",
                            "image/png", **_w(st.download_button))
 
 # ---------------------------------------------------------------------------
