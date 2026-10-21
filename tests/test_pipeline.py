@@ -1,9 +1,9 @@
 import networkx as nx
 import pytest
 
-from thermodynamic_grid_qubo.grid_engine.ieee_feeder_loader import DistributionGrid
+from thermodynamic_grid_qubo.grid_engine.ieee_feeder_loader import DistributionGrid, IEEEFeederLoader
 from thermodynamic_grid_qubo.pipeline import (
-    MAX_BUSES, GridSizeError, OptimizationConfig, load_12_component_microgrid,
+    MAX_BUSES, GridSizeError, OptimizationConfig,
     run_optimization, validate_grid_size,
 )
 from thermodynamic_grid_qubo.verification import report_card as rc
@@ -11,12 +11,12 @@ from thermodynamic_grid_qubo.verification import report_card as rc
 
 @pytest.fixture(scope="module")
 def result():
-    return run_optimization(OptimizationConfig(grid="microgrid12", solver="neal", num_reads=100, time_steps=12))
+    return run_optimization(OptimizationConfig(grid="ieee33", solver="neal", num_reads=100, time_steps=12))
 
 
-def test_12_component_grid_matches_diagram_table():
-    grid = load_12_component_microgrid()
-    assert len(grid.graph.nodes) == 12 and len(grid.lines) == 16
+def test_ieee33_feeder_loads_correctly():
+    grid = IEEEFeederLoader.load_ieee33()
+    assert len(grid.graph.nodes) == 33 and len(grid.lines) == 37
     validate_grid_size(grid)
 
 

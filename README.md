@@ -297,7 +297,7 @@ streamlit run app.py
 * **Local Web Address**: `http://localhost:8501`
 
 ### Key Interactive Features
-1. **Architecture Selector**: Choose between standard IEEE 33-Bus, 12-component test feeder, or **Custom Microgrid**.
+1. **Architecture Selector**: Choose between standard **IEEE 33-Bus Radial Feeder** or scalable **Custom Microgrid (10 to 100 components)**.
 2. **Custom Grid Controls**: Sliders for total components (10 to 100 buses), tie switches (1 to 15), and DER allocation (Solar PV, Wind, Battery BESS, EV depots).
 3. **Transient Stress Injections**: Adjust solar PV cloud drop ($0 - 90\%$) and EV charging pulse surges ($0 - 1200\text{ kW}$).
 4. **Executive Performance Table**: Direct comparison of Joule heat dissipation, entropy generation, exergy preserved, peak conductor temperature, and breaker switch counts.

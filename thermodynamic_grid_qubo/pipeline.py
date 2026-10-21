@@ -42,7 +42,6 @@ MAX_BRANCHES = 150    # candidate lines incl. tie switches  -> ~11k couplings
 
 GRID_CHOICES = {
     "ieee33": "IEEE 33-Bus Radial Feeder",
-    "microgrid12": "12-Component Smart Microgrid",
     "custom": "Custom User-Defined Microgrid",
 }
 SOLVER_CHOICES = {
@@ -61,7 +60,7 @@ class GridSizeError(ValueError):
 
 @dataclass
 class OptimizationConfig:
-    grid: str = "microgrid12"      # key of GRID_CHOICES
+    grid: str = "ieee33"           # key of GRID_CHOICES
     solver: str = "sqa"            # key of SOLVER_CHOICES
     solar_drop_pct: float = 75.0   # 0-90
     ev_surge_kw: float = 700.0     # 0-1200
@@ -134,12 +133,7 @@ def _grid_meta(choice: str, grid: DistributionGrid) -> Dict[str, Any]:
     for b, kind in grid.der_nodes.items():
         roles[b] = kind
 
-    if choice == "microgrid12":
-        names = list(SAMPLE_NODES)
-        node_labels = {i + 1: n for i, n in enumerate(names)}
-        positions = {i + 1: SAMPLE_NODES[n] for i, n in enumerate(names)}
-        line_labels = {i: row[0] for i, row in enumerate(SAMPLE_LINES)}
-    elif choice == "custom":
+    if choice == "custom":
         node_labels = {}
         for b in grid.graph.nodes:
             if b in grid.substations:
@@ -164,13 +158,34 @@ def _grid_meta(choice: str, grid: DistributionGrid) -> Dict[str, Any]:
                 tie_counter += 1
             else:
                 line_labels[e] = f"L{e + 1}"
+    elif choice == "microgrid12":
+        names = list(SAMPLE_NODES)
+        node_labels = {i + 1: n for i, n in enumerate(names)}
+        positions = {i + 1: SAMPLE_NODES[n] for i, n in enumerate(names)}
+        line_labels = {i: row[0] for i, row in enumerate(SAMPLE_LINES)}
     else:
-        node_labels = {b: str(b) for b in grid.graph.nodes}
-        pos = nx.kamada_kawai_layout(grid.graph)
-        positions = {b: (float(x), float(y)) for b, (x, y) in pos.items()}
+        # ieee33 default
+        from .verification.microgrid_visualizer import SAMPLE_NODES_33
+        pos_by_id = {}
+        name_by_id = {}
+        for name, coord in SAMPLE_NODES_33.items():
+            if "(B" in name:
+                try:
+                    bid = int(name.split("(B")[1].rstrip(")"))
+                    pos_by_id[bid] = coord
+                    name_by_id[bid] = name
+                except Exception:
+                    pass
+        node_labels = {b: name_by_id.get(b, f"Bus {b}") for b in grid.graph.nodes}
+        if len(pos_by_id) == len(grid.graph.nodes):
+            positions = {b: (float(pos_by_id[b][0]), float(pos_by_id[b][1])) for b in grid.graph.nodes}
+        else:
+            pos = nx.kamada_kawai_layout(grid.graph)
+            positions = {b: (float(x), float(y)) for b, (x, y) in pos.items()}
+
         line_labels = {}
         for e, line in grid.lines.items():
-            line_labels[e] = f"T{e - 31}" if grid.graph[line.u][line.v]["is_tie"] else f"L{e + 1}"
+            line_labels[e] = f"T{e - 31}" if grid.graph[line.u][line.v].get("is_tie", False) else f"L{e + 1}"
 
     return {
         "node_labels": node_labels,

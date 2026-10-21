@@ -204,7 +204,7 @@ run_dashboard.bat     # Windows
 ```
 
 **UI Capabilities**:
-- **Grid Models**: IEEE 33-Bus, 12-Component Smart Microgrid, or Custom Grid.
+- **Grid Models**: IEEE 33-Bus Radial Feeder or Custom Grid (10–100 Buses).
 - **Custom Sliders**: 10–100 Buses, 1–15 Tie Lines, customizable Solar/Wind/BESS/EV allocations.
 - **Dynamic Stress Injection**: Real-time sliders for Solar Drop (0–90%) and EV Pulse (0–1200 kW).
 - **Diagnostics**: Displays live line flows, nodal voltages, Joule heat savings, and network diagrams.
@@ -387,7 +387,7 @@ from thermodynamic_grid_qubo.grid_engine.custom_grid_generator import generate_c
 
 # 1. Define configuration
 config = OptimizationConfig(
-    grid="custom",                 # "ieee33", "microgrid12", or "custom"
+    grid="custom",                 # "ieee33" or "custom"
     solver="exact_oracle",          # "exact_oracle", "sqa", or "numpy_annealer"
     solar_drop_pct=75.0,           # Solar PV transient drop
     ev_surge_kw=800.0,             # EV charging pulse
